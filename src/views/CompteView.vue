@@ -12,6 +12,22 @@
           </v-card-text>
           <v-btn color="error" @click="seDeconnecter">Se déconnecter</v-btn>
         </v-card>
+        <v-card v-if="utilisateur">
+          <v-card-title>{{ utilisateur.nom_utilisateur }}</v-card-title>
+          <v-card-text>
+            <v-text-field
+                v-model="nouveauNom"
+                label="Nouveau nom d'utilisateur"
+            />
+            <v-btn color="primary" @click="mettreAJourUtilisateur(nouveauNom)">
+              Mettre à jour
+            </v-btn>
+            <v-divider class="my-4"></v-divider>
+            <v-btn color="error" @click="supprimerMonCompte">
+              Supprimer mon compte
+            </v-btn>
+          </v-card-text>
+        </v-card>
         <v-alert v-else type="info">Veuillez vous connecter pour accéder à votre compte.</v-alert>
         <v-container>
           <h2>Mes devises favorites</h2>
@@ -132,6 +148,8 @@ const devisesPopulaires = ref([]);
 const deviseSelectionnee = ref('USD');
 const router = useRouter();
 const utilisateur = computed(() => store.state.auth.utilisateur);
+const nouveauNom = ref(utilisateur.value ? utilisateur.value.nom_utilisateur : '');
+
 const devises = computed(() => store.state.devises.listeDevises.map(d => d.nom));
 const codeSource = ref('USD');
 const codeCible = ref('EUR');
@@ -140,6 +158,22 @@ const resultat = ref(null);
 const erreur = ref('');
 const devisesFavoris = computed(() => store.state.devises.devisesFavoris);
 const nouvelleDeviseFavori = ref('');
+
+async function mettreAJourUtilisateur(nouveauNom) {
+  if (utilisateur.value) {
+    await store.dispatch('utilisateur/mettreAJourUtilisateur', {
+      id: utilisateur.value.id,
+      donnees: { nom_utilisateur: nouveauNom }
+    });
+  }
+}
+
+async function supprimerMonCompte() {
+  if (utilisateur.value) {
+    await store.dispatch('utilisateur/supprimerUtilisateur', utilisateur.value.id);
+    await seDeconnecter();
+  }
+}
 
 
 
