@@ -1,4 +1,6 @@
-import axios from '../../api/axios';
+import {
+  connecterUtilisateur
+} from '../../api/utilisateur';
 
 export default {
   namespaced: true,
@@ -22,18 +24,16 @@ export default {
     // Connexion de l'utilisateur via l'API
     async connexion({ commit }, identifiants) {
       try {
-        const reponse = await axios.post('/connexion', identifiants);
+        const reponse = await connecterUtilisateur(identifiants);
         commit('setUtilisateur', {
           id: reponse.data.id,
           nom_utilisateur: reponse.data.nom_utilisateur,
           email: identifiants.email
         });
         commit('setToken', reponse.data.access_token);
-        // Stockage du token dans localStorage pour persistance
         localStorage.setItem('token', reponse.data.access_token);
         return true;
       } catch (erreur) {
-        // Gestion de l'erreur (mauvais identifiants, etc.)
         commit('deconnexion');
         localStorage.removeItem('token');
         return false;
