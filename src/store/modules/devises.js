@@ -1,11 +1,19 @@
-import { convertirDevise, recupererDevise, recupererDevisesPopulaires } from '../../api/devises';
+import {
+  convertirDevise,
+  recupererDevise,
+  recupererDevisesPopulaires,
+  ajouterDeviseFavori,
+  supprimerDeviseFavori,
+  recupererDevisesFavoris
+} from '../../api/devises';
 
 export default {
   namespaced: true,
   state: {
     listeDevises: [],
     deviseActive: null,
-    conversionResultat: null
+    conversionResultat: null,
+    devisesFavoris: []
   },
   mutations: {
     setListeDevises(state, devises) {
@@ -16,6 +24,9 @@ export default {
     },
     setConversionResultat(state, resultat) {
       state.conversionResultat = resultat;
+    },
+    setDevisesFavoris(state, favoris) {
+      state.devisesFavoris = favoris;
     }
   },
   actions: {
@@ -37,6 +48,18 @@ export default {
       const reponse = await convertirDevise(payload);
       commit('setConversionResultat', reponse.data);
       return reponse.data;
+    },
+    async chargerDevisesFavoris({ commit }) {
+      const reponse = await recupererDevisesFavoris();
+      commit('setDevisesFavoris', reponse.data.favoris);
+    },
+    async ajouterDeviseFavori({ dispatch }, nom_devise) {
+      await ajouterDeviseFavori(nom_devise);
+      await dispatch('chargerDevisesFavoris');
+    },
+    async supprimerDeviseFavori({ dispatch }, nom_devise) {
+      await supprimerDeviseFavori(nom_devise);
+      await dispatch('chargerDevisesFavoris');
     }
   }
 };
