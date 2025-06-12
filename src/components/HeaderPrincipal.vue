@@ -12,8 +12,8 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { computed } from "vue";
+import { useStore } from "vuex";
 
 const store = useStore();
 const estConnecte = computed(() => !!store.state.auth.token);

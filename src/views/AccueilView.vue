@@ -6,7 +6,8 @@
       <v-container>
         <h1>Bienvenue sur WebCur</h1>
         <p>
-          Application éducative pour explorer les devises, entreprises et actions en bourse.<br>
+          Application éducative pour explorer les devises, entreprises et
+          actions en bourse.<br />
           Utilisez la navigation pour accéder aux fonctionnalités principales.
         </p>
         <!-- Section des devises populaires -->
@@ -15,12 +16,14 @@
           <v-card-text>
             <v-list>
               <v-list-item
-                  v-for="devise in devisesPopulaires"
-                  :key="devise.nom"
+                v-for="devise in devisesPopulaires"
+                :key="devise.nom"
               >
                 <v-list-item-content>
                   <v-list-item-title>
-                    {{ devise.nom }} — Taux : {{ devise.taux }} ({{ devise.date_maj }})
+                    {{ devise.nom }} — Taux : {{ devise.taux }} ({{
+                      devise.date_maj
+                    }})
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
@@ -34,11 +37,11 @@
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue';
-import { useStore } from 'vuex';
-import HeaderPrincipal from '../components/HeaderPrincipal.vue';
-import FooterPrincipal from '../components/FooterPrincipal.vue';
-import NavigationPrincipale from '../components/NavigationPrincipale.vue';
+import { onMounted, computed } from "vue";
+import { useStore } from "vuex";
+import HeaderPrincipal from "../components/HeaderPrincipal.vue";
+import FooterPrincipal from "../components/FooterPrincipal.vue";
+import NavigationPrincipale from "../components/NavigationPrincipale.vue";
 
 // Accès au store Vuex
 const store = useStore();
@@ -48,6 +51,6 @@ const devisesPopulaires = computed(() => store.state.devises.listeDevises);
 
 // Charger les devises populaires au montage du composant
 onMounted(() => {
-  store.dispatch('devises/chargerDevisesPopulaires');
+  store.dispatch("devises/chargerDevisesPopulaires");
 });
 </script>

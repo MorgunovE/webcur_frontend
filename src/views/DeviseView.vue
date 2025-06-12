@@ -23,16 +23,19 @@
                   <strong>Conversion rates:</strong>
                   <v-simple-table dense>
                     <thead>
-                    <tr>
-                      <th>Devise</th>
-                      <th>Taux</th>
-                    </tr>
+                      <tr>
+                        <th>Devise</th>
+                        <th>Taux</th>
+                      </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(taux, code) in limitedConversionRates" :key="code">
-                      <td>{{ code }}</td>
-                      <td>{{ taux }}</td>
-                    </tr>
+                      <tr
+                        v-for="(taux, code) in limitedConversionRates"
+                        :key="code"
+                      >
+                        <td>{{ code }}</td>
+                        <td>{{ taux }}</td>
+                      </tr>
                     </tbody>
                   </v-simple-table>
                   <div v-if="showAllRates">
@@ -47,11 +50,11 @@
           </v-col>
           <v-col cols="12" md="6">
             <GraphiqueLignes
-                v-if="labels.length"
-                :labels="labels"
-                :valeurs="valeurs"
-                titre="Historique contre USD"
-                couleur="#1976D2"
+              v-if="labels.length"
+              :labels="labels"
+              :valeurs="valeurs"
+              titre="Historique contre USD"
+              couleur="#1976D2"
             />
           </v-col>
         </v-row>
@@ -62,29 +65,26 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import { useStore } from 'vuex';
-import HeaderPrincipal from '../components/HeaderPrincipal.vue';
-import FooterPrincipal from '../components/FooterPrincipal.vue';
-import NavigationPrincipale from '../components/NavigationPrincipale.vue';
-import GraphiqueLignes from '../components/GraphiqueLignes.vue';
+import { ref, computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
+import HeaderPrincipal from "../components/HeaderPrincipal.vue";
+import FooterPrincipal from "../components/FooterPrincipal.vue";
+import NavigationPrincipale from "../components/NavigationPrincipale.vue";
+import GraphiqueLignes from "../components/GraphiqueLignes.vue";
 
 const route = useRoute();
 const store = useStore();
-const pair = computed(() => route.params.pair || 'USD-EUR');
+const pair = computed(() => route.params.pair || "USD-EUR");
 const devisesPopulaires = ref([]);
-const deviseSelectionnee = ref('USD');
+const deviseSelectionnee = ref("USD");
 const deviseActive = ref(null);
 const historique = ref([]);
 const showAllRates = ref(false);
 
-
-const labels = computed(() =>
-    historique.value.map(e => e.date_maj)
-);
+const labels = computed(() => historique.value.map((e) => e.date_maj));
 const valeurs = computed(() =>
-    historique.value.map(e => e.conversion_rates?.USD || null)
+  historique.value.map((e) => e.conversion_rates?.USD || null)
 );
 
 const limitedConversionRates = computed(() => {
@@ -95,20 +95,23 @@ const limitedConversionRates = computed(() => {
 });
 
 async function chargerDevises() {
-  await store.dispatch('devises/chargerDevisesPopulaires');
-  devisesPopulaires.value = store.state.devises.listeDevises.map(d => d.nom);
+  await store.dispatch("devises/chargerDevisesPopulaires");
+  devisesPopulaires.value = store.state.devises.listeDevises.map((d) => d.nom);
 }
 
 async function chargerDevise() {
-  await store.dispatch('devises/chargerDevise', deviseSelectionnee.value);
+  await store.dispatch("devises/chargerDevise", deviseSelectionnee.value);
   deviseActive.value = store.state.devises.deviseActive;
-  await store.dispatch('devises/chargerHistoriqueDevise', { nom: deviseSelectionnee.value, jours: 30 });
+  await store.dispatch("devises/chargerHistoriqueDevise", {
+    nom: deviseSelectionnee.value,
+    jours: 30,
+  });
   historique.value = store.state.devises.historiqueDevise;
 }
 
 onMounted(async () => {
   await chargerDevises();
-  deviseSelectionnee.value = pair.value.split('-')[0];
+  deviseSelectionnee.value = pair.value.split("-")[0];
   await chargerDevise();
 });
 </script>

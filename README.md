@@ -71,8 +71,8 @@ VUE_APP_API_URL=http://localhost:5000
    npm run serve
    ```
 5. **Accéder à l’interface :**
-    - Frontend : `http://localhost:8080/` (par défaut)
-    - L’API backend doit être accessible sur `http://localhost:5000/`
+   - Frontend : `http://localhost:8080/` (par défaut)
+   - L’API backend doit être accessible sur `http://localhost:5000/`
 
 ## Lancer le projet en production
 
@@ -100,8 +100,13 @@ npm run lint
 ```
 
 ou pour corriger automatiquement les erreurs de style :
+
 ```sh
 npx eslint . --fix
+```
+ou pour formater le code avec Prettier :
+```sh
+npx prettier --write .
 ```
 
 ## Exemples d’utilisation
@@ -122,5 +127,7 @@ Ce frontend nécessite l’API WebCur (voir [WebCur_BackEnd](https://github.com/
 ## Licence
 
 MIT License © 2025 Morgunov Evgenii
+
 ```
 Ce fichier fournit une documentation claire, en français, adaptée à la structure et aux usages du frontend.
+```

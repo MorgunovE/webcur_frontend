@@ -1,28 +1,29 @@
-@import '~vuetify/styles/main.sass';
+@import "~vuetify/styles/main.sass";
 
 body {
-  font-family: 'SF Pro Display', 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+  font-family: "SF Pro Display", "Segoe UI", "Roboto", "Arial", sans-serif;
   background: #f8f8fa;
   color: #222;
   margin: 0;
   padding: 0;
 }
 
-.v-app-bar, .v-footer {
+.v-app-bar,
+.v-footer {
   background: #fff !important;
   color: #222 !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .v-card {
   border-radius: 18px !important;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
   background: #fff;
   transition: box-shadow 0.2s;
 }
 
 .v-card:hover {
-  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
 
 .v-btn {
@@ -34,11 +35,12 @@ body {
 }
 
 .v-btn--contained {
-  background: linear-gradient(90deg, #1976D2 0%, #42A5F5 100%);
+  background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
   color: #fff;
 }
 
-.v-select, .v-text-field {
+.v-select,
+.v-text-field {
   border-radius: 12px !important;
   background: #f4f6fb;
 }
@@ -57,7 +59,10 @@ body {
   padding-top: 32px;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-weight: 700;
   letter-spacing: -0.5px;
 }
@@ -67,7 +72,8 @@ h1, h2, h3, h4 {
   font-size: 1.05em;
 }
 
-.v-simple-table th, .v-simple-table td {
+.v-simple-table th,
+.v-simple-table td {
   padding: 8px 12px;
 }
 
