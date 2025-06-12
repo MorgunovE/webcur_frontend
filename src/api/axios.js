@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Création d'une instance Axios avec l'URL de base de l'API
 const instance = axios.create({
-  baseURL: 'http://localhost:5000', // À adapter selon l'environnement
+  baseURL: process.env.VUE_APP_API_URL,
   headers: { 'Content-Type': 'application/json' }
 });
 
