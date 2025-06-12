@@ -42,7 +42,7 @@ async function seConnecter() {
     mot_de_passe: motDePasse.value,
   });
   if (ok) {
-    await router.push("/");
+    await router.push("/account");
   } else {
     erreur.value = "Identifiants invalides";
   }
