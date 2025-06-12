@@ -1,0 +1,51 @@
+<template>
+  <v-app>
+    <HeaderPrincipal />
+    <NavigationPrincipale />
+    <v-main>
+      <v-container>
+        <h2>Action : {{ symbole }}</h2>
+        <v-card v-if="action">
+          <v-card-title>{{ action.symbole }}</v-card-title>
+          <v-card-text>
+            Date: {{ action.date }}<br>
+            Open: {{ action.open }}<br>
+            Close: {{ action.close }}<br>
+            Volume: {{ action.volume }}
+          </v-card-text>
+        </v-card>
+        <GraphiqueLignes
+          v-if="historique.length"
+          :labels="historique.map(e => e.date)"
+          :valeurs="historique.map(e => e.close)"
+          titre="Historique de clôture"
+          couleur="#1976D2"
+        />
+      </v-container>
+    </v-main>
+    <FooterPrincipal />
+  </v-app>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+import HeaderPrincipal from '../components/HeaderPrincipal.vue';
+import FooterPrincipal from '../components/FooterPrincipal.vue';
+import NavigationPrincipale from '../components/NavigationPrincipale.vue';
+import GraphiqueLignes from '../components/GraphiqueLignes.vue';
+
+const route = useRoute();
+const store = useStore();
+const symbole = route.params.symbole || 'AAPL';
+const action = ref(null);
+const historique = ref([]);
+
+onMounted(async () => {
+  await store.dispatch('actions/chargerAction', symbole);
+  action.value = store.state.actions.actionActive;
+  await store.dispatch('actions/chargerHistorique', { symbole, jours: 7 });
+  historique.value = store.state.actions.historique;
+});
+</script>
