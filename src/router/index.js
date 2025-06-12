@@ -7,6 +7,7 @@ import CompteView from "../views/CompteView.vue";
 import DeviseView from "../views/DeviseView.vue";
 import EntrepriseView from "../views/EntrepriseView.vue";
 import ActionView from "../views/ActionView.vue";
+import store from "@/store";
 
 const routes = [
   { path: "/", name: "Accueil", component: AccueilView },
@@ -23,6 +24,7 @@ const routes = [
     path: "/companies/:symbole",
     name: "Entreprise",
     component: EntrepriseView,
+    meta: { requiresAuth: true },
   },
   { path: "/stocks/:symbole", name: "Action", component: ActionView },
 ];
@@ -34,12 +36,13 @@ const router = createRouter({
 
 // Navigation pour vérifier l'authentification
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem("token");
-  if (to.meta.requiresAuth && !token) {
-    next("/login");
-  } else {
-    next();
+  if (to.meta.requiresAuth) {
+    const token = store.state.auth.token || localStorage.getItem("token");
+    if (!token) {
+      return next("/login");
+    }
   }
+  next();
 });
 
 export default router;
