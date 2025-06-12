@@ -1,10 +1,11 @@
+// src/store/modules/auth.js
 import axios from '../../api/axios';
 
 export default {
   namespaced: true,
   state: {
     utilisateur: null, // Informations de l'utilisateur connecté
-    token: null        // Token JWT
+    token: localStorage.getItem('token') || null // Token JWT (persisté)
   },
   mutations: {
     setUtilisateur(state, utilisateur) {
@@ -35,6 +36,7 @@ export default {
       } catch (erreur) {
         // Gestion de l'erreur (mauvais identifiants, etc.)
         commit('deconnexion');
+        localStorage.removeItem('token');
         return false;
       }
     },
