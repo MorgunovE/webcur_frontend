@@ -1,17 +1,16 @@
 import { createStore } from 'vuex';
-
-// Importation des modules Vuex
 import auth from './modules/auth';
+import utilisateur from './modules/utilisateur';
 import devises from './modules/devises';
 import entreprises from './modules/entreprises';
-import favoris from './modules/favoris';
+import actions from './modules/actions';
 
-// Création du store principal avec les modules
 export default createStore({
   modules: {
     auth,
+    utilisateur,
     devises,
     entreprises,
-    favoris
+    actions
   }
 });
