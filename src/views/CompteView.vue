@@ -52,6 +52,44 @@
           </v-card-text>
         </v-card>
       </v-container>
+      <v-container>
+        <h2>Convert Currency</h2>
+        <v-form @submit.prevent="convertir">
+          <v-row>
+            <v-col cols="12" md="3">
+              <v-select
+                  v-model="codeSource"
+                  :items="devises"
+                  label="Source currency"
+                  required
+              />
+            </v-col>
+            <v-col cols="12" md="3">
+              <v-select
+                  v-model="codeCible"
+                  :items="devises"
+                  label="Target currency"
+                  required
+              />
+            </v-col>
+            <v-col cols="12" md="3">
+              <v-text-field
+                  v-model.number="montant"
+                  label="Amount"
+                  type="number"
+                  required
+              />
+            </v-col>
+            <v-col cols="12" md="3">
+              <v-btn type="submit" color="primary">Convert</v-btn>
+            </v-col>
+          </v-row>
+        </v-form>
+        <v-alert v-if="resultat" type="success" class="mt-4">
+          {{ montant }} {{ codeSource }} = {{ resultat.montant_converti }} {{ codeCible }}
+        </v-alert>
+        <v-alert v-if="erreur" type="error" class="mt-4">{{ erreur }}</v-alert>
+      </v-container>
     </v-main>
     <FooterPrincipal />
   </v-app>
@@ -71,6 +109,12 @@ const devisesPopulaires = ref([]);
 const deviseSelectionnee = ref('USD');
 const router = useRouter();
 const utilisateur = computed(() => store.state.auth.utilisateur);
+const devises = computed(() => store.state.devises.listeDevises.map(d => d.nom));
+const codeSource = ref('USD');
+const codeCible = ref('EUR');
+const montant = ref(1);
+const resultat = ref(null);
+const erreur = ref('');
 
 
 
@@ -90,5 +134,20 @@ onMounted(chargerDevisesPopulaires);
 async function seDeconnecter() {
   await store.dispatch('auth/deconnexion');
   router.push('/');
+}
+
+async function convertir() {
+  erreur.value = '';
+  resultat.value = null;
+  try {
+    const res = await store.dispatch('devises/convertirDevise', {
+      code_source: codeSource.value,
+      code_cible: codeCible.value,
+      montant: montant.value
+    });
+    resultat.value = res;
+  } catch (e) {
+    erreur.value = 'Conversion failed';
+  }
 }
 </script>
