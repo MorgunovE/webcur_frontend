@@ -4,13 +4,13 @@
     <NavigationPrincipale />
     <v-main>
       <v-container>
-        <h1>Bienvenue sur WebCur</h1>
+        <h2>Bienvenue sur WebCur</h2>
         <p>
-          Application éducative pour explorer les devises, entreprises et
-          actions en bourse.<br />
-          Utilisez la navigation pour accéder aux fonctionnalités principales.
+          Application WebCur pour explorer les devises, entreprises et actions
+          en bourse.<br />
+          Découvrez les taux de change, l’historique des entreprises et plus
+          encore.
         </p>
-        <!-- Section des devises populaires -->
         <v-card class="mt-6" outlined>
           <v-card-title>Devises populaires</v-card-title>
           <v-card-text>
@@ -43,14 +43,10 @@ import HeaderPrincipal from "../components/HeaderPrincipal.vue";
 import FooterPrincipal from "../components/FooterPrincipal.vue";
 import NavigationPrincipale from "../components/NavigationPrincipale.vue";
 
-// Accès au store Vuex
 const store = useStore();
-
-// Computed pour la liste des devises populaires
 const devisesPopulaires = computed(() => store.state.devises.listeDevises);
 
-// Charger les devises populaires au montage du composant
-onMounted(() => {
-  store.dispatch("devises/chargerDevisesPopulaires");
+onMounted(async () => {
+  await store.dispatch("devises/chargerDevisesPopulaires");
 });
 </script>
