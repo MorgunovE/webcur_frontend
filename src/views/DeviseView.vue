@@ -50,10 +50,10 @@
           </v-col>
           <v-col cols="12" md="6">
             <GraphiqueLignes
-              v-if="labels.length"
+              v-if="labels.length && valeurs.length"
               :labels="labels"
               :valeurs="valeurs"
-              titre="Historique contre USD"
+              :titre="`Historique de ${deviseActive.nom} contre USD`"
               couleur="#1976D2"
             />
           </v-col>
@@ -83,7 +83,11 @@ const historique = computed(() => store.state.devises.historiqueDevise);
 const showAllRates = ref(false);
 
 const labels = computed(() => historique.value.map((e) => e.date_maj));
-const valeurs = computed(() => historique.value.map((e) => e.taux));
+const valeurs = computed(() =>
+  historique.value.map((e) =>
+    e.conversion_rates && e.conversion_rates.USD ? e.conversion_rates.USD : null
+  )
+);
 
 const limitedConversionRates = computed(() => {
   if (!deviseActive.value || !deviseActive.value.conversion_rates) return {};
