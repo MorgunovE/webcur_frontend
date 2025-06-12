@@ -1,11 +1,11 @@
-import axios from '../../api/axios';
-import {recupererDevise, recupererDevisesPopulaires} from '../../api/devises';
+import { convertirDevise, recupererDevise, recupererDevisesPopulaires } from '../../api/devises';
 
 export default {
   namespaced: true,
   state: {
     listeDevises: [],
-    deviseActive: null
+    deviseActive: null,
+    conversionResultat: null
   },
   mutations: {
     setListeDevises(state, devises) {
@@ -13,6 +13,9 @@ export default {
     },
     setDeviseActive(state, devise) {
       state.deviseActive = devise;
+    },
+    setConversionResultat(state, resultat) {
+      state.conversionResultat = resultat;
     }
   },
   actions: {
@@ -29,6 +32,11 @@ export default {
     async chargerDevise({ commit }, nom) {
       const reponse = await recupererDevise(nom);
       commit('setDeviseActive', reponse.data);
+    },
+    async convertirDevise({ commit }, payload) {
+      const reponse = await convertirDevise(payload);
+      commit('setConversionResultat', reponse.data);
+      return reponse.data;
     }
   }
 };
