@@ -21,25 +21,27 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import {useStore} from "vuex";
 import HeaderPrincipal from '../components/HeaderPrincipal.vue';
 import FooterPrincipal from '../components/FooterPrincipal.vue';
 import NavigationPrincipale from '../components/NavigationPrincipale.vue';
-import { inscrireUtilisateur } from '../api/utilisateur';
+
 
 const email = ref('');
 const motDePasse = ref('');
 const nomUtilisateur = ref('');
 const erreur = ref('');
 const router = useRouter();
+const store = useStore();
 
 async function sInscrire() {
   try {
-    await inscrireUtilisateur({
+    await store.dispatch('utilisateur/inscription', {
       email: email.value,
       mot_de_passe: motDePasse.value,
       nom_utilisateur: nomUtilisateur.value
     });
-    router.push('/login');
+    await router.push('/login');
   } catch (e) {
     erreur.value = "Erreur lors de l'inscription";
   }
