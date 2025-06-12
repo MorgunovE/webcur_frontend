@@ -9,3 +9,8 @@ export function recupererEntreprisesPopulaires() {
 export function recupererEntreprise(symbole) {
   return axios.get(`/societes/${symbole}`);
 }
+
+// Récupérer l'historique d'une entreprise (par défaut 30 jours)
+export function recupererHistoriqueEntreprise(symbole, jours = 30) {
+  return axios.get(`/societes/${symbole}/historique?jours=${jours}`);
+}
