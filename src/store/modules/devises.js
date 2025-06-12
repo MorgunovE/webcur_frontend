@@ -17,8 +17,13 @@ export default {
   actions: {
     // Récupère les devises populaires depuis l'API
     async chargerDevisesPopulaires({ commit }) {
-      const reponse = await axios.get('/devises/populaires');
-      commit('setListeDevises', reponse.data);
+      try {
+        const reponse = await axios.get('/devises/populaires');
+        commit('setListeDevises', reponse.data);
+      } catch (e) {
+        // Gestion d'erreur possible ici
+        commit('setListeDevises', []);
+      }
     },
     // Récupère les informations d'une devise spécifique
     async chargerDevise({ commit }, nom) {
