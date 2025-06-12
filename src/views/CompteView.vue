@@ -13,6 +13,29 @@
           <v-btn color="error" @click="seDeconnecter">Se déconnecter</v-btn>
         </v-card>
         <v-alert v-else type="info">Veuillez vous connecter pour accéder à votre compte.</v-alert>
+        <v-container>
+          <h2>Mes devises favorites</h2>
+          <v-list>
+            <v-list-item
+                v-for="devise in devisesFavoris"
+                :key="devise"
+            >
+              <v-list-item-title>{{ devise }}</v-list-item-title>
+              <v-btn icon color="error" @click="supprimerFavori(devise)">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </v-list-item>
+          </v-list>
+          <v-select
+              v-model="nouvelleDeviseFavori"
+              :items="devises"
+              label="Ajouter une devise aux favoris"
+              class="mt-2"
+          />
+          <v-btn color="primary" @click="ajouterFavori" :disabled="!nouvelleDeviseFavori">
+            Ajouter
+          </v-btn>
+        </v-container>
         <!-- Currency selection and info -->
         <v-row>
           <v-col cols="12" md="6">
@@ -115,6 +138,8 @@ const codeCible = ref('EUR');
 const montant = ref(1);
 const resultat = ref(null);
 const erreur = ref('');
+const devisesFavoris = computed(() => store.state.devises.devisesFavoris);
+const nouvelleDeviseFavori = ref('');
 
 
 
@@ -129,7 +154,21 @@ async function chargerDevise(nom) {
   deviseActive.value = store.state.devises.deviseActive;
 }
 
-onMounted(chargerDevisesPopulaires);
+onMounted(async () => {
+  await chargerDevisesPopulaires();
+  await store.dispatch('devises/chargerDevisesFavoris');
+});
+
+async function ajouterFavori() {
+  if (nouvelleDeviseFavori.value) {
+    await store.dispatch('devises/ajouterDeviseFavori', nouvelleDeviseFavori.value);
+    nouvelleDeviseFavori.value = '';
+  }
+}
+
+async function supprimerFavori(nom) {
+  await store.dispatch('devises/supprimerDeviseFavori', nom);
+}
 
 async function seDeconnecter() {
   await store.dispatch('auth/deconnexion');
