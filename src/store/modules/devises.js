@@ -1,4 +1,5 @@
 import axios from '../../api/axios';
+import {recupererDevise, recupererDevisesPopulaires} from '../../api/devises';
 
 export default {
   namespaced: true,
@@ -18,16 +19,15 @@ export default {
     // Récupère les devises populaires depuis l'API
     async chargerDevisesPopulaires({ commit }) {
       try {
-        const reponse = await axios.get('/devises/populaires');
+        const reponse = await recupererDevisesPopulaires();
         commit('setListeDevises', reponse.data);
       } catch (e) {
-        // Gestion d'erreur possible ici
         commit('setListeDevises', []);
       }
     },
     // Récupère les informations d'une devise spécifique
     async chargerDevise({ commit }, nom) {
-      const reponse = await axios.get(`/devises/${nom}`);
+      const reponse = await recupererDevise(nom);
       commit('setDeviseActive', reponse.data);
     }
   }
