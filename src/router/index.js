@@ -1,33 +1,33 @@
 import { createRouter, createWebHistory } from 'vue-router';
+
 import AccueilView from '../views/AccueilView.vue';
-// ...importer les autres vues
-import store from '../store';
+import ConnexionView from '../views/ConnexionView.vue';
+import EnregistrementView from '../views/EnregistrementView.vue';
+import CompteView from '../views/CompteView.vue';
+import DeviseView from '../views/DeviseView.vue';
+import EntrepriseView from '../views/EntrepriseView.vue';
+import ActionView from '../views/ActionView.vue';
 
 const routes = [
   { path: '/', name: 'Accueil', component: AccueilView },
-  { path: '/login', name: 'Connexion', component: () => import('../views/ConnexionView.vue') },
-  { path: '/register', name: 'Enregistrement', component: () => import('../views/EnregistrementView.vue') },
-  { path: '/currencies/:pair', name: 'Devise', component: () => import('../views/DeviseView.vue') },
-  { path: '/companies/:symbol', name: 'Entreprise', component: () => import('../views/EntrepriseView.vue') },
-  {
-    path: '/account',
-    name: 'Compte',
-    component: () => import('../views/CompteView.vue'),
-    meta: { requiresAuth: true } // Cette route nécessite l'authentification
-  },
+  { path: '/login', name: 'Connexion', component: ConnexionView },
+  { path: '/register', name: 'Inscription', component: EnregistrementView },
+  { path: '/account', name: 'Compte', component: CompteView, meta: { requiresAuth: true } },
+  { path: '/currencies/:pair', name: 'Devise', component: DeviseView },
+  { path: '/companies/:symbole', name: 'Entreprise', component: EntrepriseView },
+  { path: '/stocks/:symbole', name: 'Action', component: ActionView }
 ];
 
 const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes
 });
 
-// Garde de navigation pour protéger les routes privées
+// Navigation pour vérifier l'authentification
 router.beforeEach((to, from, next) => {
-  const estAuthentifie = !!store.state.auth.token;
-  if (to.meta.requiresAuth && !estAuthentifie) {
-    // Redirige vers la page de connexion si non authentifié
-    next({ name: 'Connexion' });
+  const token = localStorage.getItem('token');
+  if (to.meta.requiresAuth && !token) {
+    next('/login');
   } else {
     next();
   }
