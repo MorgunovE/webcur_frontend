@@ -1,10 +1,15 @@
-import axios from '../../api/axios';
+import {
+  recupererEntreprisesPopulaires,
+  recupererEntreprise,
+  recupererHistoriqueEntreprise
+} from '../../api/entreprises';
 
 export default {
   namespaced: true,
   state: {
     entreprisesPopulaires: [],
-    entrepriseActive: null
+    entrepriseActive: null,
+    historiqueEntreprise: []
   },
   mutations: {
     setEntreprisesPopulaires(state, entreprises) {
@@ -12,18 +17,23 @@ export default {
     },
     setEntrepriseActive(state, entreprise) {
       state.entrepriseActive = entreprise;
+    },
+    setHistoriqueEntreprise(state, historique) {
+      state.historiqueEntreprise = historique;
     }
   },
   actions: {
-    // Charge les entreprises populaires
     async chargerEntreprisesPopulaires({ commit }) {
-      const reponse = await axios.get('/societes/populaires');
+      const reponse = await recupererEntreprisesPopulaires();
       commit('setEntreprisesPopulaires', reponse.data);
     },
-    // Charge les détails d'une entreprise
     async chargerEntreprise({ commit }, symbole) {
-      const reponse = await axios.get(`/societes/${symbole}`);
+      const reponse = await recupererEntreprise(symbole);
       commit('setEntrepriseActive', reponse.data);
+    },
+    async chargerHistoriqueEntreprise({ commit }, { symbole, jours = 30 }) {
+      const reponse = await recupererHistoriqueEntreprise(symbole, jours);
+      commit('setHistoriqueEntreprise', reponse.data);
     }
   }
 };
