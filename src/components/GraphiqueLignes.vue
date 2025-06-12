@@ -57,7 +57,3 @@ watch(
   }
 );
 </script>
-
-<style scoped>
-/* Style optionnel pour le composant graphique */
-</style>
