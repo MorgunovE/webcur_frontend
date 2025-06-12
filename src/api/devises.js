@@ -28,3 +28,7 @@ export function supprimerDeviseFavori(nom_devise) {
 export function recupererDevisesFavoris() {
   return axios.get('/devises/favoris');
 }
+
+export function recupererHistoriqueDevise(nom, jours = 30) {
+  return axios.get(`/devises/${nom}/historique?jours=${jours}`);
+}
