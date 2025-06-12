@@ -99,6 +99,11 @@ VUE_APP_API_URL=http://localhost:5000
 npm run lint
 ```
 
+ou pour corriger automatiquement les erreurs de style :
+```sh
+npx eslint . --fix
+```
+
 ## Exemples d’utilisation
 
 - **Connexion :**  
