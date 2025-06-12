@@ -4,7 +4,8 @@ import {
   recupererDevisesPopulaires,
   ajouterDeviseFavori,
   supprimerDeviseFavori,
-  recupererDevisesFavoris
+  recupererDevisesFavoris,
+  recupererHistoriqueDevise
 } from '../../api/devises';
 
 export default {
@@ -13,7 +14,8 @@ export default {
     listeDevises: [],
     deviseActive: null,
     conversionResultat: null,
-    devisesFavoris: []
+    devisesFavoris: [],
+    historiqueDevise: []
   },
   mutations: {
     setListeDevises(state, devises) {
@@ -27,6 +29,9 @@ export default {
     },
     setDevisesFavoris(state, favoris) {
       state.devisesFavoris = favoris;
+    },
+    setHistoriqueDevise(state, historique) {
+      state.historiqueDevise = historique;
     }
   },
   actions: {
@@ -60,6 +65,10 @@ export default {
     async supprimerDeviseFavori({ dispatch }, nom_devise) {
       await supprimerDeviseFavori(nom_devise);
       await dispatch('chargerDevisesFavoris');
+    },
+    async chargerHistoriqueDevise({ commit }, { nom, jours = 30 }) {
+      const reponse = await recupererHistoriqueDevise(nom, jours);
+      commit('setHistoriqueDevise', reponse.data);
     }
   }
 };
