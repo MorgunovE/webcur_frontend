@@ -102,7 +102,7 @@ async function chargerDevises() {
 async function chargerDevise() {
   await store.dispatch('devises/chargerDevise', deviseSelectionnee.value);
   deviseActive.value = store.state.devises.deviseActive;
-  await store.dispatch('devises/chargerHistoriqueDevise', { nom: deviseSelectionnee.value, jours: 2 });
+  await store.dispatch('devises/chargerHistoriqueDevise', { nom: deviseSelectionnee.value, jours: 30 });
   historique.value = store.state.devises.historiqueDevise;
 }
 
