@@ -65,7 +65,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import HeaderPrincipal from "../components/HeaderPrincipal.vue";
@@ -73,25 +73,23 @@ import FooterPrincipal from "../components/FooterPrincipal.vue";
 import NavigationPrincipale from "../components/NavigationPrincipale.vue";
 import GraphiqueLignes from "../components/GraphiqueLignes.vue";
 
-const route = useRoute();
 const store = useStore();
+const route = useRoute();
 const pair = computed(() => route.params.pair || "USD-EUR");
 const devisesPopulaires = ref([]);
-const deviseSelectionnee = ref("USD");
-const deviseActive = ref(null);
-const historique = ref([]);
+const deviseSelectionnee = ref(route.params.paire || "USD-EUR");
+const deviseActive = computed(() => store.state.devises.deviseActive);
+const historique = computed(() => store.state.devises.historiqueDevise);
 const showAllRates = ref(false);
 
 const labels = computed(() => historique.value.map((e) => e.date_maj));
-const valeurs = computed(() =>
-  historique.value.map((e) => e.conversion_rates?.USD || null)
-);
+const valeurs = computed(() => historique.value.map((e) => e.taux));
 
 const limitedConversionRates = computed(() => {
-  if (!deviseActive.value?.conversion_rates) return {};
-  const entries = Object.entries(deviseActive.value.conversion_rates);
-  if (showAllRates.value) return Object.fromEntries(entries);
-  return Object.fromEntries(entries.slice(0, 10));
+  if (!deviseActive.value || !deviseActive.value.conversion_rates) return {};
+  return Object.fromEntries(
+      Object.entries(deviseActive.value.conversion_rates).slice(0, 10)
+  );
 });
 
 async function chargerDevises() {
@@ -110,8 +108,22 @@ async function chargerDevise() {
 }
 
 onMounted(async () => {
-  await chargerDevises();
-  deviseSelectionnee.value = pair.value.split("-")[0];
-  await chargerDevise();
+  await store.dispatch("devises/chargerDevisesPopulaires");
+  await store.dispatch("devises/chargerDevise", deviseSelectionnee.value);
+  await store.dispatch("devises/chargerHistoriqueDevise", {
+    nom: deviseSelectionnee.value,
+    jours: 30,
+  });
 });
+
+watch(
+    () => deviseSelectionnee.value,
+    async (nouvelleDevise) => {
+      await store.dispatch("devises/chargerDevise", nouvelleDevise);
+      await store.dispatch("devises/chargerHistoriqueDevise", {
+        nom: nouvelleDevise,
+        jours: 30,
+      });
+    }
+);
 </script>
