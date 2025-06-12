@@ -39,12 +39,49 @@ const donnees = ref({
 const options = ref({
   responsive: true,
   plugins: {
-    legend: { display: true },
-    title: { display: false }
+    legend: {
+      display: true,
+      labels: {
+        color: '#222',
+        font: { family: 'SF Pro Display, Segoe UI, Roboto, Arial, sans-serif', size: 14 }
+      }
+    },
+    title: { display: false },
+    tooltip: {
+      backgroundColor: '#fff',
+      titleColor: '#1976D2',
+      bodyColor: '#222',
+      borderColor: '#1976D2',
+      borderWidth: 1,
+      padding: 12
+    }
+  },
+  elements: {
+    line: {
+      borderWidth: 3,
+      borderColor: '#1976D2',
+      backgroundColor: 'rgba(25, 118, 210, 0.08)',
+      tension: 0.4
+    },
+    point: {
+      radius: 5,
+      backgroundColor: '#fff',
+      borderColor: '#1976D2',
+      borderWidth: 2,
+      hoverRadius: 7
+    }
   },
   scales: {
-    x: { title: { display: true, text: 'Date' } },
-    y: { title: { display: true, text: 'Valeur' } }
+    x: {
+      title: { display: true, text: 'Date', color: '#888', font: { size: 13 } },
+      grid: { color: '#e0e0e0' },
+      ticks: { color: '#222' }
+    },
+    y: {
+      title: { display: true, text: 'Valeur', color: '#888', font: { size: 13 } },
+      grid: { color: '#e0e0e0' },
+      ticks: { color: '#222' }
+    }
   }
 });
 
