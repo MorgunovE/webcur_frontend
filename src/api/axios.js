@@ -5,7 +5,7 @@ const instance = axios.create({
   headers: { 'Content-Type': 'application/json' }
 });
 
-// Add a request interceptor to include JWT token if present
+// Intercepteur pour inclure le token JWT dans chaque requête si présent
 instance.interceptors.request.use(
   config => {
     const token = localStorage.getItem('token');
