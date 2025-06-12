@@ -52,6 +52,29 @@
             Ajouter
           </v-btn>
         </v-container>
+        <v-container>
+          <h2>Mes actions favorites</h2>
+          <v-list>
+            <v-list-item
+                v-for="symbole in actionsFavoris"
+                :key="symbole"
+            >
+              <v-list-item-title>{{ symbole }}</v-list-item-title>
+              <v-btn icon color="error" @click="supprimerActionFavori(symbole)">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </v-list-item>
+          </v-list>
+          <v-select
+              v-model="nouvelleActionFavori"
+              :items="actionsPopulaires"
+              label="Ajouter une action aux favoris"
+              class="mt-2"
+          />
+          <v-btn color="primary" @click="ajouterActionFavori" :disabled="!nouvelleActionFavori">
+            Ajouter
+          </v-btn>
+        </v-container>
         <!-- Currency selection and info -->
         <v-row>
           <v-col cols="12" md="6">
@@ -159,6 +182,20 @@ const erreur = ref('');
 const devisesFavoris = computed(() => store.state.devises.devisesFavoris);
 const nouvelleDeviseFavori = ref('');
 
+const actionsFavoris = computed(() => store.state.actions.actionsFavoris);
+const actionsPopulaires = computed(() => store.state.actions.actionsPopulaires.map(a => a.symbole));
+const nouvelleActionFavori = ref('');
+
+async function ajouterActionFavori() {
+  if (nouvelleActionFavori.value) {
+    await store.dispatch('actions/ajouterActionFavori', nouvelleActionFavori.value);
+    nouvelleActionFavori.value = '';
+  }
+}
+async function supprimerActionFavori(symbole) {
+  await store.dispatch('actions/supprimerActionFavori', symbole);
+}
+
 async function mettreAJourUtilisateur(nouveauNom) {
   if (utilisateur.value) {
     await store.dispatch('utilisateur/mettreAJourUtilisateur', {
@@ -175,8 +212,6 @@ async function supprimerMonCompte() {
   }
 }
 
-
-
 // Charger les devises populaires au montage du composant
 async function chargerDevisesPopulaires() {
   await store.dispatch('devises/chargerDevisesPopulaires');
@@ -191,6 +226,8 @@ async function chargerDevise(nom) {
 onMounted(async () => {
   await chargerDevisesPopulaires();
   await store.dispatch('devises/chargerDevisesFavoris');
+  await store.dispatch('actions/chargerActionsPopulaires');
+  await store.dispatch('actions/chargerActionsFavoris');
 });
 
 async function ajouterFavori() {
