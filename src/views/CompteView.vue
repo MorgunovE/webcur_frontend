@@ -172,7 +172,7 @@ async function supprimerFavori(nom) {
 
 async function seDeconnecter() {
   await store.dispatch('auth/deconnexion');
-  router.push('/');
+  await router.push('/');
 }
 
 async function convertir() {
