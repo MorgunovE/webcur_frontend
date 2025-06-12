@@ -34,7 +34,7 @@ const router = useRouter();
 async function seConnecter() {
   const ok = await store.dispatch('auth/connexion', { email: email.value, mot_de_passe: motDePasse.value });
   if (ok) {
-    router.push('/');
+    await router.push('/');
   } else {
     erreur.value = "Identifiants invalides";
   }
