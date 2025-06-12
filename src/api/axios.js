@@ -1,11 +1,20 @@
 import axios from 'axios';
 
-// Création d'une instance Axios avec l'URL de base de l'API
 const instance = axios.create({
-  baseURL: process.env.VUE_APP_API_URL,
+  baseURL: process.env.VUE_APP_API_URL || 'http://localhost:5000',
   headers: { 'Content-Type': 'application/json' }
 });
 
-// (Optionnel) Ajouter un intercepteur pour le token JWT plus tard
+// Add a request interceptor to include JWT token if present
+instance.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => Promise.reject(error)
+);
 
 export default instance;
