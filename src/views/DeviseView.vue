@@ -66,7 +66,7 @@ async function chargerDevise() {
   await store.dispatch('devises/chargerDevise', deviseSelectionnee.value);
   deviseActive.value = store.state.devises.deviseActive;
   // Charger l'historique (exemple d'appel direct, à adapter selon l'API)
-  const reponse = await fetch(`http://localhost:5000/devises/${deviseSelectionnee.value}/historique?jours=7`);
+  const reponse = await fetch(`${process.env.VUE_APP_API_URL}/devises/${deviseSelectionnee.value}/historique?jours=7`);
   historique.value = await reponse.json();
 }
 
