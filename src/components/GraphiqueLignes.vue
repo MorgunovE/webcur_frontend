@@ -11,6 +11,31 @@
 // Importation des composants nécessaires
 import { Line } from "vue-chartjs";
 import { ref, watch, defineProps } from "vue";
+import {
+  Chart,
+  LineElement,
+  PointElement,
+  LineController,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from "chart.js";
+
+// Register Chart.js components
+Chart.register(
+  LineElement,
+  PointElement,
+  LineController,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
 
 // Props du composant
 const props = defineProps({
