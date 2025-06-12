@@ -7,7 +7,7 @@
         <h2>Mon compte</h2>
         <v-card v-if="utilisateur">
           <v-card-title>{{ utilisateur.nom_utilisateur }}</v-card-title>
-          <v-card-text> Email : {{ utilisateur.email }} </v-card-text>
+          <v-card-text>Email : {{ utilisateur.email }}</v-card-text>
           <v-btn color="error" @click="seDeconnecter">Se déconnecter</v-btn>
         </v-card>
         <v-card v-if="utilisateur">
@@ -26,9 +26,9 @@
             </v-btn>
           </v-card-text>
         </v-card>
-        <v-alert v-else type="info"
-          >Veuillez vous connecter pour accéder à votre compte.</v-alert
-        >
+        <v-alert v-else type="info">
+          Veuillez vous connecter pour accéder à votre compte.
+        </v-alert>
         <v-container>
           <h2>Mes devises favorites</h2>
           <v-list>
