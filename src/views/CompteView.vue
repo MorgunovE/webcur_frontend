@@ -13,6 +13,26 @@
           <v-btn color="error" @click="seDeconnecter">Se déconnecter</v-btn>
         </v-card>
         <v-alert v-else type="info">Veuillez vous connecter pour accéder à votre compte.</v-alert>
+        <!-- Currency selection and info -->
+        <v-row>
+          <v-col cols="12" md="6">
+            <v-select
+                v-model="deviseSelectionnee"
+                :items="devisesPopulaires"
+                label="Select a currency"
+            />
+            <v-btn color="primary" @click="chargerDevise(deviseSelectionnee)">
+              Load Currency Info
+            </v-btn>
+            <v-card v-if="deviseActive" class="mt-4">
+              <v-card-title>{{ deviseActive.nom }}</v-card-title>
+              <v-card-text>
+                Rate: {{ deviseActive.taux }}<br>
+                Date: {{ deviseActive.date_maj }}
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
         <!-- Section des devises populaires -->
         <v-card class="mt-6" outlined>
           <v-card-title>Devises populaires</v-card-title>
@@ -38,7 +58,7 @@
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue';
+import {onMounted, computed, ref} from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import HeaderPrincipal from '../components/HeaderPrincipal.vue';
@@ -46,17 +66,26 @@ import FooterPrincipal from '../components/FooterPrincipal.vue';
 import NavigationPrincipale from '../components/NavigationPrincipale.vue';
 
 const store = useStore();
+const deviseActive = ref(null);
+const devisesPopulaires = ref([]);
+const deviseSelectionnee = ref('USD');
 const router = useRouter();
 const utilisateur = computed(() => store.state.auth.utilisateur);
 
 
-// Computed pour la liste des devises populaires
-const devisesPopulaires = computed(() => store.state.devises.listeDevises);
 
 // Charger les devises populaires au montage du composant
-onMounted(() => {
-  store.dispatch('devises/chargerDevisesPopulaires');
-});
+async function chargerDevisesPopulaires() {
+  await store.dispatch('devises/chargerDevisesPopulaires');
+  devisesPopulaires.value = store.state.devises.listeDevises.map(d => d.nom);
+}
+
+async function chargerDevise(nom) {
+  await store.dispatch('devises/chargerDevise', nom);
+  deviseActive.value = store.state.devises.deviseActive;
+}
+
+onMounted(chargerDevisesPopulaires);
 
 async function seDeconnecter() {
   await store.dispatch('auth/deconnexion');
