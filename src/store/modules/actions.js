@@ -5,8 +5,8 @@ import {
   recupererActionsPopulaires,
   recupererActionsFavoris,
   ajouterActionFavori,
-  supprimerActionFavori
-} from '../../api/actions';
+  supprimerActionFavori,
+} from "../../api/actions";
 
 export default {
   namespaced: true,
@@ -14,7 +14,7 @@ export default {
     actionActive: null,
     historique: [],
     actionsPopulaires: [],
-    actionsFavoris: []
+    actionsFavoris: [],
   },
   mutations: {
     setActionActive(state, action) {
@@ -28,16 +28,16 @@ export default {
     },
     setActionsFavoris(state, favoris) {
       state.actionsFavoris = favoris;
-    }
+    },
   },
   actions: {
     async chargerAction({ commit }, symbole) {
       const res = await recupererAction(symbole);
-      commit('setActionActive', res.data);
+      commit("setActionActive", res.data);
     },
     async chargerHistorique({ commit }, { symbole, jours = 7 }) {
       const res = await recupererHistoriqueAction(symbole, jours);
-      commit('setHistorique', res.data);
+      commit("setHistorique", res.data);
     },
     async calculerAchat(_, payload) {
       const res = await calculerAchatAction(payload);
@@ -45,19 +45,19 @@ export default {
     },
     async chargerActionsPopulaires({ commit }) {
       const res = await recupererActionsPopulaires();
-      commit('setActionsPopulaires', res.data);
+      commit("setActionsPopulaires", res.data);
     },
     async chargerActionsFavoris({ commit }) {
       const res = await recupererActionsFavoris();
-      commit('setActionsFavoris', res.data.favoris);
+      commit("setActionsFavoris", res.data.favoris);
     },
     async ajouterActionFavori({ dispatch }, symbole) {
       await ajouterActionFavori(symbole);
-      await dispatch('chargerActionsFavoris');
+      await dispatch("chargerActionsFavoris");
     },
     async supprimerActionFavori({ dispatch }, symbole) {
       await supprimerActionFavori(symbole);
-      await dispatch('chargerActionsFavoris');
-    }
-  }
+      await dispatch("chargerActionsFavoris");
+    },
+  },
 };

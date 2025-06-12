@@ -3,14 +3,14 @@ import {
   recupererUtilisateurs,
   recupererUtilisateur,
   mettreAJourUtilisateur,
-  supprimerUtilisateur
-} from '../../api/utilisateur';
+  supprimerUtilisateur,
+} from "../../api/utilisateur";
 
 export default {
   namespaced: true,
   state: {
     utilisateurs: [],
-    utilisateurActif: null
+    utilisateurActif: null,
   },
   mutations: {
     setUtilisateurs(state, utilisateurs) {
@@ -18,7 +18,7 @@ export default {
     },
     setUtilisateurActif(state, utilisateur) {
       state.utilisateurActif = utilisateur;
-    }
+    },
   },
   actions: {
     async inscription(_, donnees) {
@@ -26,17 +26,17 @@ export default {
     },
     async chargerUtilisateurs({ commit }) {
       const reponse = await recupererUtilisateurs();
-      commit('setUtilisateurs', reponse.data);
+      commit("setUtilisateurs", reponse.data);
     },
     async chargerUtilisateur({ commit }, id) {
       const reponse = await recupererUtilisateur(id);
-      commit('setUtilisateurActif', reponse.data);
+      commit("setUtilisateurActif", reponse.data);
     },
     async mettreAJourUtilisateur(_, { id, donnees }) {
       return mettreAJourUtilisateur(id, donnees);
     },
     async supprimerUtilisateur(_, id) {
       return supprimerUtilisateur(id);
-    }
-  }
+    },
+  },
 };

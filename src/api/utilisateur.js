@@ -1,20 +1,20 @@
-import axios from './axios';
+import axios from "./axios";
 
 // Inscription d'un nouvel utilisateur
 export function inscrireUtilisateur(donnees) {
   // donnees : { email, mot_de_passe, nom_utilisateur }
-  return axios.post('/utilisateurs', donnees);
+  return axios.post("/utilisateurs", donnees);
 }
 
 // Connexion d'un utilisateur
 export function connecterUtilisateur(identifiants) {
   // identifiants : { email, mot_de_passe }
-  return axios.post('/connexion', identifiants);
+  return axios.post("/connexion", identifiants);
 }
 
 // Récupérer la liste des utilisateurs
 export function recupererUtilisateurs() {
-  return axios.get('/utilisateurs');
+  return axios.get("/utilisateurs");
 }
 
 // Récupérer un utilisateur par ID

@@ -5,8 +5,8 @@ import {
   ajouterDeviseFavori,
   supprimerDeviseFavori,
   recupererDevisesFavoris,
-  recupererHistoriqueDevise
-} from '../../api/devises';
+  recupererHistoriqueDevise,
+} from "../../api/devises";
 
 export default {
   namespaced: true,
@@ -15,7 +15,7 @@ export default {
     deviseActive: null,
     conversionResultat: null,
     devisesFavoris: [],
-    historiqueDevise: []
+    historiqueDevise: [],
   },
   mutations: {
     setListeDevises(state, devises) {
@@ -32,43 +32,43 @@ export default {
     },
     setHistoriqueDevise(state, historique) {
       state.historiqueDevise = historique;
-    }
+    },
   },
   actions: {
     // Récupère les devises populaires depuis l'API
     async chargerDevisesPopulaires({ commit }) {
       try {
         const reponse = await recupererDevisesPopulaires();
-        commit('setListeDevises', reponse.data);
+        commit("setListeDevises", reponse.data);
       } catch (e) {
-        commit('setListeDevises', []);
+        commit("setListeDevises", []);
       }
     },
     // Récupère les informations d'une devise spécifique
     async chargerDevise({ commit }, nom) {
       const reponse = await recupererDevise(nom);
-      commit('setDeviseActive', reponse.data);
+      commit("setDeviseActive", reponse.data);
     },
     async convertirDevise({ commit }, payload) {
       const reponse = await convertirDevise(payload);
-      commit('setConversionResultat', reponse.data);
+      commit("setConversionResultat", reponse.data);
       return reponse.data;
     },
     async chargerDevisesFavoris({ commit }) {
       const reponse = await recupererDevisesFavoris();
-      commit('setDevisesFavoris', reponse.data.favoris);
+      commit("setDevisesFavoris", reponse.data.favoris);
     },
     async ajouterDeviseFavori({ dispatch }, nom_devise) {
       await ajouterDeviseFavori(nom_devise);
-      await dispatch('chargerDevisesFavoris');
+      await dispatch("chargerDevisesFavoris");
     },
     async supprimerDeviseFavori({ dispatch }, nom_devise) {
       await supprimerDeviseFavori(nom_devise);
-      await dispatch('chargerDevisesFavoris');
+      await dispatch("chargerDevisesFavoris");
     },
     async chargerHistoriqueDevise({ commit }, { nom, jours = 30 }) {
       const reponse = await recupererHistoriqueDevise(nom, jours);
-      commit('setHistoriqueDevise', reponse.data);
-    }
-  }
+      commit("setHistoriqueDevise", reponse.data);
+    },
+  },
 };
