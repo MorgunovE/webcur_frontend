@@ -31,10 +31,12 @@ export default {
         });
         commit("setToken", reponse.data.access_token);
         localStorage.setItem("token", reponse.data.access_token);
+        localStorage.setItem("user_id", reponse.data.id);
         return true;
       } catch (erreur) {
         commit("deconnexion");
         localStorage.removeItem("token");
+        localStorage.removeItem("user_id");
         return false;
       }
     },
@@ -47,6 +49,24 @@ export default {
       }
       commit("deconnexion");
       localStorage.removeItem("token");
+    },
+    async reconnect({ commit, state }) {
+      const token = state.token;
+      if (!token) return false;
+      try {
+        // Try to access a protected endpoint
+        await axios.get("/devises/favoris", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        // If successful, token is valid
+        return true;
+      } catch (e) {
+        // Token invalid or expired
+        commit("deconnexion");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user_id");
+        return false;
+      }
     },
   },
 };
