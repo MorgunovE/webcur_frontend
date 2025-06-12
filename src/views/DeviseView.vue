@@ -1,32 +1,78 @@
 <template>
-  <v-container>
-    <h2>Historique de la devise {{ nomDevise }}</h2>
-    <GraphiqueLignes
-      v-if="labels.length && valeurs.length"
-      :titre="'Taux de change ' + nomDevise"
-      :labels="labels"
-      :valeurs="valeurs"
-      couleur="#43A047"
-    />
-  </v-container>
+  <v-app>
+    <HeaderPrincipal />
+    <NavigationPrincipale />
+    <v-main>
+      <v-container>
+        <h2>Informations sur la devise : {{ pair }}</h2>
+        <v-row>
+          <v-col cols="12" md="6">
+            <v-select
+              v-model="deviseSelectionnee"
+              :items="devisesPopulaires"
+              label="Sélectionner une devise"
+              @change="chargerDevise"
+            />
+            <v-card v-if="deviseActive">
+              <v-card-title>{{ deviseActive.nom }}</v-card-title>
+              <v-card-text>
+                Taux : {{ deviseActive.taux }}<br>
+                Date : {{ deviseActive.date_maj }}
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="6">
+            <GraphiqueLignes
+              v-if="historique.length"
+              :labels="labels"
+              :valeurs="valeurs"
+              titre="Historique du taux"
+              couleur="#1976D2"
+            />
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
+    <FooterPrincipal />
+  </v-app>
 </template>
 
 <script setup>
-// Importation du composant graphique
-import GraphiqueLignes from '../components/GraphiqueLignes.vue';
-import { ref, onMounted } from 'vue';
-import axios from '../api/axios';
+import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+import HeaderPrincipal from '../components/HeaderPrincipal.vue';
+import FooterPrincipal from '../components/FooterPrincipal.vue';
+import NavigationPrincipale from '../components/NavigationPrincipale.vue';
+import GraphiqueLignes from '../components/GraphiqueLignes.vue';
 
 const route = useRoute();
-const nomDevise = route.params.pair || 'USD';
-const labels = ref([]);
-const valeurs = ref([]);
+const store = useStore();
+const pair = computed(() => route.params.pair || 'USD-EUR');
+const devisesPopulaires = ref([]);
+const deviseSelectionnee = ref('USD');
+const deviseActive = ref(null);
+const historique = ref([]);
 
-// Charger l'historique de la devise depuis l'API
+const labels = computed(() => historique.value.map(e => e.date_maj));
+const valeurs = computed(() => historique.value.map(e => e.taux));
+
+async function chargerDevises() {
+  await store.dispatch('devises/chargerDevisesPopulaires');
+  devisesPopulaires.value = store.state.devises.listeDevises.map(d => d.nom);
+}
+
+async function chargerDevise() {
+  await store.dispatch('devises/chargerDevise', deviseSelectionnee.value);
+  deviseActive.value = store.state.devises.deviseActive;
+  // Charger l'historique (exemple d'appel direct, à adapter selon l'API)
+  const reponse = await fetch(`http://localhost:5000/devises/${deviseSelectionnee.value}/historique?jours=7`);
+  historique.value = await reponse.json();
+}
+
 onMounted(async () => {
-  const reponse = await axios.get(`/devises/${nomDevise}/historique?jours=7`);
-  labels.value = reponse.data.map(e => e.date_maj);
-  valeurs.value = reponse.data.map(e => e.taux);
+  await chargerDevises();
+  deviseSelectionnee.value = pair.value.split('-')[0];
+  await chargerDevise();
 });
 </script>
