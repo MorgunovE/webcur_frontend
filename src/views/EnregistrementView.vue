@@ -6,7 +6,11 @@
       <v-container>
         <h2>Inscription</h2>
         <v-form @submit.prevent="sInscrire">
-          <v-text-field v-model="email" label="Email" required />
+          <v-text-field
+            v-model="email"
+            label="Email"
+            required
+          />
           <v-text-field
             v-model="motDePasse"
             label="Mot de passe"
