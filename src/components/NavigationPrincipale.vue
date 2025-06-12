@@ -4,7 +4,11 @@
       <v-list-item to="/" title="Accueil" />
       <v-list-item to="/currencies/EUR" title="Devises" />
       <v-list-item to="/stocks/AAPL" title="Actions" />
-      <v-list-item to="/companies/AAPL" title="Entreprises" />
+      <v-list-item
+        to="/companies/AAPL"
+        title="Entreprises"
+        :disabled="!estConnecte"
+      />
       <v-list-item v-if="!estConnecte" to="/login" title="Connexion" />
       <v-list-item v-if="!estConnecte" to="/register" title="Inscription" />
       <v-list-item v-if="estConnecte" to="/account" title="Mon compte" />
