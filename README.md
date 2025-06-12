@@ -104,7 +104,9 @@ ou pour corriger automatiquement les erreurs de style :
 ```sh
 npx eslint . --fix
 ```
+
 ou pour formater le code avec Prettier :
+
 ```sh
 npx prettier --write .
 ```
