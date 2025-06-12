@@ -75,9 +75,9 @@ import GraphiqueLignes from "../components/GraphiqueLignes.vue";
 
 const store = useStore();
 const route = useRoute();
-const pair = computed(() => route.params.pair || "USD-EUR");
+const pair = computed(() => route.params.pair || "EUR");
 const devisesPopulaires = ref([]);
-const deviseSelectionnee = ref(route.params.paire || "USD-EUR");
+const deviseSelectionnee = ref(route.params.paire || "EUR");
 const deviseActive = computed(() => store.state.devises.deviseActive);
 const historique = computed(() => store.state.devises.historiqueDevise);
 const showAllRates = ref(false);
