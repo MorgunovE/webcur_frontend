@@ -10,7 +10,7 @@
 <script setup>
 // Importation des composants nécessaires
 import { Line } from "vue-chartjs";
-import { ref, watch, toRefs } from "vue";
+import { ref, watch, defineProps } from "vue";
 
 // Props du composant
 const props = defineProps({
