@@ -16,18 +16,42 @@
             <v-card v-if="deviseActive">
               <v-card-title>{{ deviseActive.nom }}</v-card-title>
               <v-card-text>
-                Taux : {{ deviseActive.taux }}<br>
-                Date : {{ deviseActive.date_maj }}
+                <div>Taux : {{ deviseActive.taux }}</div>
+                <div>Date : {{ deviseActive.date_maj }}</div>
+                <div>Base : {{ deviseActive.base_code }}</div>
+                <div>
+                  <strong>Conversion rates:</strong>
+                  <v-simple-table dense>
+                    <thead>
+                    <tr>
+                      <th>Devise</th>
+                      <th>Taux</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(taux, code) in limitedConversionRates" :key="code">
+                      <td>{{ code }}</td>
+                      <td>{{ taux }}</td>
+                    </tr>
+                    </tbody>
+                  </v-simple-table>
+                  <div v-if="showAllRates">
+                    <v-btn small @click="showAllRates = false">Show less</v-btn>
+                  </div>
+                  <div v-else>
+                    <v-btn small @click="showAllRates = true">Show all</v-btn>
+                  </div>
+                </div>
               </v-card-text>
             </v-card>
           </v-col>
           <v-col cols="12" md="6">
             <GraphiqueLignes
-              v-if="historique.length"
-              :labels="labels"
-              :valeurs="valeurs"
-              titre="Historique du taux"
-              couleur="#1976D2"
+                v-if="labels.length"
+                :labels="labels"
+                :valeurs="valeurs"
+                titre="Historique contre USD"
+                couleur="#1976D2"
             />
           </v-col>
         </v-row>
@@ -53,9 +77,22 @@ const devisesPopulaires = ref([]);
 const deviseSelectionnee = ref('USD');
 const deviseActive = ref(null);
 const historique = ref([]);
+const showAllRates = ref(false);
 
-const labels = computed(() => historique.value.map(e => e.date_maj));
-const valeurs = computed(() => historique.value.map(e => e.taux));
+
+const labels = computed(() =>
+    historique.value.map(e => e.date_maj)
+);
+const valeurs = computed(() =>
+    historique.value.map(e => e.conversion_rates?.USD || null)
+);
+
+const limitedConversionRates = computed(() => {
+  if (!deviseActive.value?.conversion_rates) return {};
+  const entries = Object.entries(deviseActive.value.conversion_rates);
+  if (showAllRates.value) return Object.fromEntries(entries);
+  return Object.fromEntries(entries.slice(0, 10));
+});
 
 async function chargerDevises() {
   await store.dispatch('devises/chargerDevisesPopulaires');
@@ -65,9 +102,8 @@ async function chargerDevises() {
 async function chargerDevise() {
   await store.dispatch('devises/chargerDevise', deviseSelectionnee.value);
   deviseActive.value = store.state.devises.deviseActive;
-  // Charger l'historique (exemple d'appel direct, à adapter selon l'API)
-  const reponse = await fetch(`${process.env.VUE_APP_API_URL}/devises/${deviseSelectionnee.value}/historique?jours=7`);
-  historique.value = await reponse.json();
+  await store.dispatch('devises/chargerHistoriqueDevise', { nom: deviseSelectionnee.value, jours: 2 });
+  historique.value = store.state.devises.historiqueDevise;
 }
 
 onMounted(async () => {
