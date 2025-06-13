@@ -42,8 +42,17 @@ const symbole = route.params.symbole || "AAPL";
 const action = ref(null);
 const historique = ref([]);
 
+function getLocalToday() {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+const today = getLocalToday();
+
 onMounted(async () => {
-  await store.dispatch("actions/chargerAction", symbole);
+  await store.dispatch("actions/chargerAction", { symbole, date: today });
   action.value = store.state.actions.actionActive;
   await store.dispatch("actions/chargerHistorique", { symbole, jours: 7 });
   historique.value = store.state.actions.historique;
