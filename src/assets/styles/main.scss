@@ -90,3 +90,33 @@ h4 {
   background: #e0e0e0;
   border-radius: 8px;
 }
+
+
+.v-container,
+.v-main {
+  padding-top: 32px !important;
+  padding-bottom: 32px !important;
+}
+
+.v-card {
+  margin-bottom: 24px !important;
+  margin-top: 12px !important;
+}
+
+.v-btn {
+  margin-top: 12px !important;
+  margin-bottom: 12px !important;
+  margin-right: 8px;
+}
+
+.v-list-item {
+  margin-bottom: 8px !important;
+}
+
+.v-app-bar {
+  margin-bottom: 24px !important;
+}
+
+.v-footer {
+  margin-top: 32px !important;
+}
