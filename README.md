@@ -74,6 +74,13 @@ VUE_APP_API_URL=http://localhost:5000
    - Frontend : `http://localhost:8080/` (par défaut)
    - L’API backend doit être accessible sur `http://localhost:5000/`
 
+6. **Docker :**
+   - Si Docker est installé, vous pouvez lancer l’application avec :
+     ```sh
+     docker build -t webcur-frontend .
+     docker run -p 8080:80 webcur-frontend
+     ```
+     
 ## Lancer le projet en production
 
 1. **Compiler l’application :**
