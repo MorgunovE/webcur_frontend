@@ -129,7 +129,3 @@ Ce frontend nécessite l’API WebCur (voir [WebCur_BackEnd](https://github.com/
 ## Licence
 
 MIT License © 2025 Morgunov Evgenii
-
-```
-Ce fichier fournit une documentation claire, en français, adaptée à la structure et aux usages du frontend.
-```
