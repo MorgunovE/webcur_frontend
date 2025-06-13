@@ -8,14 +8,6 @@ import {
   supprimerActionFavori,
 } from "../../api/actions";
 
-function getLocalToday() {
-  const d = new Date();
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
 export default {
   namespaced: true,
   state: {
@@ -23,10 +15,12 @@ export default {
     historique: [],
     actionsPopulaires: [],
     actionsFavoris: [],
+    cache: {}, // { [symbole_date]: actionData }
   },
   mutations: {
-    setActionActive(state, action) {
+    setActionActive(state, { symbole, date, action }) {
       state.actionActive = action;
+      state.cache[`${symbole}_${date}`] = action;
     },
     setHistorique(state, historique) {
       state.historique = historique;
@@ -39,13 +33,18 @@ export default {
     },
   },
   actions: {
-    async chargerAction({ commit }, { symbole, date }) {
-      // Utilise la date actuelle si aucune n'est fournie
-      if (!date) {
-        date = getLocalToday();
+    async chargerAction({ state, commit }, { symbole, date }) {
+      const cacheKey = `${symbole}_${date}`;
+      if (state.cache[cacheKey]) {
+        commit("setActionActive", {
+          symbole,
+          date,
+          action: state.cache[cacheKey],
+        });
+        return;
       }
       const res = await recupererAction(symbole, date);
-      commit("setActionActive", res.data);
+      commit("setActionActive", { symbole, date, action: res.data });
     },
     async chargerHistorique({ commit }, { symbole, jours = 7 }) {
       const res = await recupererHistoriqueAction(symbole, jours);
