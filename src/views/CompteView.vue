@@ -161,7 +161,7 @@
         <h3>Actions populaires</h3>
         <v-list>
           <v-list-item v-for="action in actionsPopulaires" :key="action">
-            <v-list-item-title>{{ action }}</v-list-item-title>
+            <v-list-item-title>{{ action.symbole }}</v-list-item-title>
           </v-list-item>
         </v-list>
         <h3>Entreprises populaires</h3>
