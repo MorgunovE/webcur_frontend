@@ -1,8 +1,8 @@
 import axios from "./axios";
 
 // Obtenir la liste des actions populaires
-export function recupererAction(symbole) {
-  return axios.get(`/actions/${symbole}`);
+export function recupererAction(symbole, date = null) {
+  return axios.get(`/actions/${symbole}?date=${date}`);
 }
 
 // Obtenir l'historique d'une action (par défaut 7 jours)
