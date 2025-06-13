@@ -157,6 +157,22 @@
         </v-alert>
         <v-alert v-if="erreur" type="error" class="mt-4">{{ erreur }}</v-alert>
       </v-container>
+      <v-container>
+        <h3>Actions populaires</h3>
+        <v-list>
+          <v-list-item v-for="action in actionsPopulaires" :key="action">
+            <v-list-item-title>{{ action }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+        <h3>Entreprises populaires</h3>
+        <v-list>
+          <v-list-item v-for="ent in entreprisesPopulaires" :key="ent.symbole">
+            <v-list-item-title>
+              {{ ent.companyName }} ({{ ent.symbole }})</v-list-item-title
+            >
+          </v-list-item>
+        </v-list>
+      </v-container>
     </v-main>
     <FooterPrincipal />
   </v-app>
@@ -172,7 +188,7 @@ import NavigationPrincipale from "../components/NavigationPrincipale.vue";
 
 const store = useStore();
 const deviseActive = ref(null);
-const devisesPopulaires = ref([]);
+const devisesPopulaires = computed(() => store.state.devises.listeDevises);
 const deviseSelectionnee = ref("USD");
 const router = useRouter();
 const utilisateur = computed(() => store.state.auth.utilisateur);
@@ -192,9 +208,11 @@ const devisesFavoris = computed(() => store.state.devises.devisesFavoris);
 const nouvelleDeviseFavori = ref("");
 
 const actionsFavoris = computed(() => store.state.actions.actionsFavoris);
-const actionsPopulaires = computed(() =>
-  store.state.actions.actionsPopulaires.map((a) => a.symbole)
+const actionsPopulaires = computed(() => store.state.actions.actionsPopulaires);
+const entreprisesPopulaires = computed(
+  () => store.state.entreprises.entreprisesPopulaires
 );
+
 const nouvelleActionFavori = ref("");
 
 async function ajouterActionFavori() {
@@ -245,6 +263,8 @@ onMounted(async () => {
   await store.dispatch("devises/chargerDevisesFavoris");
   await store.dispatch("actions/chargerActionsPopulaires");
   await store.dispatch("actions/chargerActionsFavoris");
+  await store.dispatch("devises/chargerDevisesPopulaires");
+  await store.dispatch("entreprises/chargerEntreprisesPopulaires");
 });
 
 async function ajouterFavori() {
