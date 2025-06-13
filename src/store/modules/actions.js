@@ -1,12 +1,20 @@
 import {
-  recupererAction,
-  recupererHistoriqueAction,
-  calculerAchatAction,
-  recupererActionsPopulaires,
-  recupererActionsFavoris,
   ajouterActionFavori,
+  calculerAchatAction,
+  recupererAction,
+  recupererActionsFavoris,
+  recupererActionsPopulaires,
+  recupererHistoriqueAction,
   supprimerActionFavori,
 } from "../../api/actions";
+
+function getLocalToday() {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
 
 export default {
   namespaced: true,
@@ -31,8 +39,12 @@ export default {
     },
   },
   actions: {
-    async chargerAction({ commit }, symbole) {
-      const res = await recupererAction(symbole);
+    async chargerAction({ commit }, { symbole, date }) {
+      // Utilise la date actuelle si aucune n'est fournie
+      if (!date) {
+        date = getLocalToday();
+      }
+      const res = await recupererAction(symbole, date);
       commit("setActionActive", res.data);
     },
     async chargerHistorique({ commit }, { symbole, jours = 7 }) {
