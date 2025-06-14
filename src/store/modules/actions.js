@@ -7,6 +7,7 @@ import {
   recupererHistoriqueAction,
   supprimerActionFavori,
 } from "../../api/actions";
+import {recupererDevisesFavoris} from "@/api/devises";
 
 export default {
   namespaced: true,
@@ -58,7 +59,11 @@ export default {
       const res = await recupererActionsPopulaires();
       commit("setActionsPopulaires", res.data);
     },
-    async chargerActionsFavoris({ commit }) {
+    async chargerActionsFavoris({ commit, rootState }) {
+      if (!rootState.auth.token) {
+        commit("setActionsFavoris", []);
+        return;
+      }
       try {
         const res = await recupererActionsFavoris();
         commit("setActionsFavoris", res.data.favoris);
