@@ -226,7 +226,9 @@
         <h3>Actions populaires</h3>
         <v-list>
           <v-list-item v-for="action in actionsPopulaires" :key="action">
-            <v-list-item-title>{{ action.symbole }}</v-list-item-title>
+            <v-list-item-title>
+              Action : {{ action.symbole }} - Date : {{ action.date }} - Prix : {{ action.close }}
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-container>
