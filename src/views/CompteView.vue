@@ -227,7 +227,7 @@
         <v-list>
           <v-list-item v-for="action in actionsPopulaires" :key="action">
             <v-list-item-title>
-              Action : {{ action.symbole }} - Date : {{ action.date }} - Prix : {{ action.close }}
+              Action : {{ action.symbole }} - Date : {{ action.date }} - Prix : {{ action.close }} USD
             </v-list-item-title>
           </v-list-item>
         </v-list>
@@ -284,7 +284,8 @@
         <v-list>
           <v-list-item v-for="ent in entreprisesPopulaires" :key="ent.symbole">
             <v-list-item-title>
-              {{ ent.companyName }} ({{ ent.symbole }})</v-list-item-title
+              {{ ent.companyName }} ({{ ent.symbole }}) - Date : {{ ent.date_maj }} - Prix : {{ ent.price }} USD
+            </v-list-item-title
             >
           </v-list-item>
         </v-list>
