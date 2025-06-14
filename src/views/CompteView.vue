@@ -128,13 +128,13 @@
               </v-card>
             </v-col>
             <v-col cols="12" md="6">
-              <GraphiqueLignes
+            <GraphiqueLignes
                 v-if="labels.length && valeurs.length"
                 :labels="labels"
                 :valeurs="valeurs"
-                :titre="`Historique de ${deviseActive.nom} contre USD`"
+                :titre="`Historique de ${pair} contre USD`"
                 couleur="#1976D2"
-              />
+            />
             </v-col>
           </v-row>
         </v-container>
@@ -304,10 +304,10 @@ import NavigationPrincipale from "../components/NavigationPrincipale.vue";
 import GraphiqueLignes from "../components/GraphiqueLignes.vue";
 
 const store = useStore();
-const pair = computed(() => "EUR");
 const deviseActive = computed(() => store.state.devises.deviseActive);
-const devisesPopulaires = computed(() => store.state.devises.listeDevises);
-const deviseSelectionnee = ref(pair.value);
+const devisesPopulaires = computed(() => store.state.devises.listeDevises || []);
+const deviseSelectionnee = ref("EUR");
+const pair = computed(() => deviseSelectionnee.value);
 const historique = computed(() => store.state.devises.historiqueDevise);
 const showAllRates = ref(false);
 const labels = computed(() => historique.value.map((e) => e.date_maj));
