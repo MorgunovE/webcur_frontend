@@ -54,7 +54,7 @@ const today = getLocalToday();
 onMounted(async () => {
   await store.dispatch("actions/chargerAction", { symbole, date: today });
   action.value = store.state.actions.actionActive;
-  await store.dispatch("actions/chargerHistorique", { symbole, jours: 7 });
+  await store.dispatch("actions/chargerHistorique", { symbole, jours: 30 });
   historique.value = store.state.actions.historique;
 });
 </script>
