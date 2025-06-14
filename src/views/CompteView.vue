@@ -229,7 +229,7 @@ import GraphiqueLignes from "../components/GraphiqueLignes.vue";
 const store = useStore();
 const pair = computed(() => "EUR");
 const deviseActive = computed(() => store.state.devises.deviseActive);
-const devisesPopulaires = ref([]);
+const devisesPopulaires = computed(() => store.state.devises.listeDevises);
 const deviseSelectionnee = ref(pair.value);
 const historique = computed(() => store.state.devises.historiqueDevise);
 const showAllRates = ref(false);
