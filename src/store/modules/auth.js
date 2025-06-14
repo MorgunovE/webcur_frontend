@@ -63,6 +63,11 @@ export default {
     // Déconnexion de l'utilisateur
     async deconnexion({ commit }) {
       try {
+        localStorage.removeItem("token");
+        commit("setToken", null);
+        commit("setUtilisateur", null);
+        dispatch("devises/setDevisesFavoris", [], { root: true });
+        dispatch("actions/setActionsFavoris", [], { root: true });
         await axios.post("/deconnexion");
       } catch (e) {
         // Même en cas d'échec, on nettoie le store
