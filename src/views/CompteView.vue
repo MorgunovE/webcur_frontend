@@ -66,6 +66,8 @@
           <v-select
             v-model="nouvelleActionFavori"
             :items="actionsPopulaires"
+            item-title="symbole"
+            item-value="symbole"
             label="Ajouter une action aux favoris"
             class="mt-2"
           />
@@ -230,10 +232,15 @@ async function supprimerActionFavori(symbole) {
 
 async function mettreAJourUtilisateur(nouveauNom) {
   if (utilisateur.value) {
-    await store.dispatch("utilisateur/mettreAJourUtilisateur", {
+    const response = await store.dispatch("utilisateur/mettreAJourUtilisateur", {
       id: utilisateur.value.id,
       donnees: { nom_utilisateur: nouveauNom },
     });
+    const updatedUser = {
+      ...utilisateur.value,
+      nom_utilisateur: nouveauNom,
+    };
+    store.commit("auth/setUtilisateur", updatedUser);
   }
 }
 
