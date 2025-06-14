@@ -280,6 +280,56 @@
         <v-alert v-if="achatErreur" type="error" class="mt-4">{{ achatErreur }}</v-alert>
       </v-container>
       <v-container>
+        <h2>Informations sur l'entreprise : {{ entrepriseSelectionnee }}</h2>
+        <v-row>
+          <v-col cols="12" md="4">
+            <v-select
+              v-model="entrepriseSelectionnee"
+              :items="entreprisesPopulaires"
+              item-title="companyName"
+              item-value="symbole"
+              label="Sélectionner une entreprise"
+            />
+            <v-card v-if="entreprise">
+              <v-card-title>
+                <img
+                  :src="entreprise.image"
+                  alt="Logo"
+                  height="40"
+                  v-if="entreprise.image"
+                />
+                {{ entreprise.companyName }} ({{ entreprise.symbole }})
+              </v-card-title>
+              <v-card-text>
+                <div><strong>Prix:</strong> {{ entreprise.price }} {{ entreprise.currency }}</div>
+                <div><strong>Variation:</strong> {{ entreprise.change }} ({{ entreprise.changePercentage }})</div>
+                <div><strong>Capitalisation:</strong> {{ entreprise.marketCap }}</div>
+                <div><strong>Volume:</strong> {{ entreprise.volume }}</div>
+                <div><strong>Beta:</strong> {{ entreprise.beta }}</div>
+                <div><strong>Dernier dividende:</strong> {{ entreprise.lastDividend }}</div>
+                <div><strong>Industrie:</strong> {{ entreprise.industry }}</div>
+                <div><strong>CEO:</strong> {{ entreprise.ceo }}</div>
+                <div><strong>Pays:</strong> {{ entreprise.country }}</div>
+                <div>
+                  <strong>Site web:</strong>
+                  <a :href="entreprise.website" target="_blank">{{ entreprise.website }}</a>
+                </div>
+                <div><strong>Description:</strong> {{ entreprise.description }}</div>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="8">
+            <GraphiqueLignes
+              v-if="!loadingHistoriqueEntreprise && labelsEntreprise.length"
+              :labels="labelsEntreprise"
+              :valeurs="valeursEntreprise"
+              titre="Historique du prix"
+              couleur="#1976D2"
+            />
+          </v-col>
+        </v-row>
+      </v-container>
+      <v-container>
         <h3>Entreprises populaires</h3>
         <v-list>
           <v-list-item v-for="ent in entreprisesPopulaires" :key="ent.symbole">
@@ -349,9 +399,15 @@ const actionsPopulaires = computed(() => store.state.actions.actionsPopulaires |
 const actionSelectionnee = ref("AAPL");
 const action = computed(() => store.state.actions.actionActive);
 const historiqueAction = computed(() => store.state.actions.historique || []);
-const entreprisesPopulaires = computed(
-  () => store.state.entreprises.entreprisesPopulaires
-);
+
+const entreprisesPopulaires = computed(() => store.state.entreprises.entreprisesPopulaires || []);
+const entrepriseSelectionnee = ref("AAPL");
+const entreprise = computed(() => store.state.entreprises.entrepriseActive);
+const historiqueEntreprise = computed(() => store.state.entreprises.historiqueEntreprise || []);
+const loadingHistoriqueEntreprise = ref(false);
+
+const labelsEntreprise = computed(() => historiqueEntreprise.value.map(e => e.date_maj || e.date));
+const valeursEntreprise = computed(() => historiqueEntreprise.value.map(e => e.price));
 
 const nouvelleActionFavori = ref("");
 
@@ -361,6 +417,13 @@ const achatQuantite = ref(1);
 const achatDevise = ref("EUR");
 const achatResultat = ref(null);
 const achatErreur = ref("");
+
+async function chargerEntrepriseEtHistorique(symbole) {
+  loadingHistoriqueEntreprise.value = true;
+  await store.dispatch("entreprises/chargerEntreprise", symbole);
+  await store.dispatch("entreprises/chargerHistoriqueEntreprise", { symbole, jours: 30 });
+  loadingHistoriqueEntreprise.value = false;
+}
 
 async function calculerAchatAction() {
   achatErreur.value = "";
@@ -457,9 +520,13 @@ onMounted(async () => {
   await store.dispatch("devises/chargerDevisesPopulaires");
   devisesPopulaires.value = store.state.devises.listeDevises.map((d) => d.nom);
   await chargerDevise();
-  await store.dispatch("entreprises/chargerEntreprisesPopulaires");
   if (actionsPopulaires.value.length) achatSymbole.value = actionsPopulaires.value[0].symbole;
   if (devises.value.length) achatDevise.value = devises.value[0];
+  await store.dispatch("entreprises/chargerEntreprisesPopulaires");
+  if (entreprisesPopulaires.value.length) {
+    entrepriseSelectionnee.value = entreprisesPopulaires.value[0].symbole;
+    await chargerEntrepriseEtHistorique(entrepriseSelectionnee.value);
+  }
 });
 
 const loadingHistoriqueAction = ref(false);
@@ -467,13 +534,16 @@ const loadingHistoriqueDevice = ref(false);
 
 
 watch(
-    [deviseSelectionnee, actionSelectionnee],
-    async ([newDevise, newAction], [oldDevise, oldAction]) => {
+    [deviseSelectionnee, actionSelectionnee, entrepriseSelectionnee],
+    async ([newDevise, newAction, nouveauSymbole], [oldDevise, oldAction, ancienSymbole]) => {
       if (newDevise !== oldDevise) {
         await chargerDevise();
       }
       if (newAction !== oldAction) {
         await chargerActionEtHistorique(newAction);
+      }
+      if (nouveauSymbole && nouveauSymbole !== ancienSymbole) {
+        await chargerEntrepriseEtHistorique(nouveauSymbole);
       }
     }
 );
