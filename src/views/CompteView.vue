@@ -90,7 +90,6 @@
                 item-title="nom"
                 item-value="nom"
                 label="Sélectionner une devise"
-                @change="chargerDevise"
               />
               <v-card v-if="deviseActive">
                 <v-card-title>{{ deviseActive.nom }}</v-card-title>
@@ -129,7 +128,7 @@
             </v-col>
             <v-col cols="12" md="6">
             <GraphiqueLignes
-                v-if="labels.length && valeurs.length"
+                v-if="!loadingHistoriqueDevice && labels.length && valeurs.length"
                 :labels="labels"
                 :valeurs="valeurs"
                 :titre="`Historique de ${pair} contre USD`"
@@ -205,7 +204,6 @@
           item-title="symbole"
           item-value="symbole"
           label="Sélectionner une action"
-          @change="chargerAction"
         />
         <v-card v-if="action">
           <v-card-title>{{ action.symbole }}</v-card-title>
@@ -325,8 +323,6 @@ const limitedConversionRates = computed(() => {
       : Object.fromEntries(entries.slice(0, 10));
 });
 
-
-
 const router = useRouter();
 const utilisateur = computed(() => store.state.auth.utilisateur);
 const nouveauNom = ref(
@@ -336,6 +332,7 @@ const nouveauNom = ref(
 const devises = computed(() =>
     (store.state.devises.listeDevises || []).map((d) => d.nom)
 );
+
 const codeSource = ref("USD");
 const codeCible = ref("EUR");
 const montant = ref(1);
@@ -418,15 +415,16 @@ async function supprimerMonCompte() {
 // Charger les devises populaires au montage du composant
 async function chargerDevisesPopulaires() {
   await store.dispatch("devises/chargerDevisesPopulaires");
-  devisesPopulaires.value = store.state.devises.listeDevises.map((d) => d.nom);
 }
 
 async function chargerDevise() {
+  loadingHistoriqueDevice.value = true;
   await store.dispatch("devises/chargerDevise", deviseSelectionnee.value);
   await store.dispatch("devises/chargerHistoriqueDevise", {
     nom: deviseSelectionnee.value,
     jours: 30,
   });
+  loadingHistoriqueDevice.value = false;
 }
 
 async function chargerActionEtHistorique(symbole) {
@@ -462,6 +460,7 @@ onMounted(async () => {
 });
 
 const loadingHistoriqueAction = ref(false);
+const loadingHistoriqueDevice = ref(false);
 
 
 watch(
