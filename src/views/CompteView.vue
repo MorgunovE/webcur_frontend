@@ -231,6 +231,53 @@
         </v-list>
       </v-container>
       <v-container>
+        <h3>Calculer le coût d'achat d'une action</h3>
+        <v-form @submit.prevent="calculerAchatAction">
+          <v-row>
+            <v-col cols="12" md="3">
+              <v-select
+                v-model="achatSymbole"
+                :items="actionsPopulaires"
+                item-title="symbole"
+                item-value="symbole"
+                label="Symbole"
+                required
+              />
+            </v-col>
+            <v-col cols="12" md="3">
+              <v-text-field
+                v-model="achatDate"
+                label="Date"
+                type="date"
+                required
+              />
+            </v-col>
+            <v-col cols="12" md="3">
+              <v-text-field
+                v-model.number="achatQuantite"
+                label="Quantité"
+                type="number"
+                min="1"
+                required
+              />
+            </v-col>
+            <v-col cols="12" md="3">
+              <v-select
+                v-model="achatDevise"
+                :items="devises"
+                label="Devise"
+                required
+              />
+            </v-col>
+          </v-row>
+          <v-btn type="submit" color="primary" class="mt-2">Calculer</v-btn>
+        </v-form>
+        <v-alert v-if="achatResultat" type="success" class="mt-4">
+          {{ achatResultat.quantite }} {{ achatResultat.symbole }} = {{ achatResultat.cout_total }} {{ achatResultat.devise }} (Taux: {{ achatResultat.taux }})
+        </v-alert>
+        <v-alert v-if="achatErreur" type="error" class="mt-4">{{ achatErreur }}</v-alert>
+      </v-container>
+      <v-container>
         <h3>Entreprises populaires</h3>
         <v-list>
           <v-list-item v-for="ent in entreprisesPopulaires" :key="ent.symbole">
@@ -285,7 +332,7 @@ const nouveauNom = ref(
 );
 
 const devises = computed(() =>
-  store.state.devises.listeDevises.map((d) => d.nom)
+    (store.state.devises.listeDevises || []).map((d) => d.nom)
 );
 const codeSource = ref("USD");
 const codeCible = ref("EUR");
@@ -296,7 +343,7 @@ const devisesFavoris = computed(() => store.state.devises.devisesFavoris);
 const nouvelleDeviseFavori = ref("");
 
 const actionsFavoris = computed(() => store.state.actions.actionsFavoris);
-const actionsPopulaires = computed(() => store.state.actions.actionsPopulaires);
+const actionsPopulaires = computed(() => store.state.actions.actionsPopulaires || []);
 const actionSelectionnee = ref("AAPL");
 const action = computed(() => store.state.actions.actionActive);
 const historiqueAction = computed(() => store.state.actions.historique || []);
@@ -305,6 +352,29 @@ const entreprisesPopulaires = computed(
 );
 
 const nouvelleActionFavori = ref("");
+
+const achatSymbole = ref("");
+const achatDate = ref(new Date().toISOString().slice(0, 10));
+const achatQuantite = ref(1);
+const achatDevise = ref("EUR");
+const achatResultat = ref(null);
+const achatErreur = ref("");
+
+async function calculerAchatAction() {
+  achatErreur.value = "";
+  achatResultat.value = null;
+  try {
+    const res = await store.dispatch("actions/calculerAchat", {
+      symbole: achatSymbole.value,
+      date: achatDate.value,
+      quantite: achatQuantite.value,
+      code_devise: achatDevise.value,
+    });
+    achatResultat.value = res;
+  } catch (e) {
+    achatErreur.value = "Erreur lors du calcul";
+  }
+}
 
 async function ajouterActionFavori() {
   if (nouvelleActionFavori.value) {
@@ -385,6 +455,8 @@ onMounted(async () => {
   devisesPopulaires.value = store.state.devises.listeDevises.map((d) => d.nom);
   await chargerDevise();
   await store.dispatch("entreprises/chargerEntreprisesPopulaires");
+  if (actionsPopulaires.value.length) achatSymbole.value = actionsPopulaires.value[0].symbole;
+  if (devises.value.length) achatDevise.value = devises.value[0];
 });
 
 const loadingHistoriqueAction = ref(false);
