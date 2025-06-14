@@ -59,8 +59,16 @@ export default {
       commit("setActionsPopulaires", res.data);
     },
     async chargerActionsFavoris({ commit }) {
-      const res = await recupererActionsFavoris();
-      commit("setActionsFavoris", res.data.favoris);
+      try {
+        const res = await recupererActionsFavoris();
+        commit("setActionsFavoris", res.data.favoris);
+      } catch (e) {
+        if (e.response && e.response.status === 401) {
+          commit("setActionsFavoris", []);
+        } else {
+          throw e;
+        }
+      }
     },
     async ajouterActionFavori({ dispatch }, symbole) {
       await ajouterActionFavori(symbole);
