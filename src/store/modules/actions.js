@@ -16,12 +16,10 @@ export default {
     historique: [],
     actionsPopulaires: [],
     actionsFavoris: [],
-    cache: {}, // { [symbole_date]: actionData }
   },
   mutations: {
-    setActionActive(state, { symbole, date, action }) {
+    setActionActive(state, action) {
       state.actionActive = action;
-      state.cache[`${symbole}_${date}`] = action;
     },
     setHistorique(state, historique) {
       state.historique = historique;
@@ -34,18 +32,9 @@ export default {
     },
   },
   actions: {
-    async chargerAction({ state, commit }, { symbole, date }) {
-      const cacheKey = `${symbole}_${date}`;
-      if (state.cache[cacheKey]) {
-        commit("setActionActive", {
-          symbole,
-          date,
-          action: state.cache[cacheKey],
-        });
-        return;
-      }
+    async chargerAction({ commit }, { symbole, date }) {
       const res = await recupererAction(symbole, date);
-      commit("setActionActive", { symbole, date, action: res.data });
+      commit("setActionActive", res.data);
     },
     async chargerHistorique({ commit }, { symbole, jours = 7 }) {
       const res = await recupererHistoriqueAction(symbole, jours);
