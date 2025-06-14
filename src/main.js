@@ -1,25 +1,20 @@
+// main.js
 import { createApp } from "vue";
 import App from "./App.vue";
-import vuetify from "./plugins/vuetify";
-import router from "./router";
 import store from "./store";
-
-import "vuetify/styles";
-import "@mdi/font/css/materialdesignicons.css";
-
-import "./assets/styles/main.scss";
+import router from "./router";
+import vuetify from "./plugins/vuetify";
+import axios from "./api/axios";
 
 const token = localStorage.getItem("token");
-const userId = localStorage.getItem("user_id");
-
-async function bootstrap() {
-  if (token) {
-    const ok = await store.dispatch("auth/reconnect");
-    if (!ok && userId) {
-      await router.push("/login");
-    }
-  }
-  createApp(App).use(store).use(router).use(vuetify).mount("#app");
+if (token) {
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 }
 
-bootstrap();
+const app = createApp(App);
+
+app.use(store).use(router).use(vuetify);
+
+store.dispatch("auth/reconnect").then(() => {
+  app.mount("#app");
+});
