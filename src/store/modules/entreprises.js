@@ -35,9 +35,17 @@ export default {
       const reponse = await recupererEntreprise(symbole);
       commit("setEntrepriseActive", reponse.data);
     },
-    async chargerHistoriqueEntreprise({ commit }, { symbole, jours = 30 }) {
-      const reponse = await recupererHistoriqueEntreprise(symbole, jours);
-      commit("setHistoriqueEntreprise", reponse.data);
+    async chargerHistoriqueEntreprise({ commit, rootState }, { symbole, jours = 30 }) {
+      if (!rootState.auth.token) {
+        commit("setHistoriqueEntreprise", []);
+        return;
+      }
+      try {
+        const res = await recupererHistoriqueEntreprise(symbole, jours);
+        commit("setHistoriqueEntreprise", res.data);
+      } catch (e) {
+        commit("setHistoriqueEntreprise", []);
+      }
     },
   },
 };
