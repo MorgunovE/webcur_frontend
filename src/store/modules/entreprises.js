@@ -27,7 +27,11 @@ export default {
       const reponse = await recupererEntreprisesPopulaires();
       commit("setEntreprisesPopulaires", reponse.data);
     },
-    async chargerEntreprise({ commit }, symbole) {
+    async chargerEntreprise({ commit, rootState }, symbole) {
+      if (!rootState.auth.token) {
+        commit("setEntrepriseActive", null);
+        return;
+      }
       const reponse = await recupererEntreprise(symbole);
       commit("setEntrepriseActive", reponse.data);
     },
