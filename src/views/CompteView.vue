@@ -215,9 +215,9 @@
           </v-card-text>
         </v-card>
         <GraphiqueLignes
-          v-if="historique.length"
-          :labels="historiqueAction?.map?.(e => e.date) || []"
-          :valeurs="historiqueAction?.map?.(e => e.close) || []"
+          v-if="!loadingHistoriqueAction && historiqueAction.length"
+          :labels="historiqueAction.map(e => e.date)"
+          :valeurs="historiqueAction.map(e => e.close)"
           titre="Historique de clôture"
           couleur="#1976D2"
         />
@@ -298,7 +298,7 @@ const nouvelleDeviseFavori = ref("");
 const actionsFavoris = computed(() => store.state.actions.actionsFavoris);
 const actionsPopulaires = computed(() => store.state.actions.actionsPopulaires);
 const actionSelectionnee = ref("AAPL");
-const action = ref(null);
+const action = computed(() => store.state.actions.actionActive);
 const historiqueAction = computed(() => store.state.actions.historique || []);
 const entreprisesPopulaires = computed(
   () => store.state.entreprises.entreprisesPopulaires
@@ -357,12 +357,11 @@ async function chargerDevise() {
   });
 }
 
-async function chargerAction() {
-  if (!actionSelectionnee.value) return;
-  await store.dispatch("actions/chargerAction", { symbole: actionSelectionnee.value, date: getLocalToday() });
-  action.value = store.state.actions.actionActive;
-  await store.dispatch("actions/chargerHistorique", { symbole: actionSelectionnee.value, jours: 30 });
-  historique.value = store.state.actions.historique;
+async function chargerActionEtHistorique(symbole) {
+  loadingHistoriqueAction.value = true;
+  await store.dispatch("actions/chargerAction", { symbole, date: getLocalToday() });
+  await store.dispatch("actions/chargerHistorique", { symbole, jours: 30 });
+  loadingHistoriqueAction.value = false;
 }
 
 function getLocalToday() {
@@ -379,7 +378,7 @@ onMounted(async () => {
   await store.dispatch("actions/chargerActionsPopulaires");
   if (actionsPopulaires.value.length) {
     actionSelectionnee.value = actionsPopulaires.value[0].symbole;
-    await chargerAction();
+    await chargerActionEtHistorique(actionSelectionnee.value);
   }
   await store.dispatch("actions/chargerActionsFavoris");
   await store.dispatch("devises/chargerDevisesPopulaires");
@@ -388,10 +387,18 @@ onMounted(async () => {
   await store.dispatch("entreprises/chargerEntreprisesPopulaires");
 });
 
+const loadingHistoriqueAction = ref(false);
+
+
 watch(
-    () => deviseSelectionnee.value,
-    async () => {
-      await chargerDevise();
+    [deviseSelectionnee, actionSelectionnee],
+    async ([newDevise, newAction], [oldDevise, oldAction]) => {
+      if (newDevise !== oldDevise) {
+        await chargerDevise();
+      }
+      if (newAction !== oldAction) {
+        await chargerActionEtHistorique(newAction);
+      }
     }
 );
 
