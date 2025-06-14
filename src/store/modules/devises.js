@@ -54,9 +54,17 @@ export default {
       commit("setConversionResultat", reponse.data);
       return reponse.data;
     },
-    async chargerDevisesFavoris({ commit }) {
-      const reponse = await recupererDevisesFavoris();
-      commit("setDevisesFavoris", reponse.data.favoris);
+    async chargerDevisesFavoris({ commit, rootState }) {
+      if (!rootState.auth.token) {
+        commit("setDevisesFavoris", []);
+        return;
+      }
+      try {
+        const reponse = await recupererDevisesFavoris();
+        commit("setDevisesFavoris", reponse.data.favoris);
+      } catch (e) {
+        commit("setDevisesFavoris", []);
+      }
     },
     async ajouterDeviseFavori({ dispatch }, nom_devise) {
       await ajouterDeviseFavori(nom_devise);
