@@ -197,12 +197,40 @@
         <v-alert v-if="erreur" type="error" class="mt-4">{{ erreur }}</v-alert>
       </v-container>
       <v-container>
+        <v-select
+          v-model="actionSelectionnee"
+          :items="actionsPopulaires"
+          item-title="symbole"
+          item-value="symbole"
+          label="Sélectionner une action"
+          @change="chargerAction"
+        />
+        <v-card v-if="action">
+          <v-card-title>{{ action.symbole }}</v-card-title>
+          <v-card-text>
+            Date: {{ action.date }}<br />
+            Open: {{ action.open }}<br />
+            Close: {{ action.close }}<br />
+            Volume: {{ action.volume }}
+          </v-card-text>
+        </v-card>
+        <GraphiqueLignes
+          v-if="historique.length"
+          :labels="historiqueAction?.map?.(e => e.date) || []"
+          :valeurs="historiqueAction?.map?.(e => e.close) || []"
+          titre="Historique de clôture"
+          couleur="#1976D2"
+        />
+      </v-container>
+      <v-container>
         <h3>Actions populaires</h3>
         <v-list>
           <v-list-item v-for="action in actionsPopulaires" :key="action">
             <v-list-item-title>{{ action.symbole }}</v-list-item-title>
           </v-list-item>
         </v-list>
+      </v-container>
+      <v-container>
         <h3>Entreprises populaires</h3>
         <v-list>
           <v-list-item v-for="ent in entreprisesPopulaires" :key="ent.symbole">
@@ -269,6 +297,9 @@ const nouvelleDeviseFavori = ref("");
 
 const actionsFavoris = computed(() => store.state.actions.actionsFavoris);
 const actionsPopulaires = computed(() => store.state.actions.actionsPopulaires);
+const actionSelectionnee = ref("AAPL");
+const action = ref(null);
+const historiqueAction = computed(() => store.state.actions.historique || []);
 const entreprisesPopulaires = computed(
   () => store.state.entreprises.entreprisesPopulaires
 );
@@ -326,10 +357,30 @@ async function chargerDevise() {
   });
 }
 
+async function chargerAction() {
+  if (!actionSelectionnee.value) return;
+  await store.dispatch("actions/chargerAction", { symbole: actionSelectionnee.value, date: getLocalToday() });
+  action.value = store.state.actions.actionActive;
+  await store.dispatch("actions/chargerHistorique", { symbole: actionSelectionnee.value, jours: 30 });
+  historique.value = store.state.actions.historique;
+}
+
+function getLocalToday() {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 onMounted(async () => {
   await chargerDevisesPopulaires();
   await store.dispatch("devises/chargerDevisesFavoris");
   await store.dispatch("actions/chargerActionsPopulaires");
+  if (actionsPopulaires.value.length) {
+    actionSelectionnee.value = actionsPopulaires.value[0].symbole;
+    await chargerAction();
+  }
   await store.dispatch("actions/chargerActionsFavoris");
   await store.dispatch("devises/chargerDevisesPopulaires");
   devisesPopulaires.value = store.state.devises.listeDevises.map((d) => d.nom);
