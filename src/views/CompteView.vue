@@ -87,6 +87,8 @@
               <v-select
                 v-model="deviseSelectionnee"
                 :items="devisesPopulaires"
+                item-title="nom"
+                item-value="nom"
                 label="Sélectionner une devise"
                 @change="chargerDevise"
               />
