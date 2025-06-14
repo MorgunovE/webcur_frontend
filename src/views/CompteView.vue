@@ -148,9 +148,9 @@
               >
                 <v-list-item-content>
                   <v-list-item-title>
-                    {{ devise.nom }} — Taux : {{ devise.taux }} ({{
-                      devise.date_maj
-                    }})
+                    {{ devise.nom }} — Taux USD :
+                    {{ devise.conversion_rates && devise.conversion_rates.USD ? devise.conversion_rates.USD : 'N/A' }}
+                    ({{ devise.date_maj }})
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
