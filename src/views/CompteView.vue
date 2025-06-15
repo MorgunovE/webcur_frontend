@@ -15,141 +15,206 @@
         </v-row>
       </v-container>
       <v-container>
-        <h2>Mon compte</h2>
-        <v-card v-if="utilisateur">
-          <v-card-title>{{ utilisateur.nom_utilisateur }}</v-card-title>
-          <v-card-text>Email : {{ utilisateur.email }}</v-card-text>
-          <v-btn color="error" @click="seDeconnecter">Se déconnecter</v-btn>
-        </v-card>
-        <v-card v-if="utilisateur">
-          <v-card-title>{{ utilisateur.nom_utilisateur }}</v-card-title>
+        <v-row>
+          <v-col cols="12" md="6">
+            <v-card class="pa-6 mb-4" elevation="8">
+              <v-card-title>
+                <h2 class="mb-4">Mon compte</h2>
+                <v-avatar size="40" class="mr-3">
+                  <v-icon color="primary">mdi-account-circle</v-icon>
+                </v-avatar>
+                {{ utilisateur?.nom_utilisateur || 'Utilisateur' }}
+              </v-card-title>
+              <v-card-text>
+                <div>Email : {{ utilisateur?.email }}</div>
+                <v-btn color="error" class="mt-4" @click="seDeconnecter">Se déconnecter</v-btn>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-card class="pa-6 mb-4" elevation="8">
+              <v-card-title>Modifier le profil</v-card-title>
+              <v-card-text>
+                <v-text-field
+                  v-model="nouveauNom"
+                  label="Nouveau nom d'utilisateur"
+                />
+                <v-btn color="primary" @click="mettreAJourUtilisateur(nouveauNom)">
+                  Mettre à jour
+                </v-btn>
+                <v-divider class="my-4"></v-divider>
+                <v-btn color="error" @click="supprimerMonCompte">
+                  Supprimer mon compte
+                </v-btn>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+      <!-- Favorite Actions and Currencies -->
+      <v-container>
+        <v-row class="mt-8">
+          <v-col cols="12" md="6">
+            <v-card class="pa-6 mb-4" elevation="6">
+              <v-card-title>
+                <v-icon color="primary" class="mr-2">mdi-currency-usd</v-icon>
+                Mes devises favorites
+              </v-card-title>
+              <v-card-text>
+                <div class="mb-2 text-caption">Ajoutez vos devises favorites pour un accès rapide. Vous pouvez choisir dans la liste ou saisir le nom d'une devise.</div>
+                <v-row>
+                  <v-col
+                    v-for="devise in devisesFavoris"
+                    :key="devise"
+                    cols="12"
+                    sm="6"
+                    md="6"
+                  >
+                    <v-card class="pa-3 mb-2 d-flex align-center justify-space-between hoverable">
+                      <span class="font-weight-bold">{{ devise }}</span>
+                      <v-btn icon color="error" @click="supprimerFavori(devise)">
+                        <v-icon>mdi-delete</v-icon>
+                      </v-btn>
+                    </v-card>
+                  </v-col>
+                </v-row>
+                <v-autocomplete
+                  v-model="nouvelleDeviseFavori"
+                  :items="devises"
+                  label="Ajouter une devise aux favoris"
+                  class="mt-2"
+                  clearable
+                  solo
+                />
+                <v-btn
+                  color="primary"
+                  class="mt-2"
+                  @click="ajouterFavori"
+                  :disabled="!nouvelleDeviseFavori"
+                >
+                  Ajouter
+                </v-btn>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-card class="pa-6 mb-4" elevation="6">
+              <v-card-title>
+                <v-icon color="primary" class="mr-2">mdi-finance</v-icon>
+                Mes actions favorites
+              </v-card-title>
+              <v-card-text>
+                <div class="mb-2 text-caption">Ajoutez vos actions favorites pour suivre leur évolution. Sélectionnez dans la liste ou saisissez le symbole.</div>
+                <v-row>
+                  <v-col
+                    v-for="symbole in actionsFavoris"
+                    :key="symbole"
+                    cols="12"
+                    sm="6"
+                    md="6"
+                  >
+                    <v-card class="pa-3 mb-2 d-flex align-center justify-space-between hoverable">
+                      <span class="font-weight-bold">{{ symbole }}</span>
+                      <v-btn icon color="error" @click="supprimerActionFavori(symbole)">
+                        <v-icon>mdi-delete</v-icon>
+                      </v-btn>
+                    </v-card>
+                  </v-col>
+                </v-row>
+                <v-autocomplete
+                  v-model="nouvelleActionFavori"
+                  :items="actionsPopulaires"
+                  item-title="symbole"
+                  item-value="symbole"
+                  label="Ajouter une action aux favoris"
+                  class="mt-2"
+                  clearable
+                  solo
+                />
+                <v-btn
+                  color="primary"
+                  class="mt-2"
+                  @click="ajouterActionFavori"
+                  :disabled="!nouvelleActionFavori"
+                >
+                  Ajouter
+                </v-btn>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+      <v-container>
+        <v-card class="pa-6 mt-8" elevation="6">
+          <v-card-title>
+            <v-icon color="primary" class="mr-2">mdi-currency-usd</v-icon>
+            Informations sur la devise : {{ pair }}
+          </v-card-title>
           <v-card-text>
-            <v-text-field
-              v-model="nouveauNom"
-              label="Nouveau nom d'utilisateur"
-            />
-            <v-btn color="primary" @click="mettreAJourUtilisateur(nouveauNom)">
-              Mettre à jour
-            </v-btn>
-            <v-divider class="my-4"></v-divider>
-            <v-btn color="error" @click="supprimerMonCompte">
-              Supprimer mon compte
-            </v-btn>
-          </v-card-text>
-        </v-card>
-        <v-alert v-else type="info">
-          Veuillez vous connecter pour accéder à votre compte.
-        </v-alert>
-        <v-container>
-          <h2>Mes devises favorites</h2>
-          <v-list>
-            <v-list-item v-for="devise in devisesFavoris" :key="devise">
-              <v-list-item-title>{{ devise }}</v-list-item-title>
-              <v-btn icon color="error" @click="supprimerFavori(devise)">
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </v-list-item>
-          </v-list>
-          <v-select
-            v-model="nouvelleDeviseFavori"
-            :items="devises"
-            label="Ajouter une devise aux favoris"
-            class="mt-2"
-          />
-          <v-btn
-            color="primary"
-            @click="ajouterFavori"
-            :disabled="!nouvelleDeviseFavori"
-          >
-            Ajouter
-          </v-btn>
-        </v-container>
-        <v-container>
-          <h2>Mes actions favorites</h2>
-          <v-list>
-            <v-list-item v-for="symbole in actionsFavoris" :key="symbole">
-              <v-list-item-title>{{ symbole }}</v-list-item-title>
-              <v-btn icon color="error" @click="supprimerActionFavori(symbole)">
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </v-list-item>
-          </v-list>
-          <v-select
-            v-model="nouvelleActionFavori"
-            :items="actionsPopulaires"
-            item-title="symbole"
-            item-value="symbole"
-            label="Ajouter une action aux favoris"
-            class="mt-2"
-          />
-          <v-btn
-            color="primary"
-            @click="ajouterActionFavori"
-            :disabled="!nouvelleActionFavori"
-          >
-            Ajouter
-          </v-btn>
-        </v-container>
-
-        <!-- Currency selection and info -->
-        <v-container>
-          <h2>Informations sur la devise : {{ pair }}</h2>
-          <v-row>
-            <v-col cols="12" md="6">
-              <v-select
-                v-model="deviseSelectionnee"
-                :items="devisesPopulaires"
-                item-title="nom"
-                item-value="nom"
-                label="Sélectionner une devise"
-              />
-              <v-card v-if="deviseActive">
-                <v-card-title>{{ deviseActive.nom }}</v-card-title>
-                <v-card-text>
-                  <div>Taux : {{ deviseActive.taux }}</div>
-                  <div>Date : {{ deviseActive.date_maj }}</div>
-                  <div>Base : {{ deviseActive.base_code }}</div>
-                  <div>
-                    <strong>Conversion rates:</strong>
-                    <v-simple-table dense>
-                      <thead>
+            <div class="mb-2 text-caption">Recherchez une devise par nom ou sélectionnez-en une pour afficher ses informations et son historique.</div>
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-autocomplete
+                  v-model="deviseSelectionnee"
+                  :items="devisesPopulaires"
+                  item-title="nom"
+                  item-value="nom"
+                  label="Sélectionner ou rechercher une devise"
+                  clearable
+                  solo
+                />
+                <!-- Card with info and rates as in DeviseView.vue -->
+                <v-card v-if="deviseActive">
+                  <v-card-title>{{ deviseActive.nom }}</v-card-title>
+                  <v-card-text>
+                    <div>Taux : {{ deviseActive.taux }}</div>
+                    <div>Date : {{ deviseActive.date_maj }}</div>
+                    <div>Base : {{ deviseActive.base_code }}</div>
+                    <div>
+                      <strong>Conversion rates:</strong>
+                      <v-simple-table dense>
+                        <thead>
                         <tr>
                           <th>Devise</th>
                           <th>Taux</th>
                         </tr>
-                      </thead>
-                      <tbody>
+                        </thead>
+                        <tbody>
                         <tr
-                          v-for="(taux, code) in limitedConversionRates"
-                          :key="code"
+                            v-for="(taux, code) in limitedConversionRates"
+                            :key="code"
                         >
                           <td>{{ code }}</td>
                           <td>{{ taux }}</td>
                         </tr>
-                      </tbody>
-                    </v-simple-table>
-                    <div v-if="showAllRates">
-                      <v-btn small @click="showAllRates = false">Show less</v-btn>
+                        </tbody>
+                      </v-simple-table>
+                      <div v-if="showAllRates">
+                        <v-btn small @click="showAllRates = false">Show less</v-btn>
+                      </div>
+                      <div v-else>
+                        <v-btn small @click="showAllRates = true">Show all</v-btn>
+                      </div>
                     </div>
-                    <div v-else>
-                      <v-btn small @click="showAllRates = true">Show all</v-btn>
-                    </div>
-                  </div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="12" md="6">
-            <GraphiqueLignes
-                v-if="!loadingHistoriqueDevice && labels.length && valeurs.length"
-                :labels="labels"
-                :valeurs="valeurs"
-                :titre="`Historique de ${pair} contre USD`"
-                couleur="#1976D2"
-            />
-            </v-col>
-          </v-row>
-        </v-container>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+              <v-col cols="12" md="6">
+                <GraphiqueLignes
+                    v-if="!loadingHistoriqueDevice && labels.length && valeurs.length"
+                    :labels="labels"
+                    :valeurs="valeurs"
+                    :titre="`Historique de ${pair} contre USD`"
+                    couleur="#1976D2"
+                />
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-container>
+
         <!-- Section des devises populaires -->
+        <v-container>
         <v-card class="mt-6" outlined>
           <v-card-title>Devises populaires</v-card-title>
           <v-card-text>
