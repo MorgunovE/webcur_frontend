@@ -53,7 +53,7 @@
               sm="6"
               md="2"
           >
-            <v-card class="pa-4 hoverable" @click="goCurrency(devise.nom)">
+            <v-card class="pa-4 hoverable" @click="goCurrency">
               <v-icon size="32" color="primary">mdi-currency-usd</v-icon>
               <div class="font-weight-bold mt-2">{{ devise.nom }}</div>
               <div>Taux USD: {{ devise.conversion_rates?.USD ?? 'N/A' }}</div>
@@ -74,7 +74,7 @@
               sm="6"
               md="2"
           >
-            <v-card class="pa-4 hoverable" @click="goAction(action.symbole)">
+            <v-card class="pa-4 hoverable" @click="goAction">
               <v-icon size="32" color="primary">mdi-finance</v-icon>
               <div class="font-weight-bold mt-2">{{ action.symbole }}</div>
               <div>Prix USD: {{ action.close }}</div>
@@ -95,7 +95,7 @@
               sm="6"
               md="2"
           >
-            <v-card class="pa-4 hoverable" @click="goCompany(ent.symbole)">
+            <v-card class="pa-4 hoverable" @click="goCompany">
               <v-avatar size="32" class="mb-2" v-if="ent.image">
                 <img :src="ent.image" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;" />
               </v-avatar>
