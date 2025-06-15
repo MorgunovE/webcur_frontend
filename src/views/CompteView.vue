@@ -78,6 +78,7 @@
             Ajouter
           </v-btn>
         </v-container>
+
         <!-- Currency selection and info -->
         <v-container>
           <h2>Informations sur la devise : {{ pair }}</h2>
