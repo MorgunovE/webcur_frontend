@@ -2,6 +2,18 @@
   <v-app>
     <HeaderPrincipal />
     <v-main>
+      <v-container fluid class="hero-section-compte py-16">
+        <v-row align="center" justify="center">
+          <v-col cols="12" md="8" class="text-left">
+            <h1 class="display-2 font-weight-bold mt-16 mb-16">
+              Bienvenue à nouveau, {{ utilisateur?.nom_utilisateur || 'Utilisateur' }} !
+            </h1>
+            <p class="mb-16">
+              Votre parcours financier continue. Suivez vos devises, convertissez facilement et gérez votre portefeuille.
+            </p>
+          </v-col>
+        </v-row>
+      </v-container>
       <v-container>
         <h2>Mon compte</h2>
         <v-card v-if="utilisateur">
@@ -581,3 +593,19 @@ async function convertir() {
   }
 }
 </script>
+
+<style scoped>
+
+.hero-section-compte {
+  background: linear-gradient(
+      rgba(25, 25, 50, 0.55),
+      rgba(25, 25, 50, 0.55)
+    ),
+    url('@/assets/images/hero-account.png') center/cover no-repeat;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  min-height: 400px;
+  color: white;
+}
+
+</style>
