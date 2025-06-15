@@ -1,21 +1,42 @@
 <template>
   <v-app>
     <HeaderPrincipal />
-    <NavigationPrincipale />
     <v-main>
+      <!-- Hero Image Section -->
+      <v-container fluid class="hero-section-login py-12 mb-8">
+        <v-row align="center" justify="center">
+          <v-col cols="12" md="6" class="text-center">
+            <h1 class="display-1 font-weight-bold white--text mb-16 mt-16">
+              Connectez-vous à WebCur
+            </h1>
+            <p class="subtitle-1 white--text b-16 mt-16">
+              Accédez à votre tableau de bord personnalisé pour suivre vos devises et actions favorites.
+            </p>
+          </v-col>
+        </v-row>
+      </v-container>
+      <!-- Login Card -->
       <v-container>
-        <h2>Connexion</h2>
-        <v-form @submit.prevent="seConnecter">
-          <v-text-field v-model="email" label="Email" required />
-          <v-text-field
-            v-model="motDePasse"
-            label="Mot de passe"
-            type="password"
-            required
-          />
-          <v-btn type="submit" color="primary">Se connecter</v-btn>
-        </v-form>
-        <v-alert v-if="erreur" type="error" class="mt-2">{{ erreur }}</v-alert>
+        <v-row justify="center">
+          <v-col cols="12" md="6" lg="4">
+            <v-card class="pa-8" elevation="10">
+              <h2 class="mb-6 text-center">Connexion</h2>
+              <v-form @submit.prevent="seConnecter">
+                <v-text-field v-model="email" label="Email" required />
+                <v-text-field
+                  v-model="motDePasse"
+                  label="Mot de passe"
+                  type="password"
+                  required
+                />
+                <v-btn type="submit" color="primary" block class="mt-4">
+                  Se connecter
+                </v-btn>
+              </v-form>
+              <v-alert v-if="erreur" type="error" class="mt-4">{{ erreur }}</v-alert>
+            </v-card>
+          </v-col>
+        </v-row>
       </v-container>
     </v-main>
     <FooterPrincipal />
@@ -28,7 +49,6 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import HeaderPrincipal from "../components/HeaderPrincipal.vue";
 import FooterPrincipal from "../components/FooterPrincipal.vue";
-import NavigationPrincipale from "../components/NavigationPrincipale.vue";
 
 const email = ref("");
 const motDePasse = ref("");
@@ -48,3 +68,22 @@ async function seConnecter() {
   }
 }
 </script>
+
+<style scoped>
+.hero-section-login {
+  background: linear-gradient(
+      rgba(25, 25, 50, 0.55),
+      rgba(25, 25, 50, 0.55)
+    ),
+    url('@/assets/images/hero-login.png') center/cover no-repeat;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  min-height: 340px;
+  color: white;
+}
+.hero-img-login {
+  max-width: 120px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.12);
+}
+</style>
