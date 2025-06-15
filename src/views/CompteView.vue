@@ -2,6 +2,7 @@
   <v-app>
     <HeaderPrincipal />
     <v-main>
+
       <v-container fluid class="hero-section-compte py-16">
         <v-row align="center" justify="center">
           <v-col cols="12" md="8" class="text-left">
@@ -14,6 +15,7 @@
           </v-col>
         </v-row>
       </v-container>
+
       <v-container>
         <v-row>
           <v-col cols="12" md="6">
@@ -51,7 +53,7 @@
           </v-col>
         </v-row>
       </v-container>
-      <!-- Favorite Actions and Currencies -->
+
       <v-container>
         <v-row class="mt-8">
           <v-col cols="12" md="6">
@@ -144,6 +146,7 @@
           </v-col>
         </v-row>
       </v-container>
+
       <v-container>
         <v-card class="pa-6 mt-8" elevation="6">
           <v-card-title>
@@ -163,7 +166,6 @@
                   clearable
                   solo
                 />
-                <!-- Card with info and rates as in DeviseView.vue -->
                 <v-card v-if="deviseActive">
                   <v-card-title>{{ deviseActive.nom }}</v-card-title>
                   <v-card-text>
@@ -297,7 +299,6 @@
               clearable
               solo
             />
-            <!-- Card with info and GraphiqueLignes as before -->
             <v-card v-if="action">
               <v-card-title>{{ action.symbole }}</v-card-title>
               <v-card-text>
@@ -395,23 +396,29 @@
       </v-container>
 
       <v-container>
-        <h2>Informations sur l'entreprise : {{ entrepriseSelectionnee }}</h2>
-        <v-row>
-          <v-col cols="12" md="4">
-            <v-select
+        <v-card class="pa-6 mt-8" elevation="6">
+          <v-card-title>
+            <v-icon color="primary" class="mr-2">mdi-domain</v-icon>
+            Informations sur l'entreprise : {{ entrepriseSelectionnee }}
+          </v-card-title>
+          <v-card-text>
+            <div class="mb-2 text-caption">Recherchez une entreprise par nom ou sélectionnez-en une pour afficher ses informations et son historique.</div>
+            <v-autocomplete
               v-model="entrepriseSelectionnee"
               :items="entreprisesPopulaires"
               item-title="companyName"
               item-value="symbole"
-              label="Sélectionner une entreprise"
+              label="Sélectionner ou rechercher une entreprise"
+              clearable
+              solo
             />
             <v-card v-if="entreprise">
               <v-card-title>
                 <img
-                  :src="entreprise.image"
-                  alt="Logo"
-                  height="40"
-                  v-if="entreprise.image"
+                    :src="entreprise.image"
+                    alt="Logo"
+                    height="40"
+                    v-if="entreprise.image"
                 />
                 {{ entreprise.companyName }} ({{ entreprise.symbole }})
               </v-card-title>
@@ -432,29 +439,41 @@
                 <div><strong>Description:</strong> {{ entreprise.description }}</div>
               </v-card-text>
             </v-card>
-          </v-col>
-          <v-col cols="12" md="8">
-            <GraphiqueLignes
-              v-if="!loadingHistoriqueEntreprise && labelsEntreprise.length"
-              :labels="labelsEntreprise"
-              :valeurs="valeursEntreprise"
-              titre="Historique du prix"
-              couleur="#1976D2"
-            />
+          </v-card-text>
+        </v-card>
+        <GraphiqueLignes
+            v-if="!loadingHistoriqueEntreprise && labelsEntreprise.length"
+            :labels="labelsEntreprise"
+            :valeurs="valeursEntreprise"
+            titre="Historique du prix"
+            couleur="#1976D2"
+        />
+      </v-container>
+
+      <v-container class="mt-10">
+        <h2 class="mb-4">Entreprises populaires</h2>
+        <v-row>
+          <v-col
+            v-for="ent in entreprisesPopulaires.slice(0, 5)"
+            :key="ent.symbole"
+            cols="12"
+            sm="6"
+            md="2"
+          >
+            <v-card class="pa-4 hoverable">
+              <v-avatar size="32" class="mb-2" v-if="ent.image">
+                <img :src="ent.image" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;" />
+              </v-avatar>
+              <v-icon v-else size="32" color="primary">mdi-domain</v-icon>
+              <div class="font-weight-bold mt-2">{{ ent.companyName }}</div>
+              <div>Prix USD: {{ ent.price }}</div>
+              <div class="text-caption">Date: {{ ent.date_maj }}</div>
+              <div class="text-caption">Variation: {{ ent.change }} ({{ ent.changePercentage }})</div>
+            </v-card>
           </v-col>
         </v-row>
       </v-container>
-      <v-container>
-        <h3>Entreprises populaires</h3>
-        <v-list>
-          <v-list-item v-for="ent in entreprisesPopulaires" :key="ent.symbole">
-            <v-list-item-title>
-              {{ ent.companyName }} ({{ ent.symbole }}) - Date : {{ ent.date_maj }} - Prix : {{ ent.price }} USD
-            </v-list-item-title
-            >
-          </v-list-item>
-        </v-list>
-      </v-container>
+
     </v-main>
     <FooterPrincipal />
   </v-app>
