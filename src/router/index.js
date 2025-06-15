@@ -19,14 +19,13 @@ const routes = [
     component: CompteView,
     meta: { requiresAuth: true },
   },
-  { path: "/currencies/:pair", name: "Devise", component: DeviseView },
+  { path: "/currencies", name: "Devise", component: DeviseView },
   {
-    path: "/companies/:symbole",
+    path: "/companies",
     name: "Entreprise",
     component: EntrepriseView,
-    meta: { requiresAuth: true },
   },
-  { path: "/stocks/:symbole", name: "Action", component: ActionView },
+  { path: "/stocks", name: "Action", component: ActionView },
 ];
 
 const router = createRouter({

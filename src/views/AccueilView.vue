@@ -135,14 +135,14 @@ onMounted(async () => {
 function goRegister() {
   router.push("/register");
 }
-function goCurrency(nom) {
-  router.push(`/currencies/${nom}`);
+function goCurrency() {
+  router.push(`/currencies`);
 }
-function goAction(symbole) {
-  router.push(`/stocks/${symbole}`);
+function goAction() {
+  router.push(`/stocks`);
 }
-function goCompany(symbole) {
-  router.push(`/companies/${symbole}`);
+function goCompany() {
+  router.push(`/companies`);
 }
 </script>
 
