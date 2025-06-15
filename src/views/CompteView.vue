@@ -318,63 +318,82 @@
         </v-card>
       </v-container>
 
-      <v-container>
-        <h3>Actions populaires</h3>
-        <v-list>
-          <v-list-item v-for="action in actionsPopulaires" :key="action">
-            <v-list-item-title>
-              Action : {{ action.symbole }} - Date : {{ action.date }} - Prix : {{ action.close }} USD
-            </v-list-item-title>
-          </v-list-item>
-        </v-list>
+      <v-container class="mt-10">
+        <h2 class="mb-4">Actions populaires</h2>
+        <v-row>
+          <v-col
+            v-for="action in actionsPopulaires.slice(0, 5)"
+            :key="action.symbole"
+            cols="12"
+            sm="6"
+            md="2"
+          >
+            <v-card class="pa-4 hoverable">
+              <v-icon size="32" color="primary">mdi-finance</v-icon>
+              <div class="font-weight-bold mt-2">{{ action.symbole }}</div>
+              <div>Prix USD: {{ action.close }}</div>
+              <div class="text-caption">Date: {{ action.date }}</div>
+            </v-card>
+          </v-col>
+        </v-row>
       </v-container>
+
       <v-container>
-        <h3>Calculer le coût d'achat d'une action</h3>
-        <v-form @submit.prevent="calculerAchatAction">
-          <v-row>
-            <v-col cols="12" md="3">
-              <v-select
-                v-model="achatSymbole"
-                :items="actionsPopulaires"
-                item-title="symbole"
-                item-value="symbole"
-                label="Symbole"
-                required
-              />
-            </v-col>
-            <v-col cols="12" md="3">
-              <v-text-field
-                v-model="achatDate"
-                label="Date"
-                type="date"
-                required
-              />
-            </v-col>
-            <v-col cols="12" md="3">
-              <v-text-field
-                v-model.number="achatQuantite"
-                label="Quantité"
-                type="number"
-                min="1"
-                required
-              />
-            </v-col>
-            <v-col cols="12" md="3">
-              <v-select
-                v-model="achatDevise"
-                :items="devises"
-                label="Devise"
-                required
-              />
-            </v-col>
-          </v-row>
-          <v-btn type="submit" color="primary" class="mt-2">Calculer</v-btn>
-        </v-form>
-        <v-alert v-if="achatResultat" type="success" class="mt-4">
-          {{ achatResultat.quantite }} {{ achatResultat.symbole }} = {{ achatResultat.cout_total }} {{ achatResultat.devise }} (Taux: {{ achatResultat.taux }})
-        </v-alert>
-        <v-alert v-if="achatErreur" type="error" class="mt-4">{{ achatErreur }}</v-alert>
+       <v-card class="pa-6 mt-8" elevation="6">
+         <v-card-title>
+           <v-icon color="primary" class="mr-2">mdi-calculator</v-icon>
+           Calculer le coût d'achat d'une action
+         </v-card-title>
+         <v-card-text>
+           <div class="mb-2 text-caption">Calculez le coût total d'achat d'une action à une date donnée et dans la devise de votre choix.</div>
+           <v-form @submit.prevent="calculerAchatAction">
+             <v-row>
+               <v-col cols="12" md="3">
+                 <v-select
+                   v-model="achatSymbole"
+                   :items="actionsPopulaires"
+                   item-title="symbole"
+                   item-value="symbole"
+                   label="Symbole"
+                   required
+                 />
+               </v-col>
+               <v-col cols="12" md="3">
+                 <v-text-field
+                   v-model="achatDate"
+                   label="Date"
+                   type="date"
+                   required
+                 />
+               </v-col>
+               <v-col cols="12" md="3">
+                 <v-text-field
+                   v-model.number="achatQuantite"
+                   label="Quantité"
+                   type="number"
+                   min="1"
+                   required
+                 />
+               </v-col>
+               <v-col cols="12" md="3">
+                 <v-select
+                   v-model="achatDevise"
+                   :items="devises"
+                   label="Devise"
+                   required
+                 />
+               </v-col>
+             </v-row>
+             <v-btn type="submit" color="primary" class="mt-2">Calculer</v-btn>
+           </v-form>
+           <v-alert v-if="achatResultat" type="success" class="mt-4">
+             {{ achatResultat.quantite }} {{ achatResultat.symbole }} = {{ achatResultat.cout_total }} {{ achatResultat.devise }} (Taux: {{ achatResultat.taux }})
+           </v-alert>
+           <v-alert v-if="achatErreur" type="error" class="mt-4">{{ achatErreur }}</v-alert>
+         </v-card-text>
+       </v-card>
       </v-container>
+
       <v-container>
         <h2>Informations sur l'entreprise : {{ entrepriseSelectionnee }}</h2>
         <v-row>
