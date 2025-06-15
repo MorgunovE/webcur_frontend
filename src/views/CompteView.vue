@@ -1,7 +1,6 @@
 <template>
   <v-app>
     <HeaderPrincipal />
-    <NavigationPrincipale />
     <v-main>
       <v-container>
         <h2>Mon compte</h2>
@@ -351,7 +350,6 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import HeaderPrincipal from "../components/HeaderPrincipal.vue";
 import FooterPrincipal from "../components/FooterPrincipal.vue";
-import NavigationPrincipale from "../components/NavigationPrincipale.vue";
 import GraphiqueLignes from "../components/GraphiqueLignes.vue";
 
 const store = useStore();
