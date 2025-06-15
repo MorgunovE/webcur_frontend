@@ -279,31 +279,45 @@
           </v-card-text>
         </v-card>
       </v-container>
+
       <v-container>
-        <v-select
-          v-model="actionSelectionnee"
-          :items="actionsPopulaires"
-          item-title="symbole"
-          item-value="symbole"
-          label="Sélectionner une action"
-        />
-        <v-card v-if="action">
-          <v-card-title>{{ action.symbole }}</v-card-title>
+        <v-card class="pa-6 mt-8" elevation="6">
+          <v-card-title>
+            <v-icon color="primary" class="mr-2">mdi-finance</v-icon>
+            Informations sur l'action
+          </v-card-title>
           <v-card-text>
-            Date: {{ action.date }}<br />
-            Open: {{ action.open }}<br />
-            Close: {{ action.close }}<br />
-            Volume: {{ action.volume }}
+            <div class="mb-2 text-caption">Recherchez une action par symbole ou sélectionnez-en une pour afficher ses informations et son historique.</div>
+            <v-autocomplete
+              v-model="actionSelectionnee"
+              :items="actionsPopulaires"
+              item-title="symbole"
+              item-value="symbole"
+              label="Sélectionner ou rechercher une action"
+              clearable
+              solo
+            />
+            <!-- Card with info and GraphiqueLignes as before -->
+            <v-card v-if="action">
+              <v-card-title>{{ action.symbole }}</v-card-title>
+              <v-card-text>
+                Date: {{ action.date }}<br />
+                Open: {{ action.open }}<br />
+                Close: {{ action.close }}<br />
+                Volume: {{ action.volume }}
+              </v-card-text>
+            </v-card>
+            <GraphiqueLignes
+                v-if="!loadingHistoriqueAction && historiqueAction.length"
+                :labels="historiqueAction.map(e => e.date)"
+                :valeurs="historiqueAction.map(e => e.close)"
+                titre="Historique de clôture"
+                couleur="#1976D2"
+            />
           </v-card-text>
         </v-card>
-        <GraphiqueLignes
-          v-if="!loadingHistoriqueAction && historiqueAction.length"
-          :labels="historiqueAction.map(e => e.date)"
-          :valeurs="historiqueAction.map(e => e.close)"
-          titre="Historique de clôture"
-          couleur="#1976D2"
-        />
       </v-container>
+
       <v-container>
         <h3>Actions populaires</h3>
         <v-list>
