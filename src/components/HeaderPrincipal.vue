@@ -49,6 +49,7 @@ const isMobile = computed(() => smAndDown.value);
   display: flex;
   align-items: center;
   height: 100%;
+  font-size: 2.2rem;
 }
 .logo {
   height: 32px;
@@ -60,7 +61,7 @@ const isMobile = computed(() => smAndDown.value);
 }
 @media (max-width: 600px) {
   .header-title {
-    font-size: 1.1rem;
+    font-size: 1.6rem;
   }
   .logo {
     height: 28px;
