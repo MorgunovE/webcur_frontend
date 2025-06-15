@@ -4,6 +4,7 @@
     <v-spacer />
     <v-btn to="/" text>Accueil</v-btn>
     <v-btn to="/currencies/EUR" text>Devises</v-btn>
+    <v-list-item to="/stocks/AAPL" title="Actions" />
     <v-btn to="/companies/AAPL" text>Entreprises</v-btn>
     <v-btn v-if="!estConnecte" to="/login" text>Connexion</v-btn>
     <v-btn v-if="!estConnecte" to="/register" text>Inscription</v-btn>
