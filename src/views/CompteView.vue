@@ -213,66 +213,71 @@
         </v-card>
       </v-container>
 
-        <!-- Section des devises populaires -->
-        <v-container>
-        <v-card class="mt-6" outlined>
-          <v-card-title>Devises populaires</v-card-title>
+      <v-container class="mt-10">
+        <h2 class="mb-4">Devises populaires</h2>
+        <v-row>
+          <v-col
+            v-for="devise in devisesPopulaires.slice(0, 5)"
+            :key="devise.nom"
+            cols="12"
+            sm="6"
+            md="2"
+          >
+            <v-card class="pa-4 hoverable">
+              <v-icon size="32" color="primary">mdi-currency-usd</v-icon>
+              <div class="font-weight-bold mt-2">{{ devise.nom }}</div>
+              <div>Taux USD: {{ devise.conversion_rates?.USD ?? 'N/A' }}</div>
+              <div class="text-caption">Date: {{ devise.date_maj }}</div>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+
+      <v-container>
+        <v-card class="pa-6 mt-8" elevation="6">
+          <v-card-title>
+            <v-icon color="primary" class="mr-2">mdi-swap-horizontal</v-icon>
+            Convertir une devise
+          </v-card-title>
           <v-card-text>
-            <v-list>
-              <v-list-item
-                v-for="devise in devisesPopulaires"
-                :key="devise.nom"
-              >
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ devise.nom }} — Taux USD :
-                    {{ devise.conversion_rates && devise.conversion_rates.USD ? devise.conversion_rates.USD : 'N/A' }}
-                    ({{ devise.date_maj }})
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
+            <div class="mb-2 text-caption">Convertissez rapidement un montant d'une devise à une autre. Sélectionnez les devises et saisissez le montant.</div>
+            <v-form @submit.prevent="convertir">
+              <v-row>
+                <v-col cols="12" md="3">
+                  <v-select
+                    v-model="codeSource"
+                    :items="devises"
+                    label="Devise source"
+                    required
+                  />
+                </v-col>
+                <v-col cols="12" md="3">
+                  <v-select
+                    v-model="codeCible"
+                    :items="devises"
+                    label="Devise cible"
+                    required
+                  />
+                </v-col>
+                <v-col cols="12" md="3">
+                  <v-text-field
+                    v-model.number="montant"
+                    label="Montant"
+                    type="number"
+                    required
+                  />
+                </v-col>
+                <v-col cols="12" md="3">
+                  <v-btn type="submit" color="primary" class="mt-2">Convertir</v-btn>
+                </v-col>
+              </v-row>
+            </v-form>
+            <v-alert v-if="resultat" type="success" class="mt-4">
+              {{ montant }} {{ codeSource }} = {{ resultat.montant_converti }} {{ codeCible }}
+            </v-alert>
+            <v-alert v-if="erreur" type="error" class="mt-4">{{ erreur }}</v-alert>
           </v-card-text>
         </v-card>
-      </v-container>
-      <v-container>
-        <h2>Convert Currency</h2>
-        <v-form @submit.prevent="convertir">
-          <v-row>
-            <v-col cols="12" md="3">
-              <v-select
-                v-model="codeSource"
-                :items="devises"
-                label="Source currency"
-                required
-              />
-            </v-col>
-            <v-col cols="12" md="3">
-              <v-select
-                v-model="codeCible"
-                :items="devises"
-                label="Target currency"
-                required
-              />
-            </v-col>
-            <v-col cols="12" md="3">
-              <v-text-field
-                v-model.number="montant"
-                label="Amount"
-                type="number"
-                required
-              />
-            </v-col>
-            <v-col cols="12" md="3">
-              <v-btn type="submit" color="primary">Convert</v-btn>
-            </v-col>
-          </v-row>
-        </v-form>
-        <v-alert v-if="resultat" type="success" class="mt-4">
-          {{ montant }} {{ codeSource }} = {{ resultat.montant_converti }}
-          {{ codeCible }}
-        </v-alert>
-        <v-alert v-if="erreur" type="error" class="mt-4">{{ erreur }}</v-alert>
       </v-container>
       <v-container>
         <v-select
