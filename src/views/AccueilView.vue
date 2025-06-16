@@ -196,28 +196,48 @@
         <v-row class="mb-8" align="center" justify="center">
           <v-col cols="12" md="6">
             <v-card class="pa-6">
-              <h3 class="mb-2">Discover Top Companies</h3>
+              <h3 class="mb-2">Découvrez les entreprises phares</h3>
               <div>
-                Get insights into leading companies, their market performance, and key financial indicators. WebCur helps you make smarter investment choices.
+                Obtenez des informations sur les leaders du marché, leur performance boursière et les principaux indicateurs financiers. WebCur vous aide à prendre des décisions d'investissement plus éclairées.<br>
+                Comparez les entreprises, suivez leurs évolutions en temps réel et accédez à des analyses détaillées pour optimiser votre portefeuille. Profitez d'une plateforme intuitive pour surveiller vos sociétés favorites et anticiper les tendances du marché.
               </div>
             </v-card>
           </v-col>
           <v-col cols="12" md="6" class="d-flex justify-center">
-            <!-- Prompt: "A modern illustration of skyscrapers and company logos, representing global business, blue and white theme" -->
-            <v-img src="https://via.placeholder.com/400x250?text=Top+Companies" alt="Top Companies" height="250" />
+            <div style="height:250px; width:100%;" class="rounded-lg overflow-hidden">
+              <v-img
+                  src="@/assets/images/Entreprises_1.png"
+                  alt="Entreprises"
+                  cover
+                  width="100%"
+                  height="100%"
+                  border-radius="16px"
+                  style="object-fit:cover;"
+              />
+            </div>
           </v-col>
         </v-row>
 
         <v-row class="mb-8" align="center" justify="center">
           <v-col cols="12" md="6" class="d-flex justify-center">
-            <!-- Prompt: "A business team analyzing company growth charts, digital style, professional atmosphere" -->
-            <v-img src="https://via.placeholder.com/400x250?text=Company+Growth" alt="Company Growth" height="250" />
+            <div style="height:250px; width:100%;" class="rounded-lg overflow-hidden">
+              <v-img
+                  src="@/assets/images/Entreprises_2.png"
+                  alt="Entreprises"
+                  cover
+                  width="100%"
+                  height="100%"
+                  border-radius="16px"
+                  style="object-fit:cover;"
+              />
+            </div>
           </v-col>
           <v-col cols="12" md="6">
             <v-card class="pa-6">
-              <h3 class="mb-2">Analyze Company Growth</h3>
+              <h3 class="mb-2">Analysez la croissance des entreprises</h3>
               <div>
-                Visualize company growth over time and compare industry leaders. Our platform provides the data you need to track and evaluate business success.
+                Visualisez l'évolution de la croissance des entreprises au fil du temps et comparez les leaders du secteur. Notre plateforme vous fournit toutes les données nécessaires pour suivre, évaluer et comprendre le succès des sociétés cotées. Profitez d'outils interactifs pour explorer les tendances, identifier les opportunités et prendre des décisions d'investissement éclairées.<br>
+                Accédez à des graphiques dynamiques, des historiques de performances et des analyses détaillées pour chaque entreprise. Suivez les indicateurs clés tels que le chiffre d'affaires, la capitalisation boursière, le volume d'échanges et la rentabilité. Restez informé des dernières actualités et des événements majeurs qui impactent le marché. Grâce à nos outils, développez une vision globale et approfondie pour optimiser vos stratégies d'investissement et anticiper les évolutions du secteur.
               </div>
             </v-card>
           </v-col>
