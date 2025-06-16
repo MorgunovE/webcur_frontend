@@ -118,6 +118,14 @@ ou pour formater le code avec Prettier :
 npx prettier --write .
 ```
 
+## Demander de test
+
+Pour exécuter les tests unitaires, utilisez la commande suivante :
+
+```bash
+npm run test:unit
+```
+
 ## Exemples d’utilisation
 
 - **Connexion :**  
