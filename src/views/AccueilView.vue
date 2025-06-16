@@ -72,7 +72,6 @@
           </v-col>
         </v-row>
 
-        <!-- Card: Image left, Text right (Currencies) -->
         <v-row class="mb-8" align="center" justify="center">
           <v-col cols="12" md="6" class="d-flex justify-center">
             <div style="height:250px; width:100%;" class="rounded-lg overflow-hidden">
