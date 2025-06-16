@@ -240,7 +240,7 @@
 
       <v-container class="mt-10">
         <h2 class="mb-4">Devises populaires</h2>
-        <v-row>
+        <v-row v-if="devisesPopulaires.length">
           <v-col
             v-for="devise in devisesPopulaires.slice(0, 5)"
             :key="devise.nom"
@@ -256,6 +256,9 @@
             </v-card>
           </v-col>
         </v-row>
+        <div v-else>
+          <v-alert type="info">Aucune devise populaire disponible.</v-alert>
+        </div>
       </v-container>
 
       <v-container>
@@ -874,7 +877,7 @@ onMounted(async () => {
   }
   await store.dispatch("actions/chargerActionsFavoris");
   await store.dispatch("devises/chargerDevisesPopulaires");
-  devisesPopulaires.value = store.state.devises.listeDevises.map((d) => d.nom);
+  devisesPopulaires.value = store.state.devises.listeDevises;
   await chargerDevise();
   if (actionsPopulaires.value.length) achatSymbole.value = actionsPopulaires.value[0].symbole;
   if (devises.length) achatDevise.value = devises[0];
