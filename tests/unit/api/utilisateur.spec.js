@@ -1,5 +1,3 @@
-import {inscrireUtilisateur} from "@/api/utilisateur";
-
 const fs = require('fs');
 const path = require('path');
 import axios from '@/api/axios';
