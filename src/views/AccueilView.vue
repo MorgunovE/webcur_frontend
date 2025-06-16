@@ -48,12 +48,12 @@
         <v-row class="mb-8" align="center" justify="center">
           <v-col cols="12" md="6">
             <v-card class="pa-6">
-              <h3 class="mb-2">Explore the World of Currencies</h3>
+              <h3 class="mb-2">Explorez l’univers des devises</h3>
               <div>
-                Stay updated with real-time exchange rates and discover trends in global currencies. WebCur makes currency conversion and analysis simple and accessible for everyone.
+                Suivez l’évolution des taux de change en direct et analysez les principales monnaies internationales. Avec WebCur, la gestion et la conversion des devises deviennent intuitives et rapides.
                 <br /><br />
-                <strong>Découvrez le monde des devises</strong><br />
-                Restez informé des taux de change en temps réel et suivez les tendances des monnaies mondiales. WebCur rend la conversion et l'analyse des devises simples et accessibles à tous.
+                <strong>Analysez les tendances monétaires</strong><br />
+                Profitez d’outils clairs pour comparer les devises, anticiper les fluctuations et prendre des décisions éclairées sur vos conversions.
               </div>
             </v-card>
           </v-col>
@@ -160,12 +160,12 @@
           </v-col>
           <v-col cols="12" md="6">
             <v-card class="pa-6">
-              <h3 class="mb-2">Advanced Stock Analysis Tools</h3>
+              <h3 class="mb-2">Outils avancés d'analyse boursière</h3>
               <div>
-                Dive deep into stock history, compare trends, and optimize your investment strategy with our comprehensive analysis features.
+                Explorez en profondeur l'historique des actions, comparez les tendances et optimisez votre stratégie d'investissement grâce à nos fonctionnalités d'analyse complètes.
                 <br />
-                <strong>Outils avancés d'analyse boursière</strong><br />
-                Analysez l'historique des actions, comparez les tendances et optimisez votre stratégie d'investissement grâce à nos fonctionnalités complètes et intuitives. Profitez de graphiques interactifs, de comparaisons en temps réel et d'indicateurs personnalisés pour prendre des décisions éclairées sur vos placements.
+                <strong>Analyse approfondie du marché</strong><br />
+                Accédez à des graphiques interactifs, comparez les performances en temps réel et utilisez des indicateurs personnalisés pour prendre des décisions éclairées sur vos placements.
               </div>
             </v-card>
           </v-col>
