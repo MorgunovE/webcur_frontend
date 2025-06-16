@@ -44,7 +44,7 @@
 
       <!-- Popular Currencies -->
       <v-container class="mt-10">
-        <h2 class="mb-4 text-center">Devises</h2>
+        <h2 class="mb-16 text-center">Devises</h2>
         <v-row class="mb-8" align="center" justify="center">
           <v-col cols="12" md="6">
             <v-card class="pa-6">
@@ -98,7 +98,7 @@
             </v-card>
           </v-col>
         </v-row>
-        <h3 class="mb-4">Devises populaires</h3>
+        <h3 class="mb-4 mt-16">Devises populaires</h3>
         <v-row>
           <v-col
               v-for="devise in devisesPopulaires.slice(0, 5)"
@@ -119,37 +119,59 @@
 
       <!-- Popular Actions -->
       <v-container class="mt-10">
-        <h2 class="mb-4 text-center">Actions</h2>
+        <h2 class="mb-16 text-center">Actions</h2>
         <v-row class="mb-8" align="center" justify="center">
           <v-col cols="12" md="6">
             <v-card class="pa-6">
-              <h3 class="mb-2">Track Stock Market Leaders</h3>
+              <h3 class="mb-2">Suivez les leaders du marché boursier</h3>
               <div>
-                Analyze the most popular stocks and follow their real-time performance. WebCur provides advanced analytics to help you stay ahead in the market.
+                Analysez les actions les plus populaires et suivez leurs performances en temps réel. WebCur vous offre des outils d'analyse avancés pour anticiper les tendances du marché et optimiser vos investissements. Profitez d'une vue d'ensemble claire, comparez les entreprises et prenez des décisions éclairées pour rester en avance sur le marché.<br><br>
+                Accédez à des graphiques interactifs, consultez l'historique des prix et recevez des alertes personnalisées sur les variations importantes. Que vous soyez investisseur débutant ou expérimenté, notre plateforme vous accompagne à chaque étape pour maximiser vos opportunités et minimiser les risques. Découvrez les actualités financières, les analyses d'experts et les classements des meilleures actions du moment.
               </div>
             </v-card>
           </v-col>
           <v-col cols="12" md="6" class="d-flex justify-center">
-            <!-- Prompt: "A dynamic stock market chart with rising and falling lines, modern digital style, blue and green colors" -->
-            <v-img src="https://via.placeholder.com/400x250?text=Stock+Market+Chart" alt="Stock Market Chart" height="250" />
+            <div style="height:250px; width:100%;" class="rounded-lg overflow-hidden">
+              <v-img
+                  src="@/assets/images/Action_1.png"
+                  alt="Action"
+                  cover
+                  width="100%"
+                  height="100%"
+                  border-radius="16px"
+                  style="object-fit:cover;"
+              />
+            </div>
           </v-col>
         </v-row>
 
         <v-row class="mb-8" align="center" justify="center">
           <v-col cols="12" md="6" class="d-flex justify-center">
-            <!-- Prompt: "A person analyzing stock data on a laptop, surrounded by financial icons, flat illustration" -->
-            <v-img src="https://via.placeholder.com/400x250?text=Stock+Analysis" alt="Stock Analysis" height="250" />
+            <div style="height:250px; width:100%;" class="rounded-lg overflow-hidden">
+              <v-img
+                  src="@/assets/images/Action_2.png"
+                  alt="Action"
+                  cover
+                  width="100%"
+                  height="100%"
+                  border-radius="16px"
+                  style="object-fit:cover;"
+              />
+            </div>
           </v-col>
           <v-col cols="12" md="6">
             <v-card class="pa-6">
               <h3 class="mb-2">Advanced Stock Analysis Tools</h3>
               <div>
                 Dive deep into stock history, compare trends, and optimize your investment strategy with our comprehensive analysis features.
+                <br />
+                <strong>Outils avancés d'analyse boursière</strong><br />
+                Analysez l'historique des actions, comparez les tendances et optimisez votre stratégie d'investissement grâce à nos fonctionnalités complètes et intuitives. Profitez de graphiques interactifs, de comparaisons en temps réel et d'indicateurs personnalisés pour prendre des décisions éclairées sur vos placements.
               </div>
             </v-card>
           </v-col>
         </v-row>
-        <h3 class="mb-4">Actions populaires</h3>
+        <h3 class="mb-4 mt-16">Actions populaires</h3>
         <v-row>
           <v-col
               v-for="action in actionsPopulaires.slice(0, 5)"
@@ -170,7 +192,7 @@
 
       <!-- Popular Companies -->
       <v-container class="mt-10 mb-10">
-        <h2 class="mb-4 text-center">Entreprises</h2>
+        <h2 class="mb-16 text-center">Entreprises</h2>
         <v-row class="mb-8" align="center" justify="center">
           <v-col cols="12" md="6">
             <v-card class="pa-6">
@@ -200,7 +222,7 @@
             </v-card>
           </v-col>
         </v-row>
-        <h3 class="mb-4">Entreprises populaires</h3>
+        <h3 class="mb-4 mt-16">Entreprises populaires</h3>
         <v-row>
           <v-col
               v-for="ent in entreprisesPopulaires.slice(0, 5)"
