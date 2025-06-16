@@ -152,65 +152,70 @@
           <v-card-title>
             <v-icon color="primary" class="mr-2">mdi-currency-usd</v-icon>
             Informations sur la devise : {{ pair }}
+            <v-btn icon v-if="deviseActive" @click="generatePdf('deviseCard')">
+              <v-icon>mdi-file-pdf-box</v-icon>
+            </v-btn>
           </v-card-title>
-          <v-card-text>
-            <div class="mb-2 text-caption">Recherchez une devise par nom ou sélectionnez-en une pour afficher ses informations et son historique.</div>
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-autocomplete
-                  v-model="deviseSelectionnee"
-                  :items="devisesPopulaires"
-                  item-title="nom"
-                  item-value="nom"
-                  label="Sélectionner ou rechercher une devise"
-                  clearable
-                  solo
-                />
-                <v-card v-if="deviseActive">
-                  <v-card-title>{{ deviseActive.nom }}</v-card-title>
-                  <v-card-text>
-                    <div>Taux : {{ deviseActive.taux }}</div>
-                    <div>Date : {{ deviseActive.date_maj }}</div>
-                    <div>Base : {{ deviseActive.base_code }}</div>
-                    <div>
-                      <strong>Conversion rates:</strong>
-                      <v-simple-table dense>
-                        <thead>
-                        <tr>
-                          <th>Devise</th>
-                          <th>Taux</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr
-                            v-for="(taux, code) in limitedConversionRates"
-                            :key="code"
-                        >
-                          <td>{{ code }}</td>
-                          <td>{{ taux }}</td>
-                        </tr>
-                        </tbody>
-                      </v-simple-table>
-                      <div v-if="showAllRates">
-                        <v-btn small @click="showAllRates = false">Show less</v-btn>
+          <v-card-text v-show="deviseActive">
+            <div ref="deviseCard">
+              <div class="mb-2 text-caption">Recherchez une devise par nom ou sélectionnez-en une pour afficher ses informations et son historique.</div>
+              <v-row>
+                <v-col cols="12" md="6">
+                  <v-autocomplete
+                    v-model="deviseSelectionnee"
+                    :items="devisesPopulaires"
+                    item-title="nom"
+                    item-value="nom"
+                    label="Sélectionner ou rechercher une devise"
+                    clearable
+                    solo
+                  />
+                  <v-card v-if="deviseActive">
+                    <v-card-title>{{ deviseActive.nom }}</v-card-title>
+                    <v-card-text>
+                      <div>Taux : {{ deviseActive.taux }}</div>
+                      <div>Date : {{ deviseActive.date_maj }}</div>
+                      <div>Base : {{ deviseActive.base_code }}</div>
+                      <div>
+                        <strong>Conversion rates:</strong>
+                        <v-simple-table dense>
+                          <thead>
+                          <tr>
+                            <th>Devise</th>
+                            <th>Taux</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr
+                              v-for="(taux, code) in limitedConversionRates"
+                              :key="code"
+                          >
+                            <td>{{ code }}</td>
+                            <td>{{ taux }}</td>
+                          </tr>
+                          </tbody>
+                        </v-simple-table>
+                        <div v-if="showAllRates">
+                          <v-btn small @click="showAllRates = false">Show less</v-btn>
+                        </div>
+                        <div v-else>
+                          <v-btn small @click="showAllRates = true">Show all</v-btn>
+                        </div>
                       </div>
-                      <div v-else>
-                        <v-btn small @click="showAllRates = true">Show all</v-btn>
-                      </div>
-                    </div>
-                  </v-card-text>
-                </v-card>
-              </v-col>
-              <v-col cols="12" md="6">
-                <GraphiqueLignes
-                    v-if="!loadingHistoriqueDevice && labels.length && valeurs.length"
-                    :labels="labels"
-                    :valeurs="valeurs"
-                    :titre="`Historique de ${pair} contre USD`"
-                    couleur="#1976D2"
-                />
-              </v-col>
-            </v-row>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <GraphiqueLignes
+                      v-if="!loadingHistoriqueDevice && labels.length && valeurs.length"
+                      :labels="labels"
+                      :valeurs="valeurs"
+                      :titre="`Historique de ${pair} contre USD`"
+                      couleur="#1976D2"
+                  />
+                </v-col>
+              </v-row>
+            </div>
           </v-card-text>
         </v-card>
       </v-container>
@@ -480,7 +485,9 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import {ref, computed, onMounted, watch, nextTick} from "vue";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import HeaderPrincipal from "../components/HeaderPrincipal.vue";
@@ -550,6 +557,27 @@ const achatQuantite = ref(1);
 const achatDevise = ref("EUR");
 const achatResultat = ref(null);
 const achatErreur = ref("");
+
+const deviseCard = ref(null);
+
+async function generatePdf(refName) {
+  await nextTick();
+  const el = refName === 'deviseCard' ? deviseCard.value : null;
+  if (!el) return;
+  html2canvas(el).then((canvas) => {
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF({
+      orientation: "portrait",
+      unit: "pt",
+      format: "a4",
+    });
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const imgWidth = pageWidth - 40;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    pdf.addImage(imgData, "PNG", 20, 20, imgWidth, imgHeight);
+    pdf.save("rapport.pdf");
+  });
+}
 
 async function chargerEntrepriseEtHistorique(symbole) {
   loadingHistoriqueEntreprise.value = true;
