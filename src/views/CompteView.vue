@@ -564,10 +564,18 @@ async function generatePdf(refName) {
   await nextTick();
   const el = refName === 'deviseCard' ? deviseCard.value : null;
   if (!el) return;
-  html2canvas(el).then((canvas) => {
+  const originalBg = el.style.backgroundColor;
+  const whiteBg = "#fff";
+  el.style.backgroundColor = whiteBg;
+
+  el.querySelectorAll("*").forEach(child => {
+    child.style.backgroundColor = whiteBg;
+  });
+
+  html2canvas(el, { backgroundColor: whiteBg, useCORS: true }).then((canvas) => {
     const imgData = canvas.toDataURL("image/png");
     const pdf = new jsPDF({
-      orientation: "portrait",
+      orientation: "landscape",
       unit: "pt",
       format: "a4",
     });
@@ -575,7 +583,12 @@ async function generatePdf(refName) {
     const imgWidth = pageWidth - 40;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     pdf.addImage(imgData, "PNG", 20, 20, imgWidth, imgHeight);
-    pdf.save("rapport.pdf");
+    pdf.save("devise.pdf");
+
+    el.style.backgroundColor = originalBg;
+    el.querySelectorAll("*").forEach(child => {
+      child.style.backgroundColor = "";
+    });
   });
 }
 
