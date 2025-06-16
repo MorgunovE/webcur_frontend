@@ -286,7 +286,7 @@
         <v-card class="pa-6 mt-8" elevation="6">
           <v-card-title>
             <v-icon color="primary" class="mr-2">mdi-finance</v-icon>
-            Informations sur l'action
+            Informations sur l'action : {{ actionSelectionnee }}
           </v-card-title>
           <v-card-text>
             <div class="mb-2 text-caption">Recherchez une action par symbole ou sélectionnez-en une pour afficher ses informations et son historique.</div>
