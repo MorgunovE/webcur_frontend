@@ -48,7 +48,60 @@
 
       <!-- Popular Currencies Preview -->
       <v-container class="mt-10">
-        <h2 class="mb-4">Devises populaires</h2>
+        <h2 class="mb-16 text-center">Devises</h2>
+        <v-row class="mb-8" align="center" justify="center">
+          <v-col cols="12" md="6">
+            <v-card class="pa-6">
+              <h3 class="mb-2">Explore the World of Currencies</h3>
+              <div>
+                Stay updated with real-time exchange rates and discover trends in global currencies. WebCur makes currency conversion and analysis simple and accessible for everyone.
+                <br /><br />
+                <strong>Découvrez le monde des devises</strong><br />
+                Restez informé des taux de change en temps réel et suivez les tendances des monnaies mondiales. WebCur rend la conversion et l'analyse des devises simples et accessibles à tous.
+              </div>
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="6" class="d-flex justify-center">
+            <div style="height:250px; width:100%;" class="rounded-lg overflow-hidden">
+              <v-img
+                  src="@/assets/images/Devises_1.png"
+                  alt="Devises"
+                  cover
+                  width="100%"
+                  height="100%"
+                  border-radius="16px"
+                  style="object-fit:cover;"
+              />
+            </div>
+          </v-col>
+        </v-row>
+
+        <v-row class="mb-8" align="center" justify="center">
+          <v-col cols="12" md="6" class="d-flex justify-center">
+            <div style="height:250px; width:100%;" class="rounded-lg overflow-hidden">
+              <v-img
+                  src="@/assets/images/Devises_2.png"
+                  alt="Devises"
+                  cover
+                  width="100%"
+                  height="100%"
+                  border-radius="16px"
+                  style="object-fit:cover;"
+              />
+            </div>
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-card class="pa-6">
+              <h3 class="mb-2">Votre tableau de bord personnel des devises</h3>
+              <div>
+                Créez une liste personnalisée de devises favorites et suivez leurs performances. Prenez des décisions éclairées grâce à nos outils intuitifs et à l’historique des données.<br>
+                Gérez facilement vos devises préférées, comparez les taux de change en temps réel et accédez à des analyses détaillées pour optimiser vos investissements.<br>
+                Profitez d’une expérience sur mesure pour surveiller l’évolution des marchés et rester informé des dernières tendances financières.
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
+        <h3 class="mb-4 mt-16">Devises populaires</h3>
         <v-row>
           <v-col
             v-for="devise in devisesPopulaires.slice(0, 5)"
