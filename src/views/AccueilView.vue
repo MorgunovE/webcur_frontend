@@ -44,7 +44,61 @@
 
       <!-- Popular Currencies -->
       <v-container class="mt-10">
-        <h2 class="mb-4">Devises populaires</h2>
+        <h2 class="mb-4 text-center">Devises</h2>
+        <v-row class="mb-8" align="center" justify="center">
+          <v-col cols="12" md="6">
+            <v-card class="pa-6">
+              <h3 class="mb-2">Explore the World of Currencies</h3>
+              <div>
+                Stay updated with real-time exchange rates and discover trends in global currencies. WebCur makes currency conversion and analysis simple and accessible for everyone.
+                <br /><br />
+                <strong>Découvrez le monde des devises</strong><br />
+                Restez informé des taux de change en temps réel et suivez les tendances des monnaies mondiales. WebCur rend la conversion et l'analyse des devises simples et accessibles à tous.
+              </div>
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="6" class="d-flex justify-center">
+            <div style="height:250px; width:100%;" class="rounded-lg overflow-hidden">
+              <v-img
+                  src="@/assets/images/Devises_1.png"
+                  alt="Devises"
+                  cover
+                  width="100%"
+                  height="100%"
+                  border-radius="16px"
+                  style="object-fit:cover;"
+              />
+            </div>
+          </v-col>
+        </v-row>
+
+        <!-- Card: Image left, Text right (Currencies) -->
+        <v-row class="mb-8" align="center" justify="center">
+          <v-col cols="12" md="6" class="d-flex justify-center">
+            <div style="height:250px; width:100%;" class="rounded-lg overflow-hidden">
+              <v-img
+                  src="@/assets/images/Devises_2.png"
+                  alt="Devises"
+                  cover
+                  width="100%"
+                  height="100%"
+                  border-radius="16px"
+                  style="object-fit:cover;"
+              />
+            </div>
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-card class="pa-6">
+              <h3 class="mb-2">Votre tableau de bord personnel des devises</h3>
+              <div>
+                Créez une liste personnalisée de devises favorites et suivez leurs performances. Prenez des décisions éclairées grâce à nos outils intuitifs et à l’historique des données.<br>
+                Gérez facilement vos devises préférées, comparez les taux de change en temps réel et accédez à des analyses détaillées pour optimiser vos investissements.<br>
+                Profitez d’une expérience sur mesure pour surveiller l’évolution des marchés et rester informé des dernières tendances financières.
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
+        <h3 class="mb-4">Devises populaires</h3>
         <v-row>
           <v-col
               v-for="devise in devisesPopulaires.slice(0, 5)"
@@ -65,7 +119,37 @@
 
       <!-- Popular Actions -->
       <v-container class="mt-10">
-        <h2 class="mb-4">Actions populaires</h2>
+        <h2 class="mb-4 text-center">Actions</h2>
+        <v-row class="mb-8" align="center" justify="center">
+          <v-col cols="12" md="6">
+            <v-card class="pa-6">
+              <h3 class="mb-2">Track Stock Market Leaders</h3>
+              <div>
+                Analyze the most popular stocks and follow their real-time performance. WebCur provides advanced analytics to help you stay ahead in the market.
+              </div>
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="6" class="d-flex justify-center">
+            <!-- Prompt: "A dynamic stock market chart with rising and falling lines, modern digital style, blue and green colors" -->
+            <v-img src="https://via.placeholder.com/400x250?text=Stock+Market+Chart" alt="Stock Market Chart" height="250" />
+          </v-col>
+        </v-row>
+
+        <v-row class="mb-8" align="center" justify="center">
+          <v-col cols="12" md="6" class="d-flex justify-center">
+            <!-- Prompt: "A person analyzing stock data on a laptop, surrounded by financial icons, flat illustration" -->
+            <v-img src="https://via.placeholder.com/400x250?text=Stock+Analysis" alt="Stock Analysis" height="250" />
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-card class="pa-6">
+              <h3 class="mb-2">Advanced Stock Analysis Tools</h3>
+              <div>
+                Dive deep into stock history, compare trends, and optimize your investment strategy with our comprehensive analysis features.
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
+        <h3 class="mb-4">Actions populaires</h3>
         <v-row>
           <v-col
               v-for="action in actionsPopulaires.slice(0, 5)"
@@ -86,7 +170,37 @@
 
       <!-- Popular Companies -->
       <v-container class="mt-10 mb-10">
-        <h2 class="mb-4">Entreprises populaires</h2>
+        <h2 class="mb-4 text-center">Entreprises</h2>
+        <v-row class="mb-8" align="center" justify="center">
+          <v-col cols="12" md="6">
+            <v-card class="pa-6">
+              <h3 class="mb-2">Discover Top Companies</h3>
+              <div>
+                Get insights into leading companies, their market performance, and key financial indicators. WebCur helps you make smarter investment choices.
+              </div>
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="6" class="d-flex justify-center">
+            <!-- Prompt: "A modern illustration of skyscrapers and company logos, representing global business, blue and white theme" -->
+            <v-img src="https://via.placeholder.com/400x250?text=Top+Companies" alt="Top Companies" height="250" />
+          </v-col>
+        </v-row>
+
+        <v-row class="mb-8" align="center" justify="center">
+          <v-col cols="12" md="6" class="d-flex justify-center">
+            <!-- Prompt: "A business team analyzing company growth charts, digital style, professional atmosphere" -->
+            <v-img src="https://via.placeholder.com/400x250?text=Company+Growth" alt="Company Growth" height="250" />
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-card class="pa-6">
+              <h3 class="mb-2">Analyze Company Growth</h3>
+              <div>
+                Visualize company growth over time and compare industry leaders. Our platform provides the data you need to track and evaluate business success.
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
+        <h3 class="mb-4">Entreprises populaires</h3>
         <v-row>
           <v-col
               v-for="ent in entreprisesPopulaires.slice(0, 5)"
@@ -169,4 +283,5 @@ function goCompany() {
 .hoverable:hover {
   box-shadow: 0 8px 32px rgba(25, 118, 210, 0.15);
 }
+
 </style>
