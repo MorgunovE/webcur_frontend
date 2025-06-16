@@ -88,6 +88,8 @@
                 <v-autocomplete
                   v-model="nouvelleDeviseFavori"
                   :items="devises"
+                  item-title="nom"
+                  item-value="nom"
                   label="Ajouter une devise aux favoris"
                   class="mt-2"
                   clearable
@@ -166,20 +168,25 @@
               <v-icon>mdi-file-pdf-box</v-icon>
             </v-btn>
           </v-card-title>
-          <v-card-text v-show="deviseActive">
+          <v-card-text>
             <div ref="deviseCard">
               <div class="mb-2 text-caption">Recherchez une devise par nom ou sélectionnez-en une pour afficher ses informations et son historique.</div>
               <v-row>
                 <v-col cols="12" md="6">
                   <v-autocomplete
                     v-model="deviseSelectionnee"
-                    :items="devisesPopulaires"
+                    :items="devises"
                     item-title="nom"
                     item-value="nom"
                     label="Sélectionner ou rechercher une devise"
                     clearable
                     solo
+                    @update:modelValue="onDeviseSelectionChange"
+                    @update:search-input="searchDevise"
+                    @keydown.enter="handleDeviseInput"
+                    @input="searchDevise($event)"
                   />
+                  <v-alert v-if="erreur" type="error" class="mt-2">{{ erreur }}</v-alert>
                   <v-card v-if="deviseActive">
                     <v-card-title>{{ deviseActive.nom }}</v-card-title>
                     <v-card-text>
@@ -227,6 +234,7 @@
               </v-row>
             </div>
           </v-card-text>
+          <v-alert v-if="erreur" type="error" class="mt-2">{{ erreur }}</v-alert>
         </v-card>
       </v-container>
 
@@ -517,7 +525,7 @@ import GraphiqueLignes from "../components/GraphiqueLignes.vue";
 
 const store = useStore();
 const deviseActive = computed(() => store.state.devises.deviseActive);
-const devisesPopulaires = computed(() => store.state.devises.listeDevises || []);
+const devisesPopulaires = ref([]);
 const deviseSelectionnee = ref("EUR");
 const pair = computed(() => deviseSelectionnee.value);
 const historique = computed(() => store.state.devises.historiqueDevise);
@@ -543,16 +551,27 @@ const nouveauNom = ref(
   utilisateur.value ? utilisateur.value.nom_utilisateur : ""
 );
 
-const devises = computed(() =>
-    (store.state.devises.listeDevises || []).map((d) => d.nom)
-);
+const devises = [
+  "USD", "EUR", "CAD", "GBP", "JPY", "AED", "AFN", "ALL", "AMD", "ANG", "AOA", "ARS", "AUD", "AWG", "AZN", "BAM", "BBD", "BDT",
+  "BGN", "BHD", "BIF", "BMD", "BND", "BOB", "BRL", "BSD", "BTN", "BWP", "BYN", "BZD", "CDF",
+  "CHF", "CLP", "CNY", "COP", "CRC", "CUP", "CVE", "CZK", "DJF", "DKK", "DOP", "DZD", "EGP", "ERN",
+  "ETB", "FJD", "FKP", "FOK", "GEL", "GGP", "GHS", "GIP", "GMD", "GNF", "GTQ", "GYD",
+  "HKD", "HNL", "HRK", "HTG", "HUF", "IDR", "ILS", "IMP", "INR", "IQD", "IRR", "ISK", "JEP", "JMD",
+  "JOD", "KES", "KGS", "KHR", "KID", "KMF", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR",
+  "LRD", "LSL", "LYD", "MAD", "MDL", "MGA", "MKD", "MMK", "MNT", "MOP", "MRU", "MUR", "MVR", "MWK",
+  "MXN", "MYR", "MZN", "NAD", "NGN", "NIO", "NOK", "NPR", "NZD", "OMR", "PAB", "PEN", "PGK", "PHP",
+  "PKR", "PLN", "PYG", "QAR", "RON", "RUB", "RSD", "RWF", "SAR", "SBD", "SCR", "SDG", "SEK", "SGD", "SHP",
+  "SLE", "SLL", "SOS", "SRD", "SSP", "STN", "SYP", "SZL", "THB", "TJS", "TMT", "TND", "TOP", "TRY",
+  "TTD", "TVD", "TWD", "TZS", "UAH", "UGX", "UYU", "UZS", "VES", "VND", "VUV", "WST", "XAF",
+  "XCD", "XCG", "XDR", "XOF", "XPF", "YER", "ZAR", "ZMW", "ZWL"
+];
+
 
 const codeSource = ref("USD");
 const codeCible = ref("EUR");
 const montant = ref(1);
 const resultat = ref(null);
-const erreur = ref("");
-const devisesFavoris = computed(() => store.state.devises.devisesFavoris);
+const devisesFavoris = computed(() => store.state.devises.devisesFavoris ?? []);
 const nouvelleDeviseFavori = ref("");
 
 const actionsFavoris = computed(() => store.state.actions.actionsFavoris);
@@ -599,6 +618,59 @@ const selectionnerAction = async (nomAction) => {
 const deviseCard = ref(null);
 const actionCard = ref(null);
 const entrepriseCard = ref(null);
+
+const erreur = ref("");
+
+const searchDevise = async (search) => {
+  if (search && search.length === 3) {
+    try {
+      await store.dispatch("devises/chargerDevise", search.toUpperCase());
+      erreur.value = "";
+    } catch (e) {
+      erreur.value = "Devise non trouvée";
+    }
+  }
+};
+
+const searchedDevises = ref([]);
+
+async function handleDeviseInput(event) {
+  const value = typeof event === "string" ? event : deviseSelectionnee.value;
+  if (value && value.length === 3) {
+    const upperValue = value.toUpperCase();
+    if (!devises.value.some(d => d.nom === upperValue)) {
+      try {
+        await store.dispatch("devises/chargerDevise", upperValue);
+      } catch (e) {
+        erreur.value = "Devise inconnue ou erreur de chargement.";
+        return;
+      }
+    }
+    deviseSelectionnee.value = upperValue;
+  }
+}
+
+async function onDeviseSelectionChange(nom) {
+  if (!nom) {
+    store.commit("devises/setDeviseActive", null);
+    erreur.value = "";
+    return;
+  }
+  try {
+    await store.dispatch("devises/chargerDevise", nom);
+    erreur.value = "";
+  } catch (e) {
+    if (e.response && e.response.status === 404) {
+      erreur.value = "Devise non trouvée";
+    } else if (e.response && e.response.status === 502) {
+      erreur.value = "Erreur serveur (502). Veuillez réessayer plus tard.";
+    } else {
+      erreur.value = "Erreur lors de la récupération de la devise";
+    }
+    store.commit("devises/setDeviseActive", null);
+  }
+}
+
 
 async function generatePdf(refName) {
   await nextTick();
@@ -733,6 +805,10 @@ async function chargerDevisesPopulaires() {
 }
 
 async function chargerDevise() {
+  if (!deviseSelectionnee.value) {
+    store.commit("devises/setDeviseActive", null);
+    return;
+  }
   loadingHistoriqueDevice.value = true;
   await store.dispatch("devises/chargerDevise", deviseSelectionnee.value);
   await store.dispatch("devises/chargerHistoriqueDevise", {
@@ -770,7 +846,7 @@ onMounted(async () => {
   devisesPopulaires.value = store.state.devises.listeDevises.map((d) => d.nom);
   await chargerDevise();
   if (actionsPopulaires.value.length) achatSymbole.value = actionsPopulaires.value[0].symbole;
-  if (devises.value.length) achatDevise.value = devises.value[0];
+  if (devises.length) achatDevise.value = devises[0];
   await store.dispatch("entreprises/chargerEntreprisesPopulaires");
   if (entreprisesPopulaires.value.length) {
     entrepriseSelectionnee.value = entreprisesPopulaires.value[0].symbole;
@@ -786,7 +862,11 @@ watch(
     [deviseSelectionnee, actionSelectionnee, entrepriseSelectionnee],
     async ([newDevise, newAction, nouveauSymbole], [oldDevise, oldAction, ancienSymbole]) => {
       if (newDevise !== oldDevise) {
-        await chargerDevise();
+        if (newDevise) {
+          await chargerDevise();
+        } else {
+          store.commit("devises/setDeviseActive", null);
+        }
       }
       if (newAction !== oldAction) {
         await chargerActionEtHistorique(newAction);
@@ -796,6 +876,26 @@ watch(
       }
     }
 );
+
+watch(deviseSelectionnee, async (val) => {
+  if (!val) {
+    store.commit("devises/setDeviseActive", null);
+    erreur.value = "";
+    return;
+  }
+  if (val.length >= 3) {
+    try {
+      await store.dispatch("devises/chargerDevise", val.toUpperCase());
+      erreur.value = "";
+    } catch (e) {
+      store.commit("devises/setDeviseActive", null);
+      erreur.value = "Devise non trouvée";
+    }
+  } else {
+    store.commit("devises/setDeviseActive", null);
+    erreur.value = "";
+  }
+});
 
 async function ajouterFavori() {
   if (nouvelleDeviseFavori.value) {
