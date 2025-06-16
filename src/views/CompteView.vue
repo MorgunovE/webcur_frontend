@@ -319,8 +319,8 @@
               <div class="mb-2 text-caption">Recherchez une action par symbole ou sélectionnez-en une pour afficher ses informations et son historique.</div>
               <v-autocomplete
                 v-model="actionSelectionnee"
-                :items="actionsPopulaires"
-                item-title="symbole"
+                :items="allActions"
+                item-title="display"
                 item-value="symbole"
                 label="Sélectionner ou rechercher une action"
                 clearable
@@ -380,8 +380,8 @@
                <v-col cols="12" md="3">
                  <v-select
                    v-model="achatSymbole"
-                   :items="actionsPopulaires"
-                   item-title="symbole"
+                   :items="allActions"
+                   item-title="display"
                    item-value="symbole"
                    label="Symbole"
                    required
@@ -445,14 +445,6 @@
                   clearable
                   solo
               />
-              <v-btn
-                  color="primary"
-                  class="mt-2"
-                  @click="onEntrepriseSelectionChange"
-                  :disabled="!nouvelleActionFavori"
-              >
-                Ajouter
-              </v-btn>
               <v-card v-if="entreprise">
                 <v-card-title>
                   <img
@@ -560,29 +552,7 @@ const nouveauNom = ref(
   utilisateur.value ? utilisateur.value.nom_utilisateur : ""
 );
 
-const devises = [
-  "USD", "EUR", "CAD", "GBP", "JPY", "AED", "AFN", "ALL", "AMD", "ANG", "AOA", "ARS", "AUD", "AWG", "AZN", "BAM", "BBD", "BDT",
-  "BGN", "BHD", "BIF", "BMD", "BND", "BOB", "BRL", "BSD", "BTN", "BWP", "BYN", "BZD", "CDF",
-  "CHF", "CLP", "CNY", "COP", "CRC", "CUP", "CVE", "CZK", "DJF", "DKK", "DOP", "DZD", "EGP", "ERN",
-  "ETB", "FJD", "FKP", "FOK", "GEL", "GGP", "GHS", "GIP", "GMD", "GNF", "GTQ", "GYD",
-  "HKD", "HNL", "HRK", "HTG", "HUF", "IDR", "ILS", "IMP", "INR", "IQD", "IRR", "ISK", "JEP", "JMD",
-  "JOD", "KES", "KGS", "KHR", "KID", "KMF", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR",
-  "LRD", "LSL", "LYD", "MAD", "MDL", "MGA", "MKD", "MMK", "MNT", "MOP", "MRU", "MUR", "MVR", "MWK",
-  "MXN", "MYR", "MZN", "NAD", "NGN", "NIO", "NOK", "NPR", "NZD", "OMR", "PAB", "PEN", "PGK", "PHP",
-  "PKR", "PLN", "PYG", "QAR", "RON", "RUB", "RSD", "RWF", "SAR", "SBD", "SCR", "SDG", "SEK", "SGD", "SHP",
-  "SLE", "SLL", "SOS", "SRD", "SSP", "STN", "SYP", "SZL", "THB", "TJS", "TMT", "TND", "TOP", "TRY",
-  "TTD", "TVD", "TWD", "TZS", "UAH", "UGX", "UYU", "UZS", "VES", "VND", "VUV", "WST", "XAF",
-  "XCD", "XCG", "XDR", "XOF", "XPF", "YER", "ZAR", "ZMW", "ZWL"
-];
 
-const allActions = [
-  { symbole: "AAPL", name: "Apple Inc.", display: "AAPL — Apple Inc." },
-  { symbole: "MSFT", name: "Microsoft Corporation", display: "MSFT — Microsoft Corporation" },
-  { symbole: "GOOGL", name: "Alphabet Inc.", display: "GOOGL — Alphabet Inc." },
-  { symbole: "AMZN", name: "Amazon.com Inc.", display: "AMZN — Amazon.com Inc." },
-  { symbole: "TSLA", name: "Tesla Inc.", display: "TSLA — Tesla Inc." },
-  // ...add more or load from a JSON file
-];
 
 const actionSearch = ref("");
 
@@ -660,6 +630,7 @@ const selectionnerDevise = async (nomDevise) => {
 
 const selectionnerAction = async (nomAction) => {
   actionSelectionnee.value = nomAction;
+  entrepriseSelectionnee.value = nomAction;
   await nextTick();
   const el = actionDetails.value?.$el || actionDetails.value;
   el?.scrollIntoView({ behavior: "smooth" });
@@ -991,6 +962,217 @@ async function convertir() {
     erreur.value = "Conversion failed";
   }
 }
+
+const devises = [
+  "USD", "EUR", "CAD", "GBP", "JPY", "AED", "AFN", "ALL", "AMD", "ANG", "AOA", "ARS", "AUD", "AWG", "AZN", "BAM", "BBD", "BDT",
+  "BGN", "BHD", "BIF", "BMD", "BND", "BOB", "BRL", "BSD", "BTN", "BWP", "BYN", "BZD", "CDF",
+  "CHF", "CLP", "CNY", "COP", "CRC", "CUP", "CVE", "CZK", "DJF", "DKK", "DOP", "DZD", "EGP", "ERN",
+  "ETB", "FJD", "FKP", "FOK", "GEL", "GGP", "GHS", "GIP", "GMD", "GNF", "GTQ", "GYD",
+  "HKD", "HNL", "HRK", "HTG", "HUF", "IDR", "ILS", "IMP", "INR", "IQD", "IRR", "ISK", "JEP", "JMD",
+  "JOD", "KES", "KGS", "KHR", "KID", "KMF", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR",
+  "LRD", "LSL", "LYD", "MAD", "MDL", "MGA", "MKD", "MMK", "MNT", "MOP", "MRU", "MUR", "MVR", "MWK",
+  "MXN", "MYR", "MZN", "NAD", "NGN", "NIO", "NOK", "NPR", "NZD", "OMR", "PAB", "PEN", "PGK", "PHP",
+  "PKR", "PLN", "PYG", "QAR", "RON", "RUB", "RSD", "RWF", "SAR", "SBD", "SCR", "SDG", "SEK", "SGD", "SHP",
+  "SLE", "SLL", "SOS", "SRD", "SSP", "STN", "SYP", "SZL", "THB", "TJS", "TMT", "TND", "TOP", "TRY",
+  "TTD", "TVD", "TWD", "TZS", "UAH", "UGX", "UYU", "UZS", "VES", "VND", "VUV", "WST", "XAF",
+  "XCD", "XCG", "XDR", "XOF", "XPF", "YER", "ZAR", "ZMW", "ZWL"
+];
+
+const allActions = [
+  { symbole: "AAPL", name: "Apple Inc.", display: "AAPL — Apple Inc." },
+  { symbole: "MSFT", name: "Microsoft Corporation", display: "MSFT — Microsoft Corporation" },
+  { symbole: "GOOGL", name: "Alphabet Inc.", display: "GOOGL — Alphabet Inc." },
+  { symbole: "AMZN", name: "Amazon.com Inc.", display: "AMZN — Amazon.com Inc." },
+  { symbole: "TSLA", name: "Tesla Inc.", display: "TSLA — Tesla Inc." },
+  { symbole: "META", name: "Meta Platforms Inc.", display: "META — Meta Platforms Inc." },
+  { symbole: "NVDA", name: "NVIDIA Corporation", display: "NVDA — NVIDIA Corporation" },
+  { symbole: "BRK.B", name: "Berkshire Hathaway Inc.", display: "BRK.B — Berkshire Hathaway Inc." },
+  { symbole: "JPM", name: "JPMorgan Chase & Co.", display: "JPM — JPMorgan Chase & Co." },
+  { symbole: "V", name: "Visa Inc.", display: "V — Visa Inc." },
+  { symbole: "JNJ", name: "Johnson & Johnson", display: "JNJ — Johnson & Johnson" },
+  { symbole: "WMT", name: "Walmart Inc.", display: "WMT — Walmart Inc." },
+  { symbole: "PG", name: "Procter & Gamble Co.", display: "PG — Procter & Gamble Co." },
+  { symbole: "MA", name: "Mastercard Incorporated", display: "MA — Mastercard Incorporated" },
+  { symbole: "DIS", name: "The Walt Disney Company", display: "DIS — The Walt Disney Company" },
+  { symbole: "HD", name: "The Home Depot, Inc.", display: "HD — The Home Depot, Inc." },
+  { symbole: "BAC", name: "Bank of America Corporation", display: "BAC — Bank of America Corporation" },
+  { symbole: "XOM", name: "Exxon Mobil Corporation", display: "XOM — Exxon Mobil Corporation" },
+  { symbole: "PFE", name: "Pfizer Inc.", display: "PFE — Pfizer Inc." },
+  { symbole: "KO", name: "The Coca-Cola Company", display: "KO — The Coca-Cola Company" },
+  { symbole: "PEP", name: "PepsiCo, Inc.", display: "PEP — PepsiCo, Inc." },
+  { symbole: "CSCO", name: "Cisco Systems, Inc.", display: "CSCO — Cisco Systems, Inc." },
+  { symbole: "ORCL", name: "Oracle Corporation", display: "ORCL — Oracle Corporation" },
+  { symbole: "INTC", name: "Intel Corporation", display: "INTC — Intel Corporation" },
+  { symbole: "CMCSA", name: "Comcast Corporation", display: "CMCSA — Comcast Corporation" },
+  { symbole: "ABT", name: "Abbott Laboratories", display: "ABT — Abbott Laboratories" },
+  { symbole: "MCD", name: "McDonald's Corporation", display: "MCD — McDonald's Corporation" },
+  { symbole: "NKE", name: "NIKE, Inc.", display: "NKE — NIKE, Inc." },
+  { symbole: "LLY", name: "Eli Lilly and Company", display: "LLY — Eli Lilly and Company" },
+  { symbole: "MRK", name: "Merck & Co., Inc.", display: "MRK — Merck & Co., Inc." },
+  { symbole: "UNH", name: "UnitedHealth Group Incorporated", display: "UNH — UnitedHealth Group Incorporated" },
+  { symbole: "CVX", name: "Chevron Corporation", display: "CVX — Chevron Corporation" },
+  { symbole: "T", name: "AT&T Inc.", display: "T — AT&T Inc." },
+  { symbole: "VZ", name: "Verizon Communications Inc.", display: "VZ — Verizon Communications Inc." },
+  { symbole: "COST", name: "Costco Wholesale Corporation", display: "COST — Costco Wholesale Corporation" },
+  { symbole: "ADBE", name: "Adobe Inc.", display: "ADBE — Adobe Inc." },
+  { symbole: "CRM", name: "Salesforce, Inc.", display: "CRM — Salesforce, Inc." },
+  { symbole: "PYPL", name: "PayPal Holdings, Inc.", display: "PYPL — PayPal Holdings, Inc." },
+  { symbole: "TMO", name: "Thermo Fisher Scientific Inc.", display: "TMO — Thermo Fisher Scientific Inc." },
+  { symbole: "DHR", name: "Danaher Corporation", display: "DHR — Danaher Corporation" },
+  { symbole: "LIN", name: "Linde plc", display: "LIN — Linde plc" },
+  { symbole: "ABBV", name: "AbbVie Inc.", display: "ABBV — AbbVie Inc." },
+  { symbole: "AVGO", name: "Broadcom Inc.", display: "AVGO — Broadcom Inc." },
+  { symbole: "QCOM", name: "QUALCOMM Incorporated", display: "QCOM — QUALCOMM Incorporated" },
+  { symbole: "TXN", name: "Texas Instruments Incorporated", display: "TXN — Texas Instruments Incorporated" },
+  { symbole: "SBUX", name: "Starbucks Corporation", display: "SBUX — Starbucks Corporation" },
+  { symbole: "UNP", name: "Union Pacific Corporation", display: "UNP — Union Pacific Corporation" },
+  { symbole: "MDT", name: "Medtronic plc", display: "MDT — Medtronic plc" },
+  { symbole: "BMY", name: "Bristol-Myers Squibb Company", display: "BMY — Bristol-Myers Squibb Company" },
+  { symbole: "HON", name: "Honeywell International Inc.", display: "HON — Honeywell International Inc." },
+  { symbole: "UPS", name: "United Parcel Service, Inc.", display: "UPS — United Parcel Service, Inc." },
+  { symbole: "GS", name: "The Goldman Sachs Group, Inc.", display: "GS — The Goldman Sachs Group, Inc." },
+  { symbole: "BA", name: "The Boeing Company", display: "BA — The Boeing Company" },
+  { symbole: "C", name: "Citigroup Inc.", display: "C — Citigroup Inc." },
+  { symbole: "GE", name: "General Electric Company", display: "GE — General Electric Company" },
+  { symbole: "AMGN", name: "Amgen Inc.", display: "AMGN — Amgen Inc." },
+  { symbole: "IBM", name: "International Business Machines Corporation", display: "IBM — International Business Machines Corporation" },
+  { symbole: "MMM", name: "3M Company", display: "MMM — 3M Company" },
+  { symbole: "AXP", name: "American Express Company", display: "AXP — American Express Company" },
+  { symbole: "FDX", name: "FedEx Corporation", display: "FDX — FedEx Corporation" },
+  { symbole: "GM", name: "General Motors Company", display: "GM — General Motors Company" },
+  { symbole: "F", name: "Ford Motor Company", display: "F — Ford Motor Company" },
+  { symbole: "SNY", name: "Sanofi", display: "SNY — Sanofi" },
+  { symbole: "SAP", name: "SAP SE", display: "SAP — SAP SE" },
+  { symbole: "BABA", name: "Alibaba Group Holding Limited", display: "BABA — Alibaba Group Holding Limited" },
+  { symbole: "TM", name: "Toyota Motor Corporation", display: "TM — Toyota Motor Corporation" },
+  { symbole: "NSRGY", name: "Nestlé S.A.", display: "NSRGY — Nestlé S.A." },
+  { symbole: "RDS.A", name: "Shell plc", display: "RDS.A — Shell plc" },
+  { symbole: "TOT", name: "TotalEnergies SE", display: "TOT — TotalEnergies SE" },
+  { symbole: "BP", name: "BP p.l.c.", display: "BP — BP p.l.c." },
+  { symbole: "SONY", name: "Sony Group Corporation", display: "SONY — Sony Group Corporation" },
+  { symbole: "TMUS", name: "T-Mobile US, Inc.", display: "TMUS — T-Mobile US, Inc." },
+  { symbole: "DE", name: "Deere & Company", display: "DE — Deere & Company" },
+  { symbole: "LMT", name: "Lockheed Martin Corporation", display: "LMT — Lockheed Martin Corporation" },
+  { symbole: "CAT", name: "Caterpillar Inc.", display: "CAT — Caterpillar Inc." },
+  { symbole: "MO", name: "Altria Group, Inc.", display: "MO — Altria Group, Inc." },
+  { symbole: "GILD", name: "Gilead Sciences, Inc.", display: "GILD — Gilead Sciences, Inc." },
+  { symbole: "CVS", name: "CVS Health Corporation", display: "CVS — CVS Health Corporation" },
+  { symbole: "WFC", name: "Wells Fargo & Company", display: "WFC — Wells Fargo & Company" },
+  { symbole: "BKNG", name: "Booking Holdings Inc.", display: "BKNG — Booking Holdings Inc." },
+  { symbole: "ADP", name: "Automatic Data Processing, Inc.", display: "ADP — Automatic Data Processing, Inc." },
+  { symbole: "SPGI", name: "S&P Global Inc.", display: "SPGI — S&P Global Inc." },
+  { symbole: "PLD", name: "Prologis, Inc.", display: "PLD — Prologis, Inc." },
+  { symbole: "BLK", name: "BlackRock, Inc.", display: "BLK — BlackRock, Inc." },
+  { symbole: "ISRG", name: "Intuitive Surgical, Inc.", display: "ISRG — Intuitive Surgical, Inc." },
+  { symbole: "NOW", name: "ServiceNow, Inc.", display: "NOW — ServiceNow, Inc." },
+  { symbole: "ZTS", name: "Zoetis Inc.", display: "ZTS — Zoetis Inc." },
+  { symbole: "MDLZ", name: "Mondelez International, Inc.", display: "MDLZ — Mondelez International, Inc." },
+  { symbole: "EL", name: "The Estée Lauder Companies Inc.", display: "EL — The Estée Lauder Companies Inc." },
+  { symbole: "SYK", name: "Stryker Corporation", display: "SYK — Stryker Corporation" },
+  { symbole: "TGT", name: "Target Corporation", display: "TGT — Target Corporation" },
+  { symbole: "DUK", name: "Duke Energy Corporation", display: "DUK — Duke Energy Corporation" },
+  { symbole: "SO", name: "The Southern Company", display: "SO — The Southern Company" },
+  { symbole: "CL", name: "Colgate-Palmolive Company", display: "CL — Colgate-Palmolive Company" },
+  { symbole: "APD", name: "Air Products and Chemicals, Inc.", display: "APD — Air Products and Chemicals, Inc." },
+  { symbole: "EOG", name: "EOG Resources, Inc.", display: "EOG — EOG Resources, Inc." },
+  { symbole: "SHW", name: "The Sherwin-Williams Company", display: "SHW — The Sherwin-Williams Company" },
+  { symbole: "MMC", name: "Marsh & McLennan Companies, Inc.", display: "MMC — Marsh & McLennan Companies, Inc." },
+  { symbole: "AON", name: "Aon plc", display: "AON — Aon plc" },
+  { symbole: "CB", name: "Chubb Limited", display: "CB — Chubb Limited" },
+  { symbole: "WM", name: "Waste Management, Inc.", display: "WM — Waste Management, Inc." },
+  { symbole: "GD", name: "General Dynamics Corporation", display: "GD — General Dynamics Corporation" },
+  { symbole: "HUM", name: "Humana Inc.", display: "HUM — Humana Inc." },
+  { symbole: "REGN", name: "Regeneron Pharmaceuticals, Inc.", display: "REGN — Regeneron Pharmaceuticals, Inc." },
+  { symbole: "VRTX", name: "Vertex Pharmaceuticals Incorporated", display: "VRTX — Vertex Pharmaceuticals Incorporated" },
+  { symbole: "IDXX", name: "IDEXX Laboratories, Inc.", display: "IDXX — IDEXX Laboratories, Inc." },
+  { symbole: "ROST", name: "Ross Stores, Inc.", display: "ROST — Ross Stores, Inc." },
+  { symbole: "MAR", name: "Marriott International, Inc.", display: "MAR — Marriott International, Inc." },
+  { symbole: "AIG", name: "American International Group, Inc.", display: "AIG — American International Group, Inc." },
+  { symbole: "AFL", name: "Aflac Incorporated", display: "AFL — Aflac Incorporated" },
+  { symbole: "KMB", name: "Kimberly-Clark Corporation", display: "KMB — Kimberly-Clark Corporation" },
+  { symbole: "D", name: "Dominion Energy, Inc.", display: "D — Dominion Energy, Inc." },
+  { symbole: "EXC", name: "Exelon Corporation", display: "EXC — Exelon Corporation" },
+  { symbole: "PSA", name: "Public Storage", display: "PSA — Public Storage" },
+  { symbole: "DLR", name: "Digital Realty Trust, Inc.", display: "DLR — Digital Realty Trust, Inc." },
+  { symbole: "SBAC", name: "SBA Communications Corporation", display: "SBAC — SBA Communications Corporation" },
+  { symbole: "VRSK", name: "Verisk Analytics, Inc.", display: "VRSK — Verisk Analytics, Inc." },
+  { symbole: "CDNS", name: "Cadence Design Systems, Inc.", display: "CDNS — Cadence Design Systems, Inc." },
+  { symbole: "SNPS", name: "Synopsys, Inc.", display: "SNPS — Synopsys, Inc." },
+  { symbole: "FTNT", name: "Fortinet, Inc.", display: "FTNT — Fortinet, Inc." },
+  { symbole: "PANW", name: "Palo Alto Networks, Inc.", display: "PANW — Palo Alto Networks, Inc." },
+  { symbole: "MS", name: "Morgan Stanley", display: "MS — Morgan Stanley" },
+  { symbole: "SCHW", name: "The Charles Schwab Corporation", display: "SCHW — The Charles Schwab Corporation" },
+  { symbole: "ICE", name: "Intercontinental Exchange, Inc.", display: "ICE — Intercontinental Exchange, Inc." },
+  { symbole: "SPG", name: "Simon Property Group, Inc.", display: "SPG — Simon Property Group, Inc." },
+  { symbole: "CCI", name: "Crown Castle Inc.", display: "CCI — Crown Castle Inc." },
+  { symbole: "EQIX", name: "Equinix, Inc.", display: "EQIX — Equinix, Inc." },
+  { symbole: "SBAC", name: "SBA Communications Corporation", display: "SBAC — SBA Communications Corporation" },
+  { symbole: "WELL", name: "Welltower Inc.", display: "WELL — Welltower Inc." },
+  { symbole: "O", name: "Realty Income Corporation", display: "O — Realty Income Corporation" },
+  { symbole: "VICI", name: "VICI Properties Inc.", display: "VICI — VICI Properties Inc." },
+  { symbole: "DLTR", name: "Dollar Tree, Inc.", display: "DLTR — Dollar Tree, Inc." },
+  { symbole: "FISV", name: "Fiserv, Inc.", display: "FISV — Fiserv, Inc." },
+  { symbole: "PAYX", name: "Paychex, Inc.", display: "PAYX — Paychex, Inc." },
+  { symbole: "CTAS", name: "Cintas Corporation", display: "CTAS — Cintas Corporation" },
+  { symbole: "ROK", name: "Rockwell Automation, Inc.", display: "ROK — Rockwell Automation, Inc." },
+  { symbole: "ITW", name: "Illinois Tool Works Inc.", display: "ITW — Illinois Tool Works Inc." },
+  { symbole: "EMR", name: "Emerson Electric Co.", display: "EMR — Emerson Electric Co." },
+  { symbole: "PH", name: "Parker-Hannifin Corporation", display: "PH — Parker-Hannifin Corporation" },
+  { symbole: "ETN", name: "Eaton Corporation plc", display: "ETN — Eaton Corporation plc" },
+  { symbole: "TT", name: "Trane Technologies plc", display: "TT — Trane Technologies plc" },
+  { symbole: "PCAR", name: "PACCAR Inc", display: "PCAR — PACCAR Inc" },
+  { symbole: "CMI", name: "Cummins Inc.", display: "CMI — Cummins Inc." },
+  { symbole: "DOV", name: "Dover Corporation", display: "DOV — Dover Corporation" },
+  { symbole: "XYL", name: "Xylem Inc.", display: "XYL — Xylem Inc." },
+  { symbole: "A", name: "Agilent Technologies, Inc.", display: "A — Agilent Technologies, Inc." },
+  { symbole: "MTD", name: "Mettler-Toledo International Inc.", display: "MTD — Mettler-Toledo International Inc." },
+  { symbole: "PKI", name: "PerkinElmer, Inc.", display: "PKI — PerkinElmer, Inc." },
+  { symbole: "WAT", name: "Waters Corporation", display: "WAT — Waters Corporation" },
+  { symbole: "BIO", name: "Bio-Rad Laboratories, Inc.", display: "BIO — Bio-Rad Laboratories, Inc." },
+  { symbole: "TMO", name: "Thermo Fisher Scientific Inc.", display: "TMO — Thermo Fisher Scientific Inc." },
+  { symbole: "DHR", name: "Danaher Corporation", display: "DHR — Danaher Corporation" },
+  { symbole: "ILMN", name: "Illumina, Inc.", display: "ILMN — Illumina, Inc." },
+  { symbole: "ALGN", name: "Align Technology, Inc.", display: "ALGN — Align Technology, Inc." },
+  { symbole: "STE", name: "STERIS plc", display: "STE — STERIS plc" },
+  { symbole: "RMD", name: "ResMed Inc.", display: "RMD — ResMed Inc." },
+  { symbole: "EW", name: "Edwards Lifesciences Corporation", display: "EW — Edwards Lifesciences Corporation" },
+  { symbole: "BSX", name: "Boston Scientific Corporation", display: "BSX — Boston Scientific Corporation" },
+  { symbole: "SYK", name: "Stryker Corporation", display: "SYK — Stryker Corporation" },
+  { symbole: "ZBH", name: "Zimmer Biomet Holdings, Inc.", display: "ZBH — Zimmer Biomet Holdings, Inc." },
+  { symbole: "ISRG", name: "Intuitive Surgical, Inc.", display: "ISRG — Intuitive Surgical, Inc." },
+  { symbole: "MDT", name: "Medtronic plc", display: "MDT — Medtronic plc" },
+  { symbole: "BDX", name: "Becton, Dickinson and Company", display: "BDX — Becton, Dickinson and Company" },
+  { symbole: "BAX", name: "Baxter International Inc.", display: "BAX — Baxter International Inc." },
+  { symbole: "ABT", name: "Abbott Laboratories", display: "ABT — Abbott Laboratories" },
+  { symbole: "ABMD", name: "Abiomed, Inc.", display: "ABMD — Abiomed, Inc." },
+  { symbole: "A", name: "Agilent Technologies, Inc.", display: "A — Agilent Technologies, Inc." },
+  { symbole: "DGX", name: "Quest Diagnostics Incorporated", display: "DGX — Quest Diagnostics Incorporated" },
+  { symbole: "LH", name: "Laboratory Corporation of America Holdings", display: "LH — Laboratory Corporation of America Holdings" },
+  { symbole: "PKI", name: "PerkinElmer, Inc.", display: "PKI — PerkinElmer, Inc." },
+  { symbole: "WST", name: "West Pharmaceutical Services, Inc.", display: "WST — West Pharmaceutical Services, Inc." },
+  { symbole: "MTD", name: "Mettler-Toledo International Inc.", display: "MTD — Mettler-Toledo International Inc." },
+  { symbole: "TMO", name: "Thermo Fisher Scientific Inc.", display: "TMO — Thermo Fisher Scientific Inc." },
+  { symbole: "DHR", name: "Danaher Corporation", display: "DHR — Danaher Corporation" },
+  { symbole: "IDXX", name: "IDEXX Laboratories, Inc.", display: "IDXX — IDEXX Laboratories, Inc." },
+  { symbole: "BIO", name: "Bio-Rad Laboratories, Inc.", display: "BIO — Bio-Rad Laboratories, Inc." },
+  { symbole: "A", name: "Agilent Technologies, Inc.", display: "A — Agilent Technologies, Inc." },
+  { symbole: "WAT", name: "Waters Corporation", display: "WAT — Waters Corporation" },
+  { symbole: "PKI", name: "PerkinElmer, Inc.", display: "PKI — PerkinElmer, Inc." },
+  { symbole: "MTD", name: "Mettler-Toledo International Inc.", display: "MTD — Mettler-Toledo International Inc." },
+  { symbole: "STE", name: "STERIS plc", display: "STE — STERIS plc" },
+  { symbole: "RMD", name: "ResMed Inc.", display: "RMD — ResMed Inc." },
+  { symbole: "EW", name: "Edwards Lifesciences Corporation", display: "EW — Edwards Lifesciences Corporation" },
+  { symbole: "BSX", name: "Boston Scientific Corporation", display: "BSX — Boston Scientific Corporation" },
+  { symbole: "SYK", name: "Stryker Corporation", display: "SYK — Stryker Corporation" },
+  { symbole: "ZBH", name: "Zimmer Biomet Holdings, Inc.", display: "ZBH — Zimmer Biomet Holdings, Inc." },
+  { symbole: "ISRG", name: "Intuitive Surgical, Inc.", display: "ISRG — Intuitive Surgical, Inc." },
+  { symbole: "MDT", name: "Medtronic plc", display: "MDT — Medtronic plc" },
+  { symbole: "BDX", name: "Becton, Dickinson and Company", display: "BDX — Becton, Dickinson and Company" },
+  { symbole: "BAX", name: "Baxter International Inc.", display: "BAX — Baxter International Inc." },
+  { symbole: "ABT", name: "Abbott Laboratories", display: "ABT — Abbott Laboratories" },
+  { symbole: "ABMD", name: "Abiomed, Inc.", display: "ABMD — Abiomed, Inc." }
+];
+
 </script>
 
 <style scoped>
