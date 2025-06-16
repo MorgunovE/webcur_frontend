@@ -1,0 +1,14 @@
+[2025-06-16T23:14:38.394Z] recupererDevisesPopulaires pour lister les devises populaires - PASSED
+[2025-06-16T23:14:38.396Z] recupererDevise pour récupérer une devise spécifique - PASSED
+[2025-06-16T23:14:38.397Z] recupererHistoriqueDevise pour récupérer l'historique d'une devise - PASSED
+[2025-06-16T23:14:38.398Z] recupererDevisesFavoris pour récupérer les devises favorites - PASSED
+[2025-06-16T23:14:38.398Z] convertirDevise pour convertir une devise - PASSED
+[2025-06-16T23:14:38.399Z] ajouterDeviseFavori pour ajouter une devise favorite - PASSED
+[2025-06-16T23:14:38.400Z] supprimerDeviseFavori pour supprimer une devise favorite - PASSED
+[2025-06-16T23:15:35.919Z] recupererDevisesPopulaires pour lister les devises populaires - PASSED
+[2025-06-16T23:15:35.920Z] recupererDevise pour récupérer une devise spécifique - PASSED
+[2025-06-16T23:15:35.921Z] recupererHistoriqueDevise pour récupérer l'historique d'une devise - PASSED
+[2025-06-16T23:15:35.922Z] recupererDevisesFavoris pour récupérer les devises favorites - PASSED
+[2025-06-16T23:15:35.922Z] convertirDevise pour convertir une devise - PASSED
+[2025-06-16T23:15:35.923Z] ajouterDeviseFavori pour ajouter une devise favorite - PASSED
+[2025-06-16T23:15:35.923Z] supprimerDeviseFavori pour supprimer une devise favorite - PASSED
