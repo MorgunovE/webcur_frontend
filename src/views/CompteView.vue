@@ -407,57 +407,63 @@
 
       <v-container>
         <v-card class="pa-6 mt-8" elevation="6">
-          <v-card-title>
+          <v-card-title class="search-title">
             <v-icon color="primary" class="mr-2">mdi-domain</v-icon>
-            Informations sur l'entreprise : {{ entrepriseSelectionnee }}
+            <span class="search-title-text">Informations sur l'entreprise : {{ entrepriseSelectionnee }}</span>
+            <v-btn icon v-if="entreprise" @click="generatePdf('entrepriseCard')" class="search-title-btn">
+              <v-icon>mdi-file-pdf-box</v-icon>
+            </v-btn>
           </v-card-title>
-          <v-card-text>
-            <div class="mb-2 text-caption">Recherchez une entreprise par nom ou sélectionnez-en une pour afficher ses informations et son historique.</div>
-            <v-autocomplete
-              v-model="entrepriseSelectionnee"
-              :items="entreprisesPopulaires"
-              item-title="companyName"
-              item-value="symbole"
-              label="Sélectionner ou rechercher une entreprise"
-              clearable
-              solo
-            />
-            <v-card v-if="entreprise">
-              <v-card-title>
-                <img
-                    :src="entreprise.image"
-                    alt="Logo"
-                    height="40"
-                    v-if="entreprise.image"
-                />
-                {{ entreprise.companyName }} ({{ entreprise.symbole }})
-              </v-card-title>
-              <v-card-text>
-                <div><strong>Prix:</strong> {{ entreprise.price }} {{ entreprise.currency }}</div>
-                <div><strong>Variation:</strong> {{ entreprise.change }} ({{ entreprise.changePercentage }})</div>
-                <div><strong>Capitalisation:</strong> {{ entreprise.marketCap }}</div>
-                <div><strong>Volume:</strong> {{ entreprise.volume }}</div>
-                <div><strong>Beta:</strong> {{ entreprise.beta }}</div>
-                <div><strong>Dernier dividende:</strong> {{ entreprise.lastDividend }}</div>
-                <div><strong>Industrie:</strong> {{ entreprise.industry }}</div>
-                <div><strong>CEO:</strong> {{ entreprise.ceo }}</div>
-                <div><strong>Pays:</strong> {{ entreprise.country }}</div>
-                <div>
-                  <strong>Site web:</strong>
-                  <a :href="entreprise.website" target="_blank">{{ entreprise.website }}</a>
-                </div>
-                <div><strong>Description:</strong> {{ entreprise.description }}</div>
-              </v-card-text>
-            </v-card>
+          <v-card-text v-show="entreprise">
+            <div ref="entrepriseCard">
+              <div class="mb-2 text-caption">Recherchez une entreprise par nom ou sélectionnez-en une pour afficher ses informations et son historique.</div>
+              <v-autocomplete
+                v-model="entrepriseSelectionnee"
+                :items="entreprisesPopulaires"
+                item-title="companyName"
+                item-value="symbole"
+                label="Sélectionner ou rechercher une entreprise"
+                clearable
+                solo
+              />
+              <v-card v-if="entreprise">
+                <v-card-title>
+                  <img
+                      :src="entreprise.image"
+                      alt="Logo"
+                      height="40"
+                      v-if="entreprise.image"
+                  />
+                  {{ entreprise.companyName }} ({{ entreprise.symbole }})
+                </v-card-title>
+                <v-card-text>
+                  <div><strong>Prix:</strong> {{ entreprise.price }} {{ entreprise.currency }}</div>
+                  <div><strong>Variation:</strong> {{ entreprise.change }} ({{ entreprise.changePercentage }})</div>
+                  <div><strong>Capitalisation:</strong> {{ entreprise.marketCap }}</div>
+                  <div><strong>Volume:</strong> {{ entreprise.volume }}</div>
+                  <div><strong>Beta:</strong> {{ entreprise.beta }}</div>
+                  <div><strong>Dernier dividende:</strong> {{ entreprise.lastDividend }}</div>
+                  <div><strong>Industrie:</strong> {{ entreprise.industry }}</div>
+                  <div><strong>CEO:</strong> {{ entreprise.ceo }}</div>
+                  <div><strong>Pays:</strong> {{ entreprise.country }}</div>
+                  <div>
+                    <strong>Site web:</strong>
+                    <a :href="entreprise.website" target="_blank">{{ entreprise.website }}</a>
+                  </div>
+                  <div><strong>Description:</strong> {{ entreprise.description }}</div>
+                </v-card-text>
+              </v-card>
+              <GraphiqueLignes
+                  v-if="!loadingHistoriqueEntreprise && labelsEntreprise.length"
+                  :labels="labelsEntreprise"
+                  :valeurs="valeursEntreprise"
+                  titre="Historique du prix"
+                  couleur="#1976D2"
+              />
+            </div>
           </v-card-text>
         </v-card>
-        <GraphiqueLignes
-            v-if="!loadingHistoriqueEntreprise && labelsEntreprise.length"
-            :labels="labelsEntreprise"
-            :valeurs="valeursEntreprise"
-            titre="Historique du prix"
-            couleur="#1976D2"
-        />
+
       </v-container>
 
       <v-container class="mt-10">
@@ -565,35 +571,66 @@ const achatErreur = ref("");
 
 const deviseCard = ref(null);
 const actionCard = ref(null);
+const entrepriseCard = ref(null);
 
 async function generatePdf(refName) {
   await nextTick();
   const el =
-      refName === 'deviseCard'
-          ? deviseCard.value
-          : refName === 'actionCard'
-              ? actionCard.value
-              : null;
+    refName === 'deviseCard'
+      ? deviseCard.value
+      : refName === 'actionCard'
+        ? actionCard.value
+        : refName === 'entrepriseCard'
+          ? entrepriseCard.value
+          : null;
+
   if (!el) return;
   const originalBg = el.style.backgroundColor;
   const whiteBg = "#fff";
   el.style.backgroundColor = whiteBg;
-
   el.querySelectorAll("*").forEach(child => {
     child.style.backgroundColor = whiteBg;
   });
 
-  html2canvas(el, { backgroundColor: whiteBg, useCORS: true }).then((canvas) => {
+  html2canvas(el, { backgroundColor: whiteBg, useCORS: true, scale: 2 }).then((canvas) => {
     const imgData = canvas.toDataURL("image/png");
     const pdf = new jsPDF({
-      orientation: "landscape",
+      orientation: "portrait",
       unit: "pt",
       format: "a4",
     });
     const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
     const imgWidth = pageWidth - 40;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    pdf.addImage(imgData, "PNG", 20, 20, imgWidth, imgHeight);
+
+    let position = 20;
+    let remainingHeight = imgHeight;
+    let imgY = 0;
+
+    // If the image is taller than one page, add pages
+    while (remainingHeight > 0) {
+      pdf.addImage(
+        imgData,
+        "PNG",
+        20,
+        position,
+        imgWidth,
+        Math.min(remainingHeight, pageHeight - 40),
+        undefined,
+        "FAST",
+        0,
+        imgY / canvas.height,
+        1,
+        Math.min(1, (pageHeight - 40) / imgHeight)
+      );
+      remainingHeight -= (pageHeight - 40);
+      imgY += (pageHeight - 40) * (canvas.height / imgHeight);
+      if (remainingHeight > 0) {
+        pdf.addPage();
+      }
+    }
+
     pdf.save("rapport.pdf");
 
     el.style.backgroundColor = originalBg;
