@@ -739,7 +739,6 @@ async function generatePdf(refName) {
     let remainingHeight = imgHeight;
     let imgY = 0;
 
-    // If the image is taller than one page, add pages
     while (remainingHeight > 0) {
       pdf.addImage(
         imgData,
