@@ -149,10 +149,10 @@
 
       <v-container>
         <v-card class="pa-6 mt-8" elevation="6">
-          <v-card-title>
+          <v-card-title class="devise-title">
             <v-icon color="primary" class="mr-2">mdi-currency-usd</v-icon>
-            Informations sur la devise : {{ pair }}
-            <v-btn icon v-if="deviseActive" @click="generatePdf('deviseCard')">
+            <span class="devise-title-text">Informations sur la devise : {{ pair }}</span>
+            <v-btn icon v-if="deviseActive" @click="generatePdf('deviseCard')" class="devise-title-btn">
               <v-icon>mdi-file-pdf-box</v-icon>
             </v-btn>
           </v-card-title>
@@ -769,6 +769,34 @@ async function convertir() {
   border-bottom-right-radius: 24px;
   min-height: 400px;
   color: white;
+}
+
+.devise-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.devise-title-text {
+  flex: 1 1 65px;
+  min-width: 0;
+  white-space: normal;
+  word-break: break-word;
+}
+.devise-title-btn {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+@media (max-width: 600px) {
+  .devise-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .devise-title-btn {
+    margin-left: 0;
+    align-self: flex-end;
+  }
 }
 
 </style>
