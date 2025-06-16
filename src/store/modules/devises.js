@@ -28,7 +28,7 @@ export default {
       state.conversionResultat = resultat;
     },
     setDevisesFavoris(state, favoris) {
-      state.devisesFavoris = favoris;
+      state.devisesFavoris = Array.isArray(favoris) ? favoris : [];
     },
     setHistoriqueDevise(state, historique) {
       state.historiqueDevise = historique;
@@ -45,9 +45,12 @@ export default {
       }
     },
     // Récupère les informations d'une devise spécifique
-    async chargerDevise({ commit }, nom) {
+    async chargerDevise({ commit, state }, nom) {
       const reponse = await recupererDevise(nom);
       commit("setDeviseActive", reponse.data);
+      if (!state.listeDevises.some(d => d.nom === reponse.data.nom)) {
+        commit("setListeDevises", [...state.listeDevises, reponse.data]);
+      }
     },
     async convertirDevise({ commit }, payload) {
       const reponse = await convertirDevise(payload);
