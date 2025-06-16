@@ -149,10 +149,10 @@
 
       <v-container>
         <v-card class="pa-6 mt-8" elevation="6">
-          <v-card-title class="devise-title">
+          <v-card-title class="search-title">
             <v-icon color="primary" class="mr-2">mdi-currency-usd</v-icon>
-            <span class="devise-title-text">Informations sur la devise : {{ pair }}</span>
-            <v-btn icon v-if="deviseActive" @click="generatePdf('deviseCard')" class="devise-title-btn">
+            <span class="search-title-text">Informations sur la devise : {{ pair }}</span>
+            <v-btn icon v-if="deviseActive" @click="generatePdf('deviseCard')" class="search-title-btn">
               <v-icon>mdi-file-pdf-box</v-icon>
             </v-btn>
           </v-card-title>
@@ -289,37 +289,42 @@
 
       <v-container>
         <v-card class="pa-6 mt-8" elevation="6">
-          <v-card-title>
+          <v-card-title class="search-title">
             <v-icon color="primary" class="mr-2">mdi-finance</v-icon>
-            Informations sur l'action : {{ actionSelectionnee }}
+            <span class="search-title-text">Informations sur l'action : {{ actionSelectionnee }}</span>
+            <v-btn icon v-if="action" @click="generatePdf('actionCard')" class="search-title-btn">
+              <v-icon>mdi-file-pdf-box</v-icon>
+            </v-btn>
           </v-card-title>
-          <v-card-text>
-            <div class="mb-2 text-caption">Recherchez une action par symbole ou sélectionnez-en une pour afficher ses informations et son historique.</div>
-            <v-autocomplete
-              v-model="actionSelectionnee"
-              :items="actionsPopulaires"
-              item-title="symbole"
-              item-value="symbole"
-              label="Sélectionner ou rechercher une action"
-              clearable
-              solo
-            />
-            <v-card v-if="action">
-              <v-card-title>{{ action.symbole }}</v-card-title>
-              <v-card-text>
-                Date: {{ action.date }}<br />
-                Open: {{ action.open }}<br />
-                Close: {{ action.close }}<br />
-                Volume: {{ action.volume }}
-              </v-card-text>
-            </v-card>
-            <GraphiqueLignes
-                v-if="!loadingHistoriqueAction && historiqueAction.length"
-                :labels="historiqueAction.map(e => e.date)"
-                :valeurs="historiqueAction.map(e => e.close)"
-                titre="Historique de clôture"
-                couleur="#1976D2"
-            />
+          <v-card-text v-show="action">
+            <div ref="actionCard">
+              <div class="mb-2 text-caption">Recherchez une action par symbole ou sélectionnez-en une pour afficher ses informations et son historique.</div>
+              <v-autocomplete
+                v-model="actionSelectionnee"
+                :items="actionsPopulaires"
+                item-title="symbole"
+                item-value="symbole"
+                label="Sélectionner ou rechercher une action"
+                clearable
+                solo
+              />
+              <v-card v-if="action">
+                <v-card-title>{{ action.symbole }}</v-card-title>
+                <v-card-text>
+                  Date: {{ action.date }}<br />
+                  Open: {{ action.open }}<br />
+                  Close: {{ action.close }}<br />
+                  Volume: {{ action.volume }}
+                </v-card-text>
+              </v-card>
+              <GraphiqueLignes
+                  v-if="!loadingHistoriqueAction && historiqueAction.length"
+                  :labels="historiqueAction.map(e => e.date)"
+                  :valeurs="historiqueAction.map(e => e.close)"
+                  titre="Historique de clôture"
+                  couleur="#1976D2"
+              />
+            </div>
           </v-card-text>
         </v-card>
       </v-container>
@@ -559,10 +564,16 @@ const achatResultat = ref(null);
 const achatErreur = ref("");
 
 const deviseCard = ref(null);
+const actionCard = ref(null);
 
 async function generatePdf(refName) {
   await nextTick();
-  const el = refName === 'deviseCard' ? deviseCard.value : null;
+  const el =
+      refName === 'deviseCard'
+          ? deviseCard.value
+          : refName === 'actionCard'
+              ? actionCard.value
+              : null;
   if (!el) return;
   const originalBg = el.style.backgroundColor;
   const whiteBg = "#fff";
@@ -583,7 +594,7 @@ async function generatePdf(refName) {
     const imgWidth = pageWidth - 40;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     pdf.addImage(imgData, "PNG", 20, 20, imgWidth, imgHeight);
-    pdf.save("devise.pdf");
+    pdf.save("rapport.pdf");
 
     el.style.backgroundColor = originalBg;
     el.querySelectorAll("*").forEach(child => {
@@ -771,29 +782,29 @@ async function convertir() {
   color: white;
 }
 
-.devise-title {
+.search-title {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
 }
-.devise-title-text {
+.search-title-text {
   flex: 1 1 65px;
   min-width: 0;
   white-space: normal;
   word-break: break-word;
 }
-.devise-title-btn {
+.search-title-btn {
   flex-shrink: 0;
   margin-left: auto;
 }
 @media (max-width: 600px) {
-  .devise-title {
+  .search-title {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
   }
-  .devise-title-btn {
+  .search-title-btn {
     margin-left: 0;
     align-self: flex-end;
   }
