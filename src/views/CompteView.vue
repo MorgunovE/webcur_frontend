@@ -74,9 +74,14 @@
                   >
                     <v-card class="pa-3 mb-2 d-flex align-center justify-space-between hoverable">
                       <span class="font-weight-bold">{{ devise }}</span>
-                      <v-btn icon color="error" @click="supprimerFavori(devise)">
-                        <v-icon>mdi-delete</v-icon>
-                      </v-btn>
+                      <div>
+                        <v-btn icon color="primary" @click="selectionnerDevise(devise)" class="mr-4">
+                          <v-icon>mdi-magnify</v-icon>
+                        </v-btn>
+                        <v-btn icon color="error" @click="supprimerFavori(devise)">
+                          <v-icon>mdi-delete</v-icon>
+                        </v-btn>
+                      </div>
                     </v-card>
                   </v-col>
                 </v-row>
@@ -117,9 +122,14 @@
                   >
                     <v-card class="pa-3 mb-2 d-flex align-center justify-space-between hoverable">
                       <span class="font-weight-bold">{{ symbole }}</span>
-                      <v-btn icon color="error" @click="supprimerActionFavori(symbole)">
-                        <v-icon>mdi-delete</v-icon>
-                      </v-btn>
+                      <div>
+                        <v-btn icon color="primary" @click="selectionnerAction(symbole)" class="mr-4">
+                          <v-icon>mdi-magnify</v-icon>
+                        </v-btn>
+                        <v-btn icon color="error" @click="supprimerActionFavori(symbole)">
+                          <v-icon>mdi-delete</v-icon>
+                        </v-btn>
+                      </div>
                     </v-card>
                   </v-col>
                 </v-row>
@@ -147,7 +157,7 @@
         </v-row>
       </v-container>
 
-      <v-container>
+      <v-container ref="deviseDetails">
         <v-card class="pa-6 mt-8" elevation="6">
           <v-card-title class="search-title">
             <v-icon color="primary" class="mr-2">mdi-currency-usd</v-icon>
@@ -287,7 +297,7 @@
         </v-card>
       </v-container>
 
-      <v-container>
+      <v-container ref="actionDetails">
         <v-card class="pa-6 mt-8" elevation="6">
           <v-card-title class="search-title">
             <v-icon color="primary" class="mr-2">mdi-finance</v-icon>
@@ -568,6 +578,23 @@ const achatQuantite = ref(1);
 const achatDevise = ref("EUR");
 const achatResultat = ref(null);
 const achatErreur = ref("");
+
+const deviseDetails = ref(null);
+const actionDetails  = ref(null);
+
+const selectionnerDevise = async (nomDevise) => {
+  deviseSelectionnee.value = nomDevise;
+  await nextTick();
+  const el = deviseDetails.value?.$el || deviseDetails.value;
+  el?.scrollIntoView({ behavior: "smooth" });
+};
+
+const selectionnerAction = async (nomAction) => {
+  actionSelectionnee.value = nomAction;
+  await nextTick();
+  const el = actionDetails.value?.$el || actionDetails.value;
+  el?.scrollIntoView({ behavior: "smooth" });
+};
 
 const deviseCard = ref(null);
 const actionCard = ref(null);
