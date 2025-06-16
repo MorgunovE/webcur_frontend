@@ -126,6 +126,18 @@ Pour exécuter les tests unitaires, utilisez la commande suivante :
 npm run test:unit
 ```
 
+ou pour exécuter le test spécifique pour les devises :
+
+```bash
+npm run test:unit -- tests/unit/api/devises.spec.js
+```
+
+Pour exécuter les tests end-to-end :
+
+```bash
+npm run test:e2e
+```
+
 ## Exemples d’utilisation
 
 - **Connexion :**  
