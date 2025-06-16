@@ -20,11 +20,11 @@ function logResult(message) {
 describe('devises API', () => {
   function testWithLog(name, fn) {
     test(name, async () => {
-      let status = 'PASSED';
+      let status = 'RÉUSSI';
       try {
         await fn();
       } catch (e) {
-        status = 'FAILED';
+        status = 'ÉCHEC';
         logResult(`${name} - ${status} - ${e.message}`);
         throw e;
       }
