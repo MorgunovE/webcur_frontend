@@ -52,12 +52,12 @@
         <v-row class="mb-8" align="center" justify="center">
           <v-col cols="12" md="6">
             <v-card class="pa-6">
-              <h3 class="mb-2">Explore the World of Currencies</h3>
+              <h3 class="mb-2">Explorez l’univers des devises</h3>
               <div>
-                Stay updated with real-time exchange rates and discover trends in global currencies. WebCur makes currency conversion and analysis simple and accessible for everyone.
+                Suivez l’évolution des taux de change en direct et analysez les principales monnaies internationales. Avec WebCur, la gestion et la conversion des devises deviennent intuitives et rapides.
                 <br /><br />
-                <strong>Découvrez le monde des devises</strong><br />
-                Restez informé des taux de change en temps réel et suivez les tendances des monnaies mondiales. WebCur rend la conversion et l'analyse des devises simples et accessibles à tous.
+                <strong>Analysez les tendances monétaires</strong><br />
+                Profitez d’outils clairs pour comparer les devises, anticiper les fluctuations et prendre des décisions éclairées sur vos conversions.
               </div>
             </v-card>
           </v-col>
