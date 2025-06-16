@@ -136,20 +136,20 @@
                   </v-col>
                 </v-row>
                 <v-autocomplete
-                  v-model="nouvelleActionFavori"
-                  :items="actionsPopulaires"
-                  item-title="symbole"
-                  item-value="symbole"
-                  label="Ajouter une action aux favoris"
-                  class="mt-2"
-                  clearable
-                  solo
+                    v-model="nouvelleActionFavori"
+                    :items="allActions"
+                    item-title="display"
+                    item-value="symbole"
+                    label="Ajouter une action aux favoris"
+                    class="mt-2"
+                    clearable
+                    solo
                 />
                 <v-btn
-                  color="primary"
-                  class="mt-2"
-                  @click="ajouterActionFavori"
-                  :disabled="!nouvelleActionFavori"
+                    color="primary"
+                    class="mt-2"
+                    @click="searchAndAddAction"
+                    :disabled="!nouvelleActionFavori"
                 >
                   Ajouter
                 </v-btn>
@@ -436,14 +436,23 @@
             <div ref="entrepriseCard">
               <div class="mb-2 text-caption">Recherchez une entreprise par nom ou sélectionnez-en une pour afficher ses informations et son historique.</div>
               <v-autocomplete
-                v-model="entrepriseSelectionnee"
-                :items="entreprisesPopulaires"
-                item-title="companyName"
-                item-value="symbole"
-                label="Sélectionner ou rechercher une entreprise"
-                clearable
-                solo
+                  v-model="entrepriseSelectionnee"
+                  :items="allActions"
+                  item-title="display"
+                  item-value="symbole"
+                  label="Sélectionner ou rechercher une entreprise"
+                  class="mt-2"
+                  clearable
+                  solo
               />
+              <v-btn
+                  color="primary"
+                  class="mt-2"
+                  @click="onEntrepriseSelectionChange"
+                  :disabled="!nouvelleActionFavori"
+              >
+                Ajouter
+              </v-btn>
               <v-card v-if="entreprise">
                 <v-card-title>
                   <img
@@ -566,6 +575,41 @@ const devises = [
   "XCD", "XCG", "XDR", "XOF", "XPF", "YER", "ZAR", "ZMW", "ZWL"
 ];
 
+const allActions = [
+  { symbole: "AAPL", name: "Apple Inc.", display: "AAPL — Apple Inc." },
+  { symbole: "MSFT", name: "Microsoft Corporation", display: "MSFT — Microsoft Corporation" },
+  { symbole: "GOOGL", name: "Alphabet Inc.", display: "GOOGL — Alphabet Inc." },
+  { symbole: "AMZN", name: "Amazon.com Inc.", display: "AMZN — Amazon.com Inc." },
+  { symbole: "TSLA", name: "Tesla Inc.", display: "TSLA — Tesla Inc." },
+  // ...add more or load from a JSON file
+];
+
+const actionSearch = ref("");
+
+
+function getSymbolFromInput(input) {
+  if (!input) return "";
+  if (typeof input === "string") return input.toUpperCase();
+  if (input.symbole) return input.symbole.toUpperCase();
+  return "";
+}
+
+async function searchAndAddAction() {
+  const symbole = getSymbolFromInput(nouvelleActionFavori.value || actionSearch.value);
+  if (!symbole) return;
+  try {
+    await store.dispatch("actions/chargerAction", { symbole, date: getLocalToday() });
+    await store.dispatch("actions/chargerHistorique", { symbole, jours: 30 });
+    await store.dispatch("actions/ajouterActionFavori", symbole);
+    nouvelleActionFavori.value = "";
+    actionSearch.value = "";
+    await nextTick();
+    document.getElementById("action-details")?.scrollIntoView({ behavior: "smooth" });
+  } catch (e) {
+    erreur.value = "Action non trouvée ou erreur de chargement.";
+  }
+}
+
 
 const codeSource = ref("USD");
 const codeCible = ref("EUR");
@@ -580,7 +624,13 @@ const actionSelectionnee = ref("AAPL");
 const action = computed(() => store.state.actions.actionActive);
 const historiqueAction = computed(() => store.state.actions.historique || []);
 
-const entreprisesPopulaires = computed(() => store.state.entreprises.entreprisesPopulaires || []);
+const entreprisesPopulaires = computed(() =>
+    (store.state.entreprises.entreprisesPopulaires || []).map(e => ({
+      ...e,
+      display: `${e.symbole} — ${e.companyName}`
+    }))
+);
+
 const entrepriseSelectionnee = ref("AAPL");
 const entreprise = computed(() => store.state.entreprises.entrepriseActive);
 const historiqueEntreprise = computed(() => store.state.entreprises.historiqueEntreprise || []);
@@ -589,7 +639,7 @@ const loadingHistoriqueEntreprise = ref(false);
 const labelsEntreprise = computed(() => historiqueEntreprise.value.map(e => e.date_maj || e.date));
 const valeursEntreprise = computed(() => historiqueEntreprise.value.map(e => e.price));
 
-const nouvelleActionFavori = ref("");
+const nouvelleActionFavori = ref(null);
 
 const achatSymbole = ref("");
 const achatDate = ref(new Date().toISOString().slice(0, 10));
@@ -648,6 +698,17 @@ async function handleDeviseInput(event) {
     }
     deviseSelectionnee.value = upperValue;
   }
+}
+
+async function onEntrepriseSelectionChange(symbole) {
+  if (!symbole) {
+    store.commit("entreprises/setEntrepriseActive", null);
+    return;
+  }
+  await store.dispatch("entreprises/chargerEntreprise", symbole);
+  await store.dispatch("entreprises/chargerHistoriqueEntreprise", { symbole, jours: 30 });
+  await nextTick();
+  document.getElementById("entreprise-details")?.scrollIntoView({ behavior: "smooth" });
 }
 
 async function onDeviseSelectionChange(nom) {
