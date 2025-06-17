@@ -117,6 +117,9 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-alert v-if="loadError" type="error" class="my-4">
+          {{ loadError }}
+        </v-alert>
       </v-container>
 
       <!-- AAPL Action Preview with Chart -->
@@ -144,6 +147,9 @@
             />
           </v-col>
         </v-row>
+        <v-alert v-if="loadError" type="error" class="my-4">
+          {{ loadError }}
+        </v-alert>
       </v-container>
     </v-main>
     <FooterPrincipal />
@@ -151,7 +157,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from "vue";
+import {computed, onMounted, ref} from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import HeaderPrincipal from "../components/HeaderPrincipal.vue";
@@ -160,6 +166,7 @@ import GraphiqueLignes from "../components/GraphiqueLignes.vue";
 
 const store = useStore();
 const router = useRouter();
+const loadError = ref("");
 
 const actionsPopulaires = computed(() => store.state.actions.actionsPopulaires || []);
 const aaplAction = computed(() =>
@@ -174,8 +181,12 @@ function goRegister() {
 }
 
 onMounted(async () => {
-  await store.dispatch("actions/chargerActionsPopulaires");
-  await store.dispatch("actions/chargerHistorique", { symbole: "AAPL", jours: 30 });
+  try {
+    await store.dispatch("actions/chargerActionsPopulaires");
+    await store.dispatch("actions/chargerHistorique", { symbole: "AAPL", jours: 30 });
+  } catch (e) {
+    loadError.value = "Unable to load data. Please try again later.";
+  }
 });
 </script>
 
