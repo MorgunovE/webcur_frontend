@@ -119,6 +119,9 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-alert v-if="loadError" type="error" class="my-4">
+          {{ loadError }}
+        </v-alert>
       </v-container>
 
       <!-- AAPL Company Preview with Chart -->
@@ -164,6 +167,9 @@
             />
           </v-col>
         </v-row>
+        <v-alert v-if="loadError" type="error" class="my-4">
+          {{ loadError }}
+        </v-alert>
       </v-container>
     </v-main>
     <FooterPrincipal />
@@ -171,7 +177,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import HeaderPrincipal from "../components/HeaderPrincipal.vue";
@@ -180,6 +186,7 @@ import GraphiqueLignes from "../components/GraphiqueLignes.vue";
 
 const store = useStore();
 const router = useRouter();
+const loadError = ref("");
 
 const entreprisesPopulaires = computed(() => store.state.entreprises.entreprisesPopulaires || []);
 const aaplCompany = computed(() =>
@@ -194,9 +201,12 @@ function goRegister() {
 }
 
 onMounted(async () => {
-  await store.dispatch("entreprises/chargerEntreprisesPopulaires");
-  await store.dispatch("entreprises/chargerHistoriqueEntreprise", { symbole: "AAPL", jours: 30 });
-  console.log("AAPL historique:", aaplHistorique.value);
+  try {
+    await store.dispatch("entreprises/chargerEntreprisesPopulaires");
+    await store.dispatch("entreprises/chargerHistoriqueEntreprise", { symbole: "AAPL", jours: 30 });
+  } catch (e) {
+    loadError.value = "Unable to load data. Please try again later.";
+  }
 });
 </script>
 
