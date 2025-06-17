@@ -95,6 +95,13 @@ VUE_APP_API_URL=http://localhost:5000
   ```sh
   npm run test:unit
   ```
+  ou pour exécuter le test spécifique pour les devises :
+
+```bash
+npm run test:unit -- tests/unit/api/devises.spec.js
+```
+  
+
 - **Tests end-to-end (si configuré) :**
   ```sh
   npm run test:e2e
@@ -116,26 +123,6 @@ ou pour formater le code avec Prettier :
 
 ```sh
 npx prettier --write .
-```
-
-## Demander de test
-
-Pour exécuter les tests unitaires, utilisez la commande suivante :
-
-```bash
-npm run test:unit
-```
-
-ou pour exécuter le test spécifique pour les devises :
-
-```bash
-npm run test:unit -- tests/unit/api/devises.spec.js
-```
-
-Pour exécuter les tests end-to-end :
-
-```bash
-npm run test:e2e
 ```
 
 ## Exemples d’utilisation
