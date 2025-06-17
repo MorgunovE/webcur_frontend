@@ -261,6 +261,9 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-alert v-if="loadError" type="error" class="my-4">
+          {{ loadError }}
+        </v-alert>
       </v-container>
     </v-main>
     <FooterPrincipal />
@@ -268,7 +271,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import HeaderPrincipal from "../components/HeaderPrincipal.vue";
@@ -276,15 +279,19 @@ import FooterPrincipal from "../components/FooterPrincipal.vue";
 
 const store = useStore();
 const router = useRouter();
+const loadError = ref("");
 
 const devisesPopulaires = computed(() => store.state.devises.listeDevises || []);
 const actionsPopulaires = computed(() => store.state.actions.actionsPopulaires || []);
 const entreprisesPopulaires = computed(() => store.state.entreprises.entreprisesPopulaires || []);
 
 onMounted(async () => {
-  await store.dispatch("devises/chargerDevisesPopulaires");
-  await store.dispatch("actions/chargerActionsPopulaires");
-  await store.dispatch("entreprises/chargerEntreprisesPopulaires");
+  try {
+    await store.dispatch("actions/chargerActionsPopulaires");
+    await store.dispatch("actions/chargerHistorique", { symbole: "AAPL", jours: 30 });
+  } catch (e) {
+    loadError.value = "Unable to load data. Please try again later.";
+  }
 });
 
 function goRegister() {
