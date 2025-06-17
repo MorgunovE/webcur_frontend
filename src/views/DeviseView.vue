@@ -102,7 +102,7 @@
           </v-col>
         </v-row>
         <h3 class="mb-4 mt-16">Devises populaires</h3>
-        <v-row>
+        <v-row v-if="!errorDevises">
           <v-col
             v-for="devise in devisesPopulaires.slice(0, 5)"
             :key="devise.nom"
@@ -118,6 +118,9 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-alert v-else type="error" class="mt-4">
+          {{ errorDevises }}
+        </v-alert>
       </v-container>
 
       <!-- CAD Currency Preview with Chart -->
@@ -187,6 +190,7 @@ import GraphiqueLignes from "../components/GraphiqueLignes.vue";
 
 const store = useStore();
 const router = useRouter();
+const errorDevises = ref('');
 
 const devisesPopulaires = computed(() => store.state.devises.listeDevises || []);
 const cadDevise = computed(() =>
@@ -214,8 +218,19 @@ function goRegister() {
   router.push("/register");
 }
 
+async function chargerDevisesPopulaires() {
+  try {
+    await store.dispatch('devises/chargerDevisesPopulaires');
+    devisesPopulaires.value = store.state.devises.listeDevises;
+    errorDevises.value = '';
+  } catch (e) {
+    errorDevises.value = 'Unable to load popular currencies. Please try again later.';
+    devisesPopulaires.value = [];
+  }
+}
+
 onMounted(async () => {
-  await store.dispatch("devises/chargerDevisesPopulaires");
+  await chargerDevisesPopulaires();
   await store.dispatch("devises/chargerHistoriqueDevise", { nom: "CAD", jours: 30 });
 });
 </script>
