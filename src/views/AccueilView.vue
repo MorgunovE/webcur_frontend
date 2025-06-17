@@ -114,6 +114,9 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-alert v-if="loadError" type="error" class="my-4">
+          {{ loadError }}
+        </v-alert>
       </v-container>
 
       <!-- Popular Actions -->
@@ -187,6 +190,9 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-alert v-if="loadError" type="error" class="my-4">
+          {{ loadError }}
+        </v-alert>
       </v-container>
 
       <!-- Popular Companies -->
@@ -287,8 +293,9 @@ const entreprisesPopulaires = computed(() => store.state.entreprises.entreprises
 
 onMounted(async () => {
   try {
+    await store.dispatch("devises/chargerDevisesPopulaires");
     await store.dispatch("actions/chargerActionsPopulaires");
-    await store.dispatch("actions/chargerHistorique", { symbole: "AAPL", jours: 30 });
+    await store.dispatch("entreprises/chargerEntreprisesPopulaires");
   } catch (e) {
     loadError.value = "Unable to load data. Please try again later.";
   }
