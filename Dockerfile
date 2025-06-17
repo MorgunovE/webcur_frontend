@@ -1,4 +1,4 @@
-# Build stage
+# Stage de build
 FROM node:20-alpine AS build
 LABEL authors="Evgenii Morgunov"
 WORKDIR /app
@@ -7,7 +7,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Production stage
+# Stage de production
 FROM nginx:alpine
 LABEL authors="Evgenii Morgunov"
 COPY --from=build /app/dist /usr/share/nginx/html
