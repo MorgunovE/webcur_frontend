@@ -3,7 +3,7 @@ const path = require('path');
 import router from '@/router';
 
 const logDir = path.resolve(__dirname, '../../logs');
-const logPath = path.join(logDir, 'test-results.log');
+const logPath = path.join(logDir, 'unit-test-results.log');
 
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir, { recursive: true });
