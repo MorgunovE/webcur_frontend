@@ -518,10 +518,6 @@ const limitedConversionRates = computed(() => {
 
 const router = useRouter();
 const utilisateur = computed(() => store.state.auth.utilisateur);
-const nouveauNom = ref(
-  utilisateur.value ? utilisateur.value.nom_utilisateur : ""
-);
-
 
 
 const actionSearch = ref("");
@@ -623,8 +619,6 @@ const searchDevise = async (search) => {
   }
 };
 
-const searchedDevises = ref([]);
-
 async function handleDeviseInput(event) {
   const value = typeof event === "string" ? event : deviseSelectionnee.value;
   if (value && value.length === 3) {
@@ -639,17 +633,6 @@ async function handleDeviseInput(event) {
     }
     deviseSelectionnee.value = upperValue;
   }
-}
-
-async function onEntrepriseSelectionChange(symbole) {
-  if (!symbole) {
-    store.commit("entreprises/setEntrepriseActive", null);
-    return;
-  }
-  await store.dispatch("entreprises/chargerEntreprise", symbole);
-  await store.dispatch("entreprises/chargerHistoriqueEntreprise", { symbole, jours: 30 });
-  await nextTick();
-  document.getElementById("entreprise-details")?.scrollIntoView({ behavior: "smooth" });
 }
 
 async function onDeviseSelectionChange(nom) {
@@ -763,44 +746,11 @@ async function calculerAchatAction() {
   }
 }
 
-async function ajouterActionFavori() {
-  if (nouvelleActionFavori.value) {
-    await store.dispatch(
-      "actions/ajouterActionFavori",
-      nouvelleActionFavori.value
-    );
-    nouvelleActionFavori.value = "";
-  }
-}
+
 async function supprimerActionFavori(symbole) {
   await store.dispatch("actions/supprimerActionFavori", symbole);
 }
 
-async function mettreAJourUtilisateur(nouveauNom) {
-  if (utilisateur.value) {
-    const response = await store.dispatch("utilisateur/mettreAJourUtilisateur", {
-      id: utilisateur.value.id,
-      donnees: { nom_utilisateur: nouveauNom },
-    });
-    const updatedUser = {
-      ...utilisateur.value,
-      nom_utilisateur: nouveauNom,
-    };
-    store.commit("auth/setUtilisateur", updatedUser);
-  }
-}
-
-async function supprimerMonCompte() {
-  if (utilisateur.value) {
-    await store.dispatch(
-      "utilisateur/supprimerUtilisateur",
-      utilisateur.value.id
-    );
-    await seDeconnecter();
-  }
-}
-
-// Charger les devises populaires au montage du composant
 async function chargerDevisesPopulaires() {
   await store.dispatch("devises/chargerDevisesPopulaires");
 }
@@ -910,11 +860,6 @@ async function ajouterFavori() {
 
 async function supprimerFavori(nom) {
   await store.dispatch("devises/supprimerDeviseFavori", nom);
-}
-
-async function seDeconnecter() {
-  await store.dispatch("auth/deconnexion");
-  await router.push("/");
 }
 
 async function convertir() {
