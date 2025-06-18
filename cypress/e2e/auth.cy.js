@@ -1,16 +1,5 @@
-const fs = require('fs');
-const path = require('path');
-
-const logDir = path.resolve(__dirname, '../../tests/logs');
-const logPath = path.join(logDir, 'e2e-results.log');
-
-if (!fs.existsSync(logDir)) {
-  fs.mkdirSync(logDir, { recursive: true });
-}
-
 function logResult(message) {
-  const now = new Date().toISOString();
-  fs.appendFileSync(logPath, `[${now}] ${message}\n`);
+  cy.task('logResult', { message });
 }
 
 describe('Authentification - E2E', () => {
