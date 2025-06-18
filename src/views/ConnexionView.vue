@@ -82,9 +82,5 @@ async function seConnecter() {
   min-height: 340px;
   color: white;
 }
-.hero-img-login {
-  max-width: 120px;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.12);
-}
+
 </style>
