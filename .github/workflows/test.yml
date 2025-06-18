@@ -30,6 +30,6 @@ jobs:
         run: echo "${{ secrets.WEBCUR_FROMT_ENV }}" > .env
       - run: npm ci
       - run: npm run build
-      - run: npx serve -s dist &
+      - run: npx serve -s dist -l 8080 &
       - run: npx wait-on http://localhost:8080
       - run: npx cypress run
