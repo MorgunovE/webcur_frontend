@@ -161,7 +161,7 @@
                       <div>Base : {{ deviseActive.base_code }}</div>
                       <div>
                         <strong>Conversion rates:</strong>
-                        <v-simple-table dense>
+                        <v-table density="compact">
                           <thead>
                           <tr>
                             <th>Devise</th>
@@ -177,7 +177,7 @@
                             <td>{{ taux }}</td>
                           </tr>
                           </tbody>
-                        </v-simple-table>
+                        </v-table>
                         <div v-if="showAllRates">
                           <v-btn small @click="showAllRates = false">Show less</v-btn>
                         </div>
@@ -239,7 +239,7 @@
               <v-row>
                 <v-col cols="12" md="3">
                   <v-select
-                    v-model="codeSource"
+                    v-model="codeSourcfe"
                     :items="devises"
                     label="Devise source"
                     required
