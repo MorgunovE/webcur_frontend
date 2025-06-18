@@ -6,7 +6,7 @@ import actionsModule from '@/store/modules/actions';
 jest.mock('@/api/actions');
 
 const logDir = path.resolve(__dirname, '../../../logs');
-const logPath = path.join(logDir, 'test-results.log');
+const logPath = path.join(logDir, 'unit-test-results.log');
 
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir, { recursive: true });
