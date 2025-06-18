@@ -26,5 +26,5 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npx serve -s dist &
-      - run: npx wait-on http://localhost:3000
+      - run: npx wait-on http://localhost:8080
       - run: npx cypress run
