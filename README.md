@@ -102,10 +102,18 @@ npm run test:unit -- tests/unit/api/devises.spec.js
 ```
   
 
-- **Tests end-to-end (si configuré) :**
+- **Tests end-to-end :**
   ```sh
   npm run test:e2e
   ```
+  ou our exécuter tous les tests en mode CI (ligne de commande):
+    ```sh
+      npm run test:e2e:ci
+    ```
+  ou our exécuter un seul fichier de test :
+    ```sh
+      npm run test:e2e -- cypress/e2e/devises.cy.js
+    ```
 
 ## Lint du code
 
