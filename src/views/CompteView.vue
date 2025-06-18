@@ -17,41 +17,7 @@
       </v-container>
 
       <v-container>
-        <v-row>
-          <v-col cols="12" md="6">
-            <v-card class="pa-6 mb-4" elevation="8">
-              <v-card-title>
-                <h2 class="mb-4">Mon compte</h2>
-                <v-avatar size="40" class="mr-3">
-                  <v-icon color="primary">mdi-account-circle</v-icon>
-                </v-avatar>
-                {{ utilisateur?.nom_utilisateur || 'Utilisateur' }}
-              </v-card-title>
-              <v-card-text>
-                <div>Email : {{ utilisateur?.email }}</div>
-                <v-btn color="error" class="mt-4" @click="seDeconnecter">Se déconnecter</v-btn>
-              </v-card-text>
-            </v-card>
-          </v-col>
-          <v-col cols="12" md="6">
-            <v-card class="pa-6 mb-4" elevation="8">
-              <v-card-title>Modifier le profil</v-card-title>
-              <v-card-text>
-                <v-text-field
-                  v-model="nouveauNom"
-                  label="Nouveau nom d'utilisateur"
-                />
-                <v-btn color="primary" @click="mettreAJourUtilisateur(nouveauNom)">
-                  Mettre à jour
-                </v-btn>
-                <v-divider class="my-4"></v-divider>
-                <v-btn color="error" @click="supprimerMonCompte">
-                  Supprimer mon compte
-                </v-btn>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
+        <CompteUserCard />
       </v-container>
 
       <v-container>
@@ -526,6 +492,7 @@ import { useRouter } from "vue-router";
 import HeaderPrincipal from "../components/HeaderPrincipal.vue";
 import FooterPrincipal from "../components/FooterPrincipal.vue";
 import GraphiqueLignes from "../components/GraphiqueLignes.vue";
+import CompteUserCard from "../components/CompteUserCard.vue";
 
 const store = useStore();
 const deviseActive = computed(() => store.state.devises.deviseActive);
