@@ -22,14 +22,15 @@
             <v-card class="pa-8" elevation="10">
               <h2 class="mb-6 text-center">Connexion</h2>
               <v-form @submit.prevent="seConnecter">
-                <v-text-field v-model="email" label="Email" required />
+                <v-text-field v-model="email" label="Email" required data-cy="login-email" />
                 <v-text-field
                   v-model="motDePasse"
                   label="Mot de passe"
                   type="password"
                   required
+                  data-cy="login-password"
                 />
-                <v-btn type="submit" color="primary" block class="mt-4">
+                <v-btn type="submit" color="primary" block class="mt-4" data-cy="login-submit">
                   Se connecter
                 </v-btn>
               </v-form>
