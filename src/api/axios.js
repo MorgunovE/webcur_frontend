@@ -1,11 +1,30 @@
 import axios from "axios";
 
+const LOCAL_URL = process.env.VUE_APP_API_URL || "http://localhost:5000";
+const REMOTE_URL = process.env.VUE_APP_API_URL_REMOTE;
+
+let apiBaseUrl = LOCAL_URL;
+
+async function detectApiBaseUrl() {
+  try {
+    await axios.get(`${LOCAL_URL}/health`, { timeout: 2000 });
+    apiBaseUrl = LOCAL_URL;
+  } catch {
+    try {
+      await axios.get(`${REMOTE_URL}/health`, { timeout: 2000 });
+      apiBaseUrl = REMOTE_URL;
+    } catch {
+      apiBaseUrl = LOCAL_URL;
+    }
+  }
+  instance.defaults.baseURL = apiBaseUrl;
+}
+
 const instance = axios.create({
-  baseURL: process.env.VUE_APP_API_URL || "http://localhost:5000",
+  baseURL: apiBaseUrl,
   headers: { "Content-Type": "application/json" },
 });
 
-// Intercepteur pour inclure le token JWT dans chaque requête si présent
 instance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -17,4 +36,5 @@ instance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+export { detectApiBaseUrl };
 export default instance;
