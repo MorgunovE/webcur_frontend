@@ -1,4 +1,4 @@
-name: Run Jest Tests
+name: Run Tests unit jest and e2e cypress
 
 on:
   release:
@@ -13,19 +13,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Create .env file from secret
+        run: echo "${{ secrets.WEBCUR_FROMT_ENV }}" > .env
       - run: npm ci
       - run: npm run test:unit
 
   e2e_tests:
     runs-on: ubuntu-latest
-    env:
-      WEBCUR_FROMT_ENV: ${{ secrets.WEBCUR_FROMT_ENV }}
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Create .env file from secret
+        run: echo "${{ secrets.WEBCUR_FROMT_ENV }}" > .env
       - run: npm ci
       - run: npm run build
       - run: npx serve -s dist &
