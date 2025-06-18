@@ -353,67 +353,14 @@
        </v-card>
       </v-container>
 
-      <v-container>
-        <v-card class="pa-6 mt-8" elevation="6">
-          <v-card-title class="search-title">
-            <v-icon color="primary" class="mr-2">mdi-domain</v-icon>
-            <span class="search-title-text">Informations sur l'entreprise : {{ entrepriseSelectionnee }}</span>
-            <v-btn icon v-if="entreprise" @click="generatePdf('entrepriseCard')" class="search-title-btn">
-              <v-icon>mdi-file-pdf-box</v-icon>
-            </v-btn>
-          </v-card-title>
-          <v-card-text v-show="entreprise">
-            <div ref="entrepriseCard">
-              <div class="mb-2 text-caption">Recherchez une entreprise par nom ou sélectionnez-en une pour afficher ses informations et son historique.</div>
-              <v-autocomplete
-                  v-model="entrepriseSelectionnee"
-                  :items="allActions"
-                  item-title="display"
-                  item-value="symbole"
-                  label="Sélectionner ou rechercher une entreprise"
-                  class="mt-2"
-                  clearable
-                  solo
-              />
-              <v-card v-if="entreprise">
-                <v-card-title>
-                  <img
-                      :src="entreprise.image"
-                      alt="Logo"
-                      height="40"
-                      v-if="entreprise.image"
-                  />
-                  {{ entreprise.companyName }} ({{ entreprise.symbole }})
-                </v-card-title>
-                <v-card-text>
-                  <div><strong>Prix:</strong> {{ entreprise.price }} {{ entreprise.currency }}</div>
-                  <div><strong>Variation:</strong> {{ entreprise.change }} ({{ entreprise.changePercentage }})</div>
-                  <div><strong>Capitalisation:</strong> {{ entreprise.marketCap }}</div>
-                  <div><strong>Volume:</strong> {{ entreprise.volume }}</div>
-                  <div><strong>Beta:</strong> {{ entreprise.beta }}</div>
-                  <div><strong>Dernier dividende:</strong> {{ entreprise.lastDividend }}</div>
-                  <div><strong>Industrie:</strong> {{ entreprise.industry }}</div>
-                  <div><strong>CEO:</strong> {{ entreprise.ceo }}</div>
-                  <div><strong>Pays:</strong> {{ entreprise.country }}</div>
-                  <div>
-                    <strong>Site web:</strong>
-                    <a :href="entreprise.website" target="_blank">{{ entreprise.website }}</a>
-                  </div>
-                  <div><strong>Description:</strong> {{ entreprise.description }}</div>
-                </v-card-text>
-              </v-card>
-              <GraphiqueLignes
-                  v-if="!loadingHistoriqueEntreprise && labelsEntreprise.length"
-                  :labels="labelsEntreprise"
-                  :valeurs="valeursEntreprise"
-                  titre="Historique du prix"
-                  couleur="#1976D2"
-              />
-            </div>
-          </v-card-text>
-        </v-card>
-
-      </v-container>
+      <EntrepriseDetailsCard
+          v-model:entrepriseSelectionnee="entrepriseSelectionnee"
+          :allActions="allActions"
+          :labelsEntreprise="labelsEntreprise"
+          :valeursEntreprise="valeursEntreprise"
+          :loadingHistoriqueEntreprise="loadingHistoriqueEntreprise"
+          :entreprise="entreprise"
+      />
 
       <EntreprisesPopulaires :entreprises="entreprisesPopulaires" />
 
@@ -435,6 +382,7 @@ import CompteUserCard from "../components/CompteUserCard.vue";
 import EntreprisesPopulaires from "../components/EntreprisesPopulaires.vue";
 import ActionsPopulaires from "../components/ActionsPopulaires.vue";
 import DevisesPopulaires from "../components/DevisesPopulaires.vue";
+import EntrepriseDetailsCard from "../components/EntrepriseDetailsCard.vue";
 
 const store = useStore();
 const deviseActive = computed(() => store.state.devises.deviseActive);
