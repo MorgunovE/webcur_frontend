@@ -253,47 +253,14 @@
         </v-card>
       </v-container>
 
-      <v-container ref="actionDetails">
-        <v-card class="pa-6 mt-8" elevation="6">
-          <v-card-title class="search-title">
-            <v-icon color="primary" class="mr-2">mdi-finance</v-icon>
-            <span class="search-title-text">Informations sur l'action : {{ actionSelectionnee }}</span>
-            <v-btn icon v-if="action" @click="generatePdf('actionCard')" class="search-title-btn">
-              <v-icon>mdi-file-pdf-box</v-icon>
-            </v-btn>
-          </v-card-title>
-          <v-card-text v-show="action">
-            <div ref="actionCard">
-              <div class="mb-2 text-caption">Recherchez une action par symbole ou sélectionnez-en une pour afficher ses informations et son historique.</div>
-              <v-autocomplete
-                v-model="actionSelectionnee"
-                :items="allActions"
-                item-title="display"
-                item-value="symbole"
-                label="Sélectionner ou rechercher une action"
-                clearable
-                solo
-              />
-              <v-card v-if="action">
-                <v-card-title>{{ action.symbole }}</v-card-title>
-                <v-card-text>
-                  Date: {{ action.date }}<br />
-                  Open: {{ action.open }}<br />
-                  Close: {{ action.close }}<br />
-                  Volume: {{ action.volume }}
-                </v-card-text>
-              </v-card>
-              <GraphiqueLignes
-                  v-if="!loadingHistoriqueAction && historiqueAction.length"
-                  :labels="historiqueAction.map(e => e.date)"
-                  :valeurs="historiqueAction.map(e => e.close)"
-                  titre="Historique de clôture"
-                  couleur="#1976D2"
-              />
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-container>
+      <ActionDetailsCard
+          v-model:actionSelectionnee="actionSelectionnee"
+          :allActions="allActions"
+          :action="action"
+          :historiqueAction="historiqueAction"
+          :loadingHistoriqueAction="loadingHistoriqueAction"
+          ref="actionDetails"
+      />
 
       <ActionsPopulaires :actions="actionsPopulaires" />
 
@@ -383,6 +350,7 @@ import EntreprisesPopulaires from "../components/EntreprisesPopulaires.vue";
 import ActionsPopulaires from "../components/ActionsPopulaires.vue";
 import DevisesPopulaires from "../components/DevisesPopulaires.vue";
 import EntrepriseDetailsCard from "../components/EntrepriseDetailsCard.vue";
+import ActionDetailsCard from "../components/ActionDetailsCard.vue";
 
 const store = useStore();
 const deviseActive = computed(() => store.state.devises.deviseActive);
