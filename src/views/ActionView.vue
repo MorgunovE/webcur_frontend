@@ -12,7 +12,7 @@
             <p class="mb-16">
               Gardez une longueur d'avance grâce à nos outils et analyses avancés. Faites le suivi de vos investissements et prenez des décisions éclairées.
             </p>
-            <v-btn color="primary" large @click="goRegister" class="mb-16">
+            <v-btn color="primary" large @click="goRegister" class="mb-16" data-cy="action-hero-register-btn">
               Commencer maintenant
             </v-btn>
           </v-col>
@@ -100,7 +100,7 @@
             </v-card>
           </v-col>
         </v-row>
-        <h3 class="mb-4 mt-16">Actions populaires</h3>
+        <h3 class="mb-4 mt-16" data-cy="section-actions-populaires">Actions populaires</h3>
         <v-row>
           <v-col
             v-for="action in actionsPopulaires.slice(0, 5)"
@@ -109,7 +109,7 @@
             sm="6"
             md="2"
           >
-            <v-card class="pa-4 hoverable" @click="goRegister">
+            <v-card class="pa-4 hoverable" @click="goRegister" data-cy="action-populaire">
               <v-icon size="32" color="primary">mdi-finance</v-icon>
               <div class="font-weight-bold mt-2">{{ action.symbole }}</div>
               <div>Prix USD: {{ action.close }}</div>
@@ -123,7 +123,7 @@
       </v-container>
 
       <!-- AAPL Action Preview with Chart -->
-      <v-container class="mt-10" @click="goRegister">
+      <v-container class="mt-10" @click="goRegister" data-cy="section-aapl">
         <h2 class="mb-4">Aperçu de l'action Apple (AAPL)</h2>
         <v-row>
           <v-col cols="12" md="6">
