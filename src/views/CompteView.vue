@@ -126,82 +126,20 @@
       </v-container>
 
       <v-container ref="deviseDetails">
-        <v-card class="pa-6 mt-8" elevation="6">
-          <v-card-title class="search-title">
-            <v-icon color="primary" class="mr-2">mdi-currency-usd</v-icon>
-            <span class="search-title-text">Informations sur la devise : {{ pair }}</span>
-            <v-btn icon v-if="deviseActive" @click="generatePdf('deviseCard')" class="search-title-btn">
-              <v-icon>mdi-file-pdf-box</v-icon>
-            </v-btn>
-          </v-card-title>
-          <v-card-text>
-            <div ref="deviseCard">
-              <div class="mb-2 text-caption">Recherchez une devise par nom ou sélectionnez-en une pour afficher ses informations et son historique.</div>
-              <v-row>
-                <v-col cols="12" md="6">
-                  <v-autocomplete
-                    v-model="deviseSelectionnee"
-                    :items="devises"
-                    item-title="nom"
-                    item-value="nom"
-                    label="Sélectionner ou rechercher une devise"
-                    clearable
-                    solo
-                    @update:modelValue="onDeviseSelectionChange"
-                    @update:search-input="searchDevise"
-                    @keydown.enter="handleDeviseInput"
-                    @input="searchDevise($event)"
-                  />
-                  <v-alert v-if="erreur" type="error" class="mt-2">{{ erreur }}</v-alert>
-                  <v-card v-if="deviseActive">
-                    <v-card-title>{{ deviseActive.nom }}</v-card-title>
-                    <v-card-text>
-                      <div>Taux : {{ deviseActive.taux }}</div>
-                      <div>Date : {{ deviseActive.date_maj }}</div>
-                      <div>Base : {{ deviseActive.base_code }}</div>
-                      <div>
-                        <strong>Conversion rates:</strong>
-                        <v-table density="compact">
-                          <thead>
-                          <tr>
-                            <th>Devise</th>
-                            <th>Taux</th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                          <tr
-                              v-for="(taux, code) in limitedConversionRates"
-                              :key="code"
-                          >
-                            <td>{{ code }}</td>
-                            <td>{{ taux }}</td>
-                          </tr>
-                          </tbody>
-                        </v-table>
-                        <div v-if="showAllRates">
-                          <v-btn small @click="showAllRates = false">Show less</v-btn>
-                        </div>
-                        <div v-else>
-                          <v-btn small @click="showAllRates = true">Show all</v-btn>
-                        </div>
-                      </div>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <GraphiqueLignes
-                      v-if="!loadingHistoriqueDevice && labels.length && valeurs.length"
-                      :labels="labels"
-                      :valeurs="valeurs"
-                      :titre="`Historique de ${pair} contre USD`"
-                      couleur="#1976D2"
-                  />
-                </v-col>
-              </v-row>
-            </div>
-          </v-card-text>
-          <v-alert v-if="erreur" type="error" class="mt-2">{{ erreur }}</v-alert>
-        </v-card>
+        <DeviseDetailsCard
+            :pair="pair"
+            :deviseSelectionnee="deviseSelectionnee"
+            :devises="devises"
+            :deviseActive="deviseActive"
+            :labels="labels"
+            :valeurs="valeurs"
+            :erreur="erreur"
+            :loadingHistoriqueDevice="loadingHistoriqueDevice"
+            :conversionRates="deviseActive?.conversion_rates"
+            @update:deviseSelectionnee="onDeviseSelectionChange"
+            @searchDevise="searchDevise"
+            @handleDeviseInput="handleDeviseInput"
+        />
       </v-container>
 
       <DevisesPopulaires :devises="devisesPopulaires" />
@@ -338,19 +276,16 @@
 
 <script setup>
 import {ref, computed, onMounted, watch, nextTick} from "vue";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
 import HeaderPrincipal from "../components/HeaderPrincipal.vue";
 import FooterPrincipal from "../components/FooterPrincipal.vue";
-import GraphiqueLignes from "../components/GraphiqueLignes.vue";
 import CompteUserCard from "../components/CompteUserCard.vue";
 import EntreprisesPopulaires from "../components/EntreprisesPopulaires.vue";
 import ActionsPopulaires from "../components/ActionsPopulaires.vue";
 import DevisesPopulaires from "../components/DevisesPopulaires.vue";
 import EntrepriseDetailsCard from "../components/EntrepriseDetailsCard.vue";
 import ActionDetailsCard from "../components/ActionDetailsCard.vue";
+import DeviseDetailsCard from "@/components/DeviseDetailsCard.vue";
 
 const store = useStore();
 const deviseActive = computed(() => store.state.devises.deviseActive);
@@ -358,28 +293,75 @@ const devisesPopulaires = ref([]);
 const deviseSelectionnee = ref("EUR");
 const pair = computed(() => deviseSelectionnee.value);
 const historique = computed(() => store.state.devises.historiqueDevise);
-const showAllRates = ref(false);
 const labels = computed(() => historique.value.map((e) => e.date_maj));
 const valeurs = computed(() =>
     historique.value.map((e) =>
         e.conversion_rates && e.conversion_rates.USD ? e.conversion_rates.USD : null
     )
 );
-
-const limitedConversionRates = computed(() => {
-  if (!deviseActive.value || !deviseActive.value.conversion_rates) return {};
-  const entries = Object.entries(deviseActive.value.conversion_rates);
-  return showAllRates.value
-      ? Object.fromEntries(entries)
-      : Object.fromEntries(entries.slice(0, 10));
-});
-
-const router = useRouter();
 const utilisateur = computed(() => store.state.auth.utilisateur);
-
-
 const actionSearch = ref("");
+const codeSource = ref("USD");
+const codeCible = ref("EUR");
+const montant = ref(1);
+const resultat = ref(null);
+const devisesFavoris = computed(() => store.state.devises.devisesFavoris ?? []);
+const nouvelleDeviseFavori = ref("");
+const actionsFavoris = computed(() => store.state.actions.actionsFavoris);
+const actionsPopulaires = computed(() => store.state.actions.actionsPopulaires || []);
+const actionSelectionnee = ref("AAPL");
+const action = computed(() => store.state.actions.actionActive);
+const historiqueAction = computed(() => store.state.actions.historique || []);
+const entrepriseSelectionnee = ref("AAPL");
+const entreprise = computed(() => store.state.entreprises.entrepriseActive);
+const historiqueEntreprise = computed(() => store.state.entreprises.historiqueEntreprise || []);
+const loadingHistoriqueEntreprise = ref(false);
+const labelsEntreprise = computed(() => historiqueEntreprise.value.map(e => e.date_maj || e.date));
+const valeursEntreprise = computed(() => historiqueEntreprise.value.map(e => e.price));
+const nouvelleActionFavori = ref(null);
+const achatSymbole = ref("");
+const achatDate = ref(new Date().toISOString().slice(0, 10));
+const achatQuantite = ref(1);
+const achatDevise = ref("EUR");
+const achatResultat = ref(null);
+const achatErreur = ref("");
+const deviseDetails = ref(null);
+const actionDetails  = ref(null);
+const entreprisesPopulaires = computed(() =>
+    (store.state.entreprises.entreprisesPopulaires || []).map(e => ({
+      ...e,
+      display: `${e.symbole} — ${e.companyName}`
+    }))
+);
+const erreur = ref("");
+const loadingHistoriqueAction = ref(false);
+const loadingHistoriqueDevice = ref(false);
 
+const selectionnerDevise = async (nomDevise) => {
+  deviseSelectionnee.value = nomDevise;
+  await nextTick();
+  const el = deviseDetails.value?.$el || deviseDetails.value;
+  el?.scrollIntoView({ behavior: "smooth" });
+};
+
+const selectionnerAction = async (nomAction) => {
+  actionSelectionnee.value = nomAction;
+  entrepriseSelectionnee.value = nomAction;
+  await nextTick();
+  const el = actionDetails.value?.$el || actionDetails.value;
+  el?.scrollIntoView({ behavior: "smooth" });
+};
+
+const searchDevise = async (search) => {
+  if (search && search.length === 3) {
+    try {
+      await store.dispatch("devises/chargerDevise", search.toUpperCase());
+      erreur.value = "";
+    } catch (e) {
+      erreur.value = "Devise non trouvée";
+    }
+  }
+};
 
 function getSymbolFromInput(input) {
   if (!input) return "";
@@ -403,79 +385,6 @@ async function searchAndAddAction() {
     erreur.value = "Action non trouvée ou erreur de chargement.";
   }
 }
-
-
-const codeSource = ref("USD");
-const codeCible = ref("EUR");
-const montant = ref(1);
-const resultat = ref(null);
-const devisesFavoris = computed(() => store.state.devises.devisesFavoris ?? []);
-const nouvelleDeviseFavori = ref("");
-
-const actionsFavoris = computed(() => store.state.actions.actionsFavoris);
-const actionsPopulaires = computed(() => store.state.actions.actionsPopulaires || []);
-const actionSelectionnee = ref("AAPL");
-const action = computed(() => store.state.actions.actionActive);
-const historiqueAction = computed(() => store.state.actions.historique || []);
-
-const entreprisesPopulaires = computed(() =>
-    (store.state.entreprises.entreprisesPopulaires || []).map(e => ({
-      ...e,
-      display: `${e.symbole} — ${e.companyName}`
-    }))
-);
-
-const entrepriseSelectionnee = ref("AAPL");
-const entreprise = computed(() => store.state.entreprises.entrepriseActive);
-const historiqueEntreprise = computed(() => store.state.entreprises.historiqueEntreprise || []);
-const loadingHistoriqueEntreprise = ref(false);
-
-const labelsEntreprise = computed(() => historiqueEntreprise.value.map(e => e.date_maj || e.date));
-const valeursEntreprise = computed(() => historiqueEntreprise.value.map(e => e.price));
-
-const nouvelleActionFavori = ref(null);
-
-const achatSymbole = ref("");
-const achatDate = ref(new Date().toISOString().slice(0, 10));
-const achatQuantite = ref(1);
-const achatDevise = ref("EUR");
-const achatResultat = ref(null);
-const achatErreur = ref("");
-
-const deviseDetails = ref(null);
-const actionDetails  = ref(null);
-
-const selectionnerDevise = async (nomDevise) => {
-  deviseSelectionnee.value = nomDevise;
-  await nextTick();
-  const el = deviseDetails.value?.$el || deviseDetails.value;
-  el?.scrollIntoView({ behavior: "smooth" });
-};
-
-const selectionnerAction = async (nomAction) => {
-  actionSelectionnee.value = nomAction;
-  entrepriseSelectionnee.value = nomAction;
-  await nextTick();
-  const el = actionDetails.value?.$el || actionDetails.value;
-  el?.scrollIntoView({ behavior: "smooth" });
-};
-
-const deviseCard = ref(null);
-const actionCard = ref(null);
-const entrepriseCard = ref(null);
-
-const erreur = ref("");
-
-const searchDevise = async (search) => {
-  if (search && search.length === 3) {
-    try {
-      await store.dispatch("devises/chargerDevise", search.toUpperCase());
-      erreur.value = "";
-    } catch (e) {
-      erreur.value = "Devise non trouvée";
-    }
-  }
-};
 
 async function handleDeviseInput(event) {
   const value = typeof event === "string" ? event : deviseSelectionnee.value;
@@ -514,73 +423,6 @@ async function onDeviseSelectionChange(nom) {
   }
 }
 
-
-async function generatePdf(refName) {
-  await nextTick();
-  const el =
-    refName === 'deviseCard'
-      ? deviseCard.value
-      : refName === 'actionCard'
-        ? actionCard.value
-        : refName === 'entrepriseCard'
-          ? entrepriseCard.value
-          : null;
-
-  if (!el) return;
-  const originalBg = el.style.backgroundColor;
-  const whiteBg = "#fff";
-  el.style.backgroundColor = whiteBg;
-  el.querySelectorAll("*").forEach(child => {
-    child.style.backgroundColor = whiteBg;
-  });
-
-  html2canvas(el, { backgroundColor: whiteBg, useCORS: true, scale: 2 }).then((canvas) => {
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "pt",
-      format: "a4",
-    });
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const imgWidth = pageWidth - 40;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-    let position = 20;
-    let remainingHeight = imgHeight;
-    let imgY = 0;
-
-    while (remainingHeight > 0) {
-      pdf.addImage(
-        imgData,
-        "PNG",
-        20,
-        position,
-        imgWidth,
-        Math.min(remainingHeight, pageHeight - 40),
-        undefined,
-        "FAST",
-        0,
-        imgY / canvas.height,
-        1,
-        Math.min(1, (pageHeight - 40) / imgHeight)
-      );
-      remainingHeight -= (pageHeight - 40);
-      imgY += (pageHeight - 40) * (canvas.height / imgHeight);
-      if (remainingHeight > 0) {
-        pdf.addPage();
-      }
-    }
-
-    pdf.save("rapport.pdf");
-
-    el.style.backgroundColor = originalBg;
-    el.querySelectorAll("*").forEach(child => {
-      child.style.backgroundColor = "";
-    });
-  });
-}
-
 async function chargerEntrepriseEtHistorique(symbole) {
   loadingHistoriqueEntreprise.value = true;
   await store.dispatch("entreprises/chargerEntreprise", symbole);
@@ -603,7 +445,6 @@ async function calculerAchatAction() {
     achatErreur.value = "Erreur lors du calcul";
   }
 }
-
 
 async function supprimerActionFavori(symbole) {
   await store.dispatch("actions/supprimerActionFavori", symbole);
@@ -662,10 +503,6 @@ onMounted(async () => {
     await chargerEntrepriseEtHistorique(entrepriseSelectionnee.value);
   }
 });
-
-const loadingHistoriqueAction = ref(false);
-const loadingHistoriqueDevice = ref(false);
-
 
 watch(
     [deviseSelectionnee, actionSelectionnee, entrepriseSelectionnee],
@@ -828,34 +665,6 @@ const allActions = [
   border-bottom-right-radius: 24px;
   min-height: 400px;
   color: white;
-}
-
-.search-title {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-.search-title-text {
-  flex: 1 1 65px;
-  min-width: 0;
-  white-space: normal;
-  word-break: break-word;
-}
-.search-title-btn {
-  flex-shrink: 0;
-  margin-left: auto;
-}
-@media (max-width: 600px) {
-  .search-title {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-  .search-title-btn {
-    margin-left: 0;
-    align-self: flex-end;
-  }
 }
 
 </style>
