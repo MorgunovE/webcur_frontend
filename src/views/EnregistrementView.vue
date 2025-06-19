@@ -22,23 +22,25 @@
             <v-card class="pa-8" elevation="10">
               <h2 class="mb-6 text-center">Inscription</h2>
               <v-form @submit.prevent="sInscrire">
-                <v-text-field v-model="email" label="Email" required />
+                <v-text-field v-model="email" label="Email" required data-cy="register-email" />
                 <v-text-field
                   v-model="motDePasse"
                   label="Mot de passe"
                   type="password"
                   required
+                  data-cy="register-password"
                 />
                 <v-text-field
                   v-model="nomUtilisateur"
                   label="Nom d'utilisateur"
                   required
+                  data-cy="register-username"
                 />
-                <v-btn type="submit" color="primary" block class="mt-4">
+                <v-btn type="submit" color="primary" block class="mt-4" data-cy="register-submit">
                   S'inscrire
                 </v-btn>
               </v-form>
-              <v-alert v-if="erreur" type="error" class="mt-4">{{ erreur }}</v-alert>
+              <v-alert v-if="erreur" type="error" class="mt-4" data-cy="register-error">{{ erreur }}</v-alert>
             </v-card>
           </v-col>
         </v-row>
