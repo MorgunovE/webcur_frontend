@@ -32,11 +32,11 @@
                 <div class="mb-2 text-caption">Ajoutez vos devises favorites pour un accès rapide. Vous pouvez choisir dans la liste ou saisir le nom d'une devise.</div>
                 <v-row>
                   <v-col
-                    v-for="devise in devisesFavoris"
-                    :key="devise"
-                    cols="12"
-                    sm="6"
-                    md="6"
+                      v-for="devise in devisesFavoris"
+                      :key="devise"
+                      cols="12"
+                      sm="6"
+                      md="6"
                   >
                     <v-card class="pa-3 mb-2 d-flex align-center justify-space-between hoverable">
                       <span class="font-weight-bold">{{ devise }}</span>
@@ -52,22 +52,22 @@
                   </v-col>
                 </v-row>
                 <v-autocomplete
-                  v-model="nouvelleDeviseFavori"
-                  :items="devises"
-                  item-title="nom"
-                  item-value="nom"
-                  label="Ajouter une devise aux favoris"
-                  class="mt-2"
-                  clearable
-                  solo
-                  data-cy="autocomplete-devise-favori"
+                    v-model="nouvelleDeviseFavori"
+                    :items="devises"
+                    item-title="nom"
+                    item-value="nom"
+                    label="Ajouter une devise aux favoris"
+                    class="mt-2"
+                    clearable
+                    solo
+                    data-cy="autocomplete-devise-favori"
                 />
                 <v-btn
-                  color="primary"
-                  class="mt-2"
-                  @click="ajouterFavori"
-                  :disabled="!nouvelleDeviseFavori"
-                  data-cy="ajouter-devise-favori"
+                    color="primary"
+                    class="mt-2"
+                    @click="ajouterFavori"
+                    :disabled="!nouvelleDeviseFavori"
+                    data-cy="ajouter-devise-favori"
                 >
                   Ajouter
                 </v-btn>
