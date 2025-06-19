@@ -149,14 +149,14 @@
       <DevisesPopulaires :devises="devisesPopulaires" />
 
       <v-container>
-        <v-card class="pa-6 mt-8" elevation="6">
+        <v-card class="pa-6 mt-8" elevation="6" data-cy="conversion-card">
           <v-card-title>
             <v-icon color="primary" class="mr-2">mdi-swap-horizontal</v-icon>
             Convertir une devise
           </v-card-title>
           <v-card-text>
             <div class="mb-2 text-caption">Convertissez rapidement un montant d'une devise à une autre. Sélectionnez les devises et saisissez le montant.</div>
-            <v-form @submit.prevent="convertir">
+            <v-form @submit.prevent="convertir" data-cy="conversion-form">
               <v-row>
                 <v-col cols="12" md="3">
                   <v-select
@@ -164,6 +164,7 @@
                     :items="devises"
                     label="Devise source"
                     required
+                    data-cy="conversion-source"
                   />
                 </v-col>
                 <v-col cols="12" md="3">
@@ -172,6 +173,7 @@
                     :items="devises"
                     label="Devise cible"
                     required
+                    data-cy="conversion-cible"
                   />
                 </v-col>
                 <v-col cols="12" md="3">
@@ -180,17 +182,18 @@
                     label="Montant"
                     type="number"
                     required
+                    data-cy="conversion-montant"
                   />
                 </v-col>
                 <v-col cols="12" md="3">
-                  <v-btn type="submit" color="primary" class="mt-2">Convertir</v-btn>
+                  <v-btn type="submit" color="primary" class="mt-2" data-cy="conversion-submit">Convertir</v-btn>
                 </v-col>
               </v-row>
             </v-form>
-            <v-alert v-if="resultat" type="success" class="mt-4">
+            <v-alert v-if="resultat" type="success" class="mt-4" data-cy="conversion-result">
               {{ montant }} {{ codeSource }} = {{ resultat.montant_converti }} {{ codeCible }}
             </v-alert>
-            <v-alert v-if="erreur" type="error" class="mt-4">{{ erreur }}</v-alert>
+            <v-alert v-if="erreur" type="error" class="mt-4" data-cy="conversion-error">{{ erreur }}</v-alert>
           </v-card-text>
         </v-card>
       </v-container>
