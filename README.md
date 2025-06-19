@@ -112,7 +112,7 @@ npm run test:unit -- tests/unit/api/devises.spec.js
     ```
   ou our exécuter un seul fichier de test :
     ```sh
-      npm run test:e2e -- cypress/e2e/devises.cy.js
+      npm run test:e2e:ci -- cypress/e2e/auth.cy.js
     ```
 
 ## Lint du code
