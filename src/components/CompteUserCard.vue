@@ -7,10 +7,10 @@
           <v-avatar size="40" class="mr-3">
             <v-icon color="primary">mdi-account-circle</v-icon>
           </v-avatar>
-          {{ utilisateur?.nom_utilisateur || 'Utilisateur' }}
+          <span data-cy="compte-username">{{ utilisateur?.nom_utilisateur || 'Utilisateur' }}</span>
         </v-card-title>
         <v-card-text>
-          <div>Email : {{ utilisateur?.email }}</div>
+          <div data-cy="compte-email">Email : {{ utilisateur?.email }}</div>
           <v-btn color="error" class="mt-4" @click="seDeconnecter">Se déconnecter</v-btn>
         </v-card-text>
       </v-card>
@@ -22,12 +22,13 @@
           <v-text-field
             v-model="nouveauNom"
             label="Nouveau nom d'utilisateur"
+            data-cy="compte-nouveau-nom"
           />
-          <v-btn color="primary" @click="mettreAJourUtilisateur(nouveauNom)">
+          <v-btn data-cy="compte-update-btn" color="primary" @click="mettreAJourUtilisateur(nouveauNom)">
             Mettre à jour
           </v-btn>
           <v-divider class="my-4"></v-divider>
-          <v-btn color="error" @click="supprimerMonCompte">
+          <v-btn color="error" @click="supprimerMonCompte" data-cy="compte-delete-btn">
             Supprimer mon compte
           </v-btn>
         </v-card-text>
