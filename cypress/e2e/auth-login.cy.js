@@ -4,9 +4,9 @@ function logResult(message) {
 
 describe('Authentification - E2E', () => {
     const testUser = {
-        email: 'cypressauthtestuser@mail.com',
+        email: `cypressauthtestuser${Date.now()}@mail.com`,
         mot_de_passe: 'cypressauthtestuser',
-        nom_utilisateur: 'CypressAuthTestUser'
+        nom_utilisateur: `CypressAuthTestUser${Date.now()}`
     };
     let userId = null;
     let apiBaseUrl = '';
