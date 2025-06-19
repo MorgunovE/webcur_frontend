@@ -117,6 +117,58 @@ describe('Compte - E2E', () => {
     cy.get('[data-cy="compte-username"]').should('contain', nouveauNom);
   });
 
+  it('Ajoute et supprime une devise favorite', () => {
+    cy.visit('/login');
+    cy.get('[data-cy="login-email"]').type(testUser.email);
+    cy.get('[data-cy="login-password"]').type(testUser.mot_de_passe);
+    cy.get('[data-cy="login-submit"]').click();
+    cy.url().should('include', '/account');
+
+    // Ajouter une devise favorite
+    cy.get('[data-cy="autocomplete-devise-favori"]').type('CAD');
+    cy.get('.v-autocomplete__content').contains('CAD').click();
+    cy.get('[data-cy="ajouter-devise-favori"]', { timeout: 10000 }).click();
+    cy.contains('.font-weight-bold', 'CAD', { timeout: 10000 }).should('exist');
+
+    // Supprimer la devise favorite
+    cy.contains('.font-weight-bold', 'CAD')
+      .parents('.v-card')
+      .find('[data-cy="supprimer-devise-favori"]')
+      .click();
+    cy.contains('.font-weight-bold', 'CAD').should('not.exist');
+  });
+
+  it('Ajoute et supprime une action favorite', () => {
+    cy.visit('/login');
+    cy.get('[data-cy="login-email"]').type(testUser.email);
+    cy.get('[data-cy="login-password"]').type(testUser.mot_de_passe);
+    cy.get('[data-cy="login-submit"]').click();
+    cy.url().should('include', '/account');
+
+    // Ajouter une action favorite
+    cy.get('[data-cy="autocomplete-action-favori"]').type('AAPL');
+    cy.get('.v-autocomplete__content').contains('AAPL').click();
+    cy.get('[data-cy="ajouter-action-favori"]').should('not.be.disabled').click();
+
+    // Vérifier que l'action favorite a été ajoutée
+    cy.get('[data-cy="supprimer-action-favori"]', { timeout: 10000 })
+      .parents('.v-card')
+      .contains('.font-weight-bold', 'AAPL')
+      .should('exist');
+
+    // Supprimer l'action favorite
+    cy.get('[data-cy="supprimer-action-favori"]')
+      .parents('.v-card')
+      .contains('.font-weight-bold', 'AAPL')
+      .parents('.v-card')
+      .find('[data-cy="supprimer-action-favori"]')
+      .click();
+
+    // Vérifier que l'action favorite n'est plus dans la liste
+    cy.get('[data-cy="action-favori-card"]', { timeout: 10000 })
+        .should('not.exist');
+  });
+
   // active apre tout tests realise
   // it('Déconnexion', () => {
   //   cy.visit('/login');
