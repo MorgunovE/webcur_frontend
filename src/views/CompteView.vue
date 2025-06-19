@@ -156,7 +156,7 @@
               <v-row>
                 <v-col cols="12" md="3">
                   <v-select
-                    v-model="codeSourcfe"
+                    v-model="codeSource"
                     :items="devises"
                     label="Devise source"
                     required
@@ -286,6 +286,7 @@ import DevisesPopulaires from "../components/DevisesPopulaires.vue";
 import EntrepriseDetailsCard from "../components/EntrepriseDetailsCard.vue";
 import ActionDetailsCard from "../components/ActionDetailsCard.vue";
 import DeviseDetailsCard from "@/components/DeviseDetailsCard.vue";
+
 
 const store = useStore();
 const deviseActive = computed(() => store.state.devises.deviseActive);
