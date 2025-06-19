@@ -215,6 +215,26 @@ describe('Compte - E2E', () => {
     cy.get('[data-cy="devise-populaire"]', { timeout: 20000 }).should('be.visible');
   });
 
+  it('Convertit un montant entre deux devises', () => {
+    cy.visit('/login');
+    cy.get('[data-cy="login-email"]').type(testUser.email);
+    cy.get('[data-cy="login-password"]').type(testUser.mot_de_passe);
+    cy.get('[data-cy="login-submit"]').click();
+    cy.url().should('include', '/account');
+
+    // Remplir le formulaire de conversion
+    cy.get('[data-cy="conversion-source"]', { timeout: 10000 }).click().get('.v-list-item').contains('USD').click();
+    cy.get('[data-cy="conversion-cible"]', { timeout: 10000 }).click().get('.v-list-item').contains('EUR').click();
+    cy.get('[data-cy="conversion-montant"] input').clear();
+    cy.get('[data-cy="conversion-montant"] input').type('10');
+    cy.get('[data-cy="conversion-submit"]').click();
+
+    // Vérifier le résultat de la conversion
+    cy.get('[data-cy="conversion-result"]', { timeout: 10000 })
+      .should('contain', '10 USD')
+      .and('contain', 'EUR');
+  });
+
 
 
   // active apre tout tests realise
