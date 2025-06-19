@@ -1,6 +1,7 @@
 const { defineConfig } = require("cypress");
 const fs = require("fs");
 const path = require("path");
+require("dotenv").config();
 
 module.exports = defineConfig({
   e2e: {
@@ -20,6 +21,10 @@ module.exports = defineConfig({
     },
     baseUrl: process.env.CYPRESS_BASE_URL || "http://localhost:8080",
     specPattern: "cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
+    env: {
+      VUE_APP_API_URL: process.env.VUE_APP_API_URL || "http://localhost:5000",
+      VUE_APP_API_URL_REMOTE: process.env.VUE_APP_API_URL_REMOTE || "",
+    },
   },
 
   component: {
