@@ -12,7 +12,7 @@
             <p class="mb-16">
               WebCur vous permet d’analyser les entreprises cotées, de suivre leurs variations et d’optimiser vos investissements grâce à des outils intuitifs.
             </p>
-            <v-btn color="primary" large @click="goRegister" class="mb-16">
+            <v-btn color="primary" large @click="goRegister" class="mb-16" data-cy="entreprise-hero-register-btn">
               Commencer maintenant
             </v-btn>
           </v-col>
@@ -47,7 +47,7 @@
       </v-container>
 
       <!-- Popular Companies Preview -->
-      <v-container class="mt-10">
+      <v-container class="mt-10" data-cy="section-entreprises">
         <h2 class="mb-16 text-center">Entreprises</h2>
         <v-row class="mb-8" align="center" justify="center">
           <v-col cols="12" md="6">
@@ -107,7 +107,7 @@
             sm="6"
             md="2"
           >
-            <v-card class="pa-4 hoverable" @click="goRegister">
+            <v-card class="pa-4 hoverable" @click="goRegister" data-cy="entreprise-populaire">
               <v-avatar size="32" class="mb-2" v-if="ent.image">
                 <img :src="ent.image" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;" />
               </v-avatar>
@@ -125,7 +125,7 @@
       </v-container>
 
       <!-- AAPL Company Preview with Chart -->
-      <v-container class="mt-10" @click="goRegister">
+      <v-container class="mt-10" @click="goRegister" data-cy="section-aapl">
         <h2 class="mb-4">Aperçu de l'entreprise Apple (AAPL)</h2>
         <v-row>
           <v-col cols="12" md="6">
