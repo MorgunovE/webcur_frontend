@@ -44,7 +44,7 @@
                         <v-btn icon color="primary" @click="selectionnerDevise(devise)" class="mr-4">
                           <v-icon>mdi-magnify</v-icon>
                         </v-btn>
-                        <v-btn icon color="error" @click="supprimerFavori(devise)">
+                        <v-btn icon color="error" @click="supprimerFavori(devise)" data-cy="supprimer-devise-favori">
                           <v-icon>mdi-delete</v-icon>
                         </v-btn>
                       </div>
@@ -60,12 +60,14 @@
                   class="mt-2"
                   clearable
                   solo
+                  data-cy="autocomplete-devise-favori"
                 />
                 <v-btn
                   color="primary"
                   class="mt-2"
                   @click="ajouterFavori"
                   :disabled="!nouvelleDeviseFavori"
+                  data-cy="ajouter-devise-favori"
                 >
                   Ajouter
                 </v-btn>
@@ -89,12 +91,12 @@
                     md="6"
                   >
                     <v-card class="pa-3 mb-2 d-flex align-center justify-space-between hoverable">
-                      <span class="font-weight-bold">{{ symbole }}</span>
+                      <span class="font-weight-bold" data-cy="action-favori-card">{{ symbole }}</span>
                       <div>
                         <v-btn icon color="primary" @click="selectionnerAction(symbole)" class="mr-4">
                           <v-icon>mdi-magnify</v-icon>
                         </v-btn>
-                        <v-btn icon color="error" @click="supprimerActionFavori(symbole)">
+                        <v-btn icon color="error" @click="supprimerActionFavori(symbole)" data-cy="supprimer-action-favori">
                           <v-icon>mdi-delete</v-icon>
                         </v-btn>
                       </div>
@@ -110,12 +112,14 @@
                     class="mt-2"
                     clearable
                     solo
+                    data-cy="autocomplete-action-favori"
                 />
                 <v-btn
                     color="primary"
                     class="mt-2"
                     @click="searchAndAddAction"
                     :disabled="!nouvelleActionFavori"
+                    data-cy="ajouter-action-favori"
                 >
                   Ajouter
                 </v-btn>
