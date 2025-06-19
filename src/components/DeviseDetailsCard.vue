@@ -1,10 +1,10 @@
 <template>
   <v-container>
     <v-card class="pa-6 mt-8" elevation="6">
-      <v-card-title class="search-title">
+      <v-card-title class="search-title" data-cy="devise-details-title">
         <v-icon color="primary" class="mr-2">mdi-currency-usd</v-icon>
         <span class="search-title-text">Informations sur la devise : {{ pair }}</span>
-        <v-btn icon v-if="deviseActive" @click="onGeneratePdf" class="search-title-btn">
+        <v-btn icon v-if="deviseActive" @click="onGeneratePdf" class="search-title-btn" data-cy="devise-pdf-btn">
           <v-icon>mdi-file-pdf-box</v-icon>
         </v-btn>
       </v-card-title>
@@ -27,15 +27,16 @@
                 @update:search-input="onSearchDevise"
                 @keydown.enter="onHandleDeviseInput"
                 @input="onSearchDevise"
+                data-cy="devise-autocomplete"
               />
               <v-alert v-if="erreur" type="error" class="mt-2">{{ erreur }}</v-alert>
               <v-card v-if="deviseActive">
-                <v-card-title>{{ deviseActive.nom }}</v-card-title>
+                <v-card-title data-cy="devise-card-title">{{ deviseActive.nom }}</v-card-title>
                 <v-card-text>
-                  <div>Taux : {{ deviseActive.taux }}</div>
-                  <div>Date : {{ deviseActive.date_maj }}</div>
-                  <div>Base : {{ deviseActive.base_code }}</div>
-                  <div>
+                  <div data-cy="devise-taux">Taux : {{ deviseActive.taux }}</div>
+                  <div data-cy="devise-date">Date : {{ deviseActive.date_maj }}</div>
+                  <div data-cy="devise-base">Base : {{ deviseActive.base_code }}</div>
+                  <div data-cy="devise-conversion-rates">
                     <strong>Conversion rates:</strong>
                     <v-table density="compact">
                       <thead>
@@ -52,10 +53,10 @@
                       </tbody>
                     </v-table>
                     <div v-if="showAllRates">
-                      <v-btn small @click="showAllRates = false">Show less</v-btn>
+                      <v-btn small @click="showAllRates = false" data-cy="devise-show-less-btn">Show less</v-btn>
                     </div>
                     <div v-else>
-                      <v-btn small @click="showAllRates = true">Show all</v-btn>
+                      <v-btn small @click="showAllRates = true" data-cy="devise-show-all-btn">Show all</v-btn>
                     </div>
                   </div>
                 </v-card-text>
