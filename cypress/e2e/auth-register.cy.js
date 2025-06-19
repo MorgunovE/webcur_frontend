@@ -10,6 +10,7 @@ describe('Enregistrement - E2E', () => {
     };
     let userId = null;
     let apiBaseUrl = '';
+    let token = null;
 
     function detectApiBaseUrl() {
         const local = Cypress.env('VUE_APP_API_URL') || 'http://localhost:5000';
@@ -54,10 +55,11 @@ describe('Enregistrement - E2E', () => {
     });
 
     after(() => {
-        if (userId) {
+        if (userId && token) {
             cy.request({
                 method: 'DELETE',
                 url: `${apiBaseUrl}/utilisateurs/${userId}`,
+                headers: { Authorization: `Bearer ${token}` },
                 failOnStatusCode: false
             });
         }
@@ -86,6 +88,14 @@ describe('Enregistrement - E2E', () => {
             failOnStatusCode: false
         }).then(res => {
             userId = res.body.id || res.body.data?.id;
+            return cy.request({
+                method: 'POST',
+                url: `${apiBaseUrl}/connexion`,
+                body: { email: testUser.email, mot_de_passe: testUser.mot_de_passe },
+                failOnStatusCode: false
+            }).then(loginRes => {
+                token = loginRes.body.access_token || loginRes.body.token;
+            });
         });
     });
 
