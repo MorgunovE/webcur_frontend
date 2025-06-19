@@ -12,7 +12,7 @@
             <p class="mb-16">
               WebCur fournit des taux de change en temps réel et des outils pour gérer vos finances dans différentes devises.
             </p>
-            <v-btn color="primary" large @click="goRegister" class="mb16">
+            <v-btn color="primary" large @click="goRegister" class="mb16" data-cy="devise-hero-register-btn">
               Commencer maintenant
             </v-btn>
           </v-col>
@@ -48,7 +48,7 @@
 
       <!-- Popular Currencies Preview -->
       <v-container class="mt-10">
-        <h2 class="mb-16 text-center">Devises</h2>
+        <h2 class="mb-16 text-center" data-cy="section-devises">Devises</h2>
         <v-row class="mb-8" align="center" justify="center">
           <v-col cols="12" md="6">
             <v-card class="pa-6">
@@ -110,7 +110,7 @@
             sm="6"
             md="2"
           >
-            <v-card class="pa-4 hoverable" @click="goRegister">
+            <v-card class="pa-4 hoverable" @click="goRegister" data-cy="devise-populaire">
               <v-icon size="32" color="primary">mdi-currency-usd</v-icon>
               <div class="font-weight-bold mt-2">{{ devise.nom }}</div>
               <div>Taux USD: {{ devise.conversion_rates?.USD ?? 'N/A' }}</div>
@@ -124,7 +124,7 @@
       </v-container>
 
       <!-- CAD Currency Preview with Chart -->
-      <v-container class="mt-10" @click="goRegister">
+      <v-container class="mt-10" @click="goRegister" data-cy="section-cad">
         <h2 class="mb-4">Aperçu du dollar canadien (CAD)</h2>
         <v-row>
           <v-col cols="12" md="6">
@@ -155,10 +155,10 @@
                     </tbody>
                   </v-simple-table>
                   <div v-if="cadShowAllRates">
-                    <v-btn small @click.stop="cadShowAllRates = false" color="primary" variant="text">Show less</v-btn>
+                    <v-btn small @click.stop="cadShowAllRates = false" color="primary" variant="text" data-cy="cad-show-less-btn">Show less</v-btn>
                   </div>
                   <div v-else>
-                    <v-btn small @click.stop="cadShowAllRates = true" color="primary" variant="text">Show all</v-btn>
+                    <v-btn small @click.stop="cadShowAllRates = true" color="primary" variant="text" data-cy="cad-show-all-btn">Show all</v-btn>
                   </div>
                 </div>
               </v-card-text>
