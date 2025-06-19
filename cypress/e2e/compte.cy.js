@@ -169,6 +169,42 @@ describe('Compte - E2E', () => {
         .should('not.exist');
   });
 
+  it('Affiche et interagit avec la carte des détails de devise', () => {
+    // Connexion
+    cy.visit('/login');
+    cy.get('[data-cy="login-email"]').type(testUser.email);
+    cy.get('[data-cy="login-password"]').type(testUser.mot_de_passe);
+    cy.get('[data-cy="login-submit"]').click();
+    cy.url().should('include', '/account');
+
+    // Cible l'input réel de l'autocomplete
+    cy.get('[data-cy="devise-autocomplete"] input')
+        .clear();
+
+    cy.get('[data-cy="devise-autocomplete"] input')
+        .type('CAD');
+
+    // Sélectionne dans la liste
+    cy.get('.v-autocomplete__content', { timeout: 10000 })
+        .contains('CAD')
+        .click();
+
+    // Vérifie l'affichage des détails de la devise sélectionnée
+    cy.get('[data-cy="devise-card-title"]', { timeout: 10000 }).should('contain', 'CAD');
+    cy.get('[data-cy="devise-taux"]', { timeout: 10000 }).should('be.visible');
+    cy.get('[data-cy="devise-date"]', { timeout: 10000 }).should('be.visible');
+    cy.get('[data-cy="devise-base"]', { timeout: 10000 }).should('be.visible');
+    cy.get('[data-cy="devise-conversion-rates"]', { timeout: 10000 }).should('be.visible');
+
+    // Vérifie le bouton "Show all" et "Show less"
+    cy.get('[data-cy="devise-show-all-btn"]', { timeout: 10000 }).click();
+    cy.get('[data-cy="devise-show-less-btn"]', { timeout: 10000 }).should('be.visible');
+    cy.get('[data-cy="devise-show-less-btn"]', { timeout: 10000 }).click();
+
+    // Vérifie le bouton PDF (si la devise est active)
+    cy.get('[data-cy="devise-pdf-btn"]', { timeout: 10000 }).should('be.visible');
+  });
+
   // active apre tout tests realise
   // it('Déconnexion', () => {
   //   cy.visit('/login');
