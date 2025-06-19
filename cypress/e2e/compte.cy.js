@@ -92,4 +92,41 @@ describe('Compte - E2E', () => {
       .should('contain', `Bienvenue à nouveau, ${testUser.nom_utilisateur} !`);
     cy.contains('Votre parcours financier continue');
   });
+
+  it('Affiche le nom d\'utilisateur et l\'email dans la carte du compte', () => {
+    cy.visit('/login');
+    cy.get('[data-cy="login-email"]').type(testUser.email);
+    cy.get('[data-cy="login-password"]').type(testUser.mot_de_passe);
+    cy.get('[data-cy="login-submit"]').click();
+    cy.url().should('include', '/account');
+    cy.get('[data-cy="compte-username"]').should('contain', testUser.nom_utilisateur);
+    cy.get('[data-cy="compte-email"]').should('contain', testUser.email);
+  });
+
+  it('Met à jour le nom d\'utilisateur', () => {
+    cy.visit('/login');
+    cy.get('[data-cy="login-email"]').type(testUser.email);
+    cy.get('[data-cy="login-password"]').type(testUser.mot_de_passe);
+    cy.get('[data-cy="login-submit"]').click();
+    cy.url().should('include', '/account');
+    const nouveauNom = `${testUser.nom_utilisateur}_modifié`;
+    cy.get('[data-cy="compte-nouveau-nom"] input').clear();
+    cy.get('[data-cy="compte-nouveau-nom"] input').should('have.value', '');
+    cy.get('[data-cy="compte-nouveau-nom"] input').type(nouveauNom);
+    cy.get('[data-cy="compte-update-btn"]').click();
+    cy.get('[data-cy="compte-username"]').should('contain', nouveauNom);
+  });
+
+  // active apre tout tests realise
+  // it('Supprime le compte utilisateur', () => {
+  //   cy.visit('/login');
+  //   cy.get('[data-cy="login-email"]').type(testUser.email);
+  //   cy.get('[data-cy="login-password"]').type(testUser.mot_de_passe);
+  //   cy.get('[data-cy="login-submit"]').click();
+  //   cy.url().should('include', '/account');
+  //   cy.get('[data-cy="compte-delete-btn"]').click();
+  //   cy.url().should('not.include', '/account');
+  //   cy.get('[data-cy="login-email"]').should('not.exist');
+  // });
+
 });
