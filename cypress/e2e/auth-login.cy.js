@@ -12,7 +12,6 @@ describe('Authentification - E2E', () => {
     let apiBaseUrl = '';
     let token = null;
 
-    // Detect a working API base URL, fallback to local if all fail
     function detectApiBaseUrl() {
         const local = Cypress.env('VUE_APP_API_URL') || 'http://localhost:5000';
         const remote = Cypress.env('VUE_APP_API_URL_REMOTE');
