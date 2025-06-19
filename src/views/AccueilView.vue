@@ -9,7 +9,7 @@
             <h1 class="display-2 font-weight-bold mb-16">
               Suivez, convertissez et comparez les devises en temps réel
             </h1>
-            <v-btn color="primary" large class="mt-16" @click="goRegister">
+            <v-btn color="primary" large class="mt-16" @click="goRegister" data-cy="hero-register-btn">
               Commencer maintenant
             </v-btn>
           </v-col>
@@ -44,7 +44,7 @@
 
       <!-- Popular Currencies -->
       <v-container class="mt-10">
-        <h2 class="mb-16 text-center">Devises</h2>
+        <h2 class="mb-16 text-center" data-cy="section-devises" >Devises</h2>
         <v-row class="mb-8" align="center" justify="center">
           <v-col cols="12" md="6">
             <v-card class="pa-6">
@@ -105,6 +105,7 @@
               cols="12"
               sm="6"
               md="2"
+              data-cy="devise-populaire"
           >
             <v-card class="pa-4 hoverable" @click="goCurrency">
               <v-icon size="32" color="primary">mdi-currency-usd</v-icon>
@@ -121,7 +122,7 @@
 
       <!-- Popular Actions -->
       <v-container class="mt-10">
-        <h2 class="mb-16 text-center">Actions</h2>
+        <h2 class="mb-16 text-center" data-cy="section-actions">Actions</h2>
         <v-row class="mb-8" align="center" justify="center">
           <v-col cols="12" md="6">
             <v-card class="pa-6">
@@ -181,6 +182,7 @@
               cols="12"
               sm="6"
               md="2"
+              data-cy="action-populaire"
           >
             <v-card class="pa-4 hoverable" @click="goAction">
               <v-icon size="32" color="primary">mdi-finance</v-icon>
@@ -197,7 +199,7 @@
 
       <!-- Popular Companies -->
       <v-container class="mt-10 mb-10">
-        <h2 class="mb-16 text-center">Entreprises</h2>
+        <h2 class="mb-16 text-center" data-cy="section-entreprises">Entreprises</h2>
         <v-row class="mb-8" align="center" justify="center">
           <v-col cols="12" md="6">
             <v-card class="pa-6">
@@ -255,6 +257,7 @@
               cols="12"
               sm="6"
               md="2"
+              data-cy="entreprise-populaire"
           >
             <v-card class="pa-4 hoverable" @click="goCompany">
               <v-avatar size="32" class="mb-2" v-if="ent.image">
