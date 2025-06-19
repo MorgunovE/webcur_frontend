@@ -6,7 +6,7 @@
       <v-container fluid class="hero-section-compte py-16">
         <v-row align="center" justify="center">
           <v-col cols="12" md="8" class="text-left">
-            <h1 class="display-2 font-weight-bold mt-16 mb-16">
+            <h1 class="display-2 font-weight-bold mt-16 mb-16" data-cy="compte-hero-title">
               Bienvenue à nouveau, {{ utilisateur?.nom_utilisateur || 'Utilisateur' }} !
             </h1>
             <p class="mb-16">
