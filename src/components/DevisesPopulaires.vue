@@ -1,6 +1,6 @@
 <template>
   <v-container class="mt-10">
-    <h2 class="mb-4">Devises populaires</h2>
+    <h2 class="mb-4" data-cy="section-devises-populaires">Devises populaires</h2>
     <v-row v-if="devises && devises.length">
       <v-col
         v-for="devise in devises.slice(0, 5)"
@@ -8,6 +8,7 @@
         cols="12"
         sm="6"
         md="2"
+        data-cy="devise-populaire"
       >
         <v-card class="pa-4 hoverable">
           <v-icon size="32" color="primary">mdi-currency-usd</v-icon>
