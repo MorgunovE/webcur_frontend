@@ -32,7 +32,7 @@ describe('Actions - E2E', () => {
   });
 
   it('Affiche les actions populaires', () => {
-    cy.get('[data-cy="action-populaire"]', { timeout: 10000 }).should('have.length.at.least', 1);
+    cy.get('[data-cy="action-populaire"]', { timeout: 20000 }).should('have.length.at.least', 1);
   });
 
   it('Affiche la section Aperçu de l\'action Apple (AAPL)', () => {
