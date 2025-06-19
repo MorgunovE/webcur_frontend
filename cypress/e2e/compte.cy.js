@@ -205,6 +205,18 @@ describe('Compte - E2E', () => {
     cy.get('[data-cy="devise-pdf-btn"]', { timeout: 10000 }).should('be.visible');
   });
 
+  it('Affiche la section Devises populaires après connexion', () => {
+    cy.visit('/login');
+    cy.get('[data-cy="login-email"]').type(testUser.email);
+    cy.get('[data-cy="login-password"]').type(testUser.mot_de_passe);
+    cy.get('[data-cy="login-submit"]').click();
+    cy.url().should('include', '/account');
+    cy.get('[data-cy="section-devises-populaires"]', { timeout: 10000 }).should('be.visible');
+    cy.get('[data-cy="devise-populaire"]', { timeout: 20000 }).should('be.visible');
+  });
+
+
+
   // active apre tout tests realise
   // it('Déconnexion', () => {
   //   cy.visit('/login');
