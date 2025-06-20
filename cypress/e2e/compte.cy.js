@@ -301,6 +301,40 @@ describe('Compte - E2E', () => {
      .and('contain', 'Taux');
  });
 
+ it('Affiche et interagit avec la carte des détails entreprise', () => {
+   // Connexion utilisateur
+   cy.visit('/login');
+   cy.get('[data-cy="login-email"]').type(testUser.email);
+   cy.get('[data-cy="login-password"]').type(testUser.mot_de_passe);
+   cy.get('[data-cy="login-submit"]').click();
+   cy.url().should('include', '/account');
+
+   // Attendre que le composant soit visible
+   cy.get('[data-cy="entreprise-details-container"]', { timeout: 30000 }).should('be.visible');
+   cy.get('[data-cy="entreprise-details-autocomplete"]', { timeout: 30000 }).should('be.visible');
+   cy.get('[data-cy="entreprise-details-autocomplete"]', { timeout: 30000 }).click();
+
+   // Sélectionner une entreprise (ex: AAPL)
+   cy.get('.v-autocomplete__content', { timeout: 30000 }).contains('AAPL').click();
+
+   // Vérifier l'affichage des infos
+   cy.get('[data-cy="entreprise-details-info-card"]', { timeout: 30000 }).should('be.visible');
+   cy.get('[data-cy="entreprise-details-info-title"]').should('contain', 'AAPL');
+   cy.get('[data-cy="entreprise-details-info-text"]').should('contain', 'Prix:');
+   cy.get('[data-cy="entreprise-details-info-text"]').should('contain', 'Variation:');
+   cy.get('[data-cy="entreprise-details-info-text"]').should('contain', 'Capitalisation:');
+   cy.get('[data-cy="entreprise-details-info-text"]').should('contain', 'CEO:');
+   cy.get('[data-cy="entreprise-details-info-text"]').should('contain', 'Pays:');
+   cy.get('[data-cy="entreprise-details-info-text"]').should('contain', 'Site web:');
+   cy.get('[data-cy="entreprise-details-info-text"]').should('contain', 'Description:');
+
+   // Vérifier le bouton PDF
+   cy.get('[data-cy="entreprise-details-pdf-btn"]', { timeout: 30000 }).should('be.visible');
+
+   // Vérifier le graphique
+   cy.get('[data-cy="entreprise-details-chart"]', { timeout: 30000 }).should('exist');
+ });
+
 
 
   // active apre tout tests realise
