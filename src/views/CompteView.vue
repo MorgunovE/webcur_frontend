@@ -210,14 +210,14 @@
       <ActionsPopulaires :actions="actionsPopulaires" />
 
       <v-container>
-       <v-card class="pa-6 mt-8" elevation="6">
+       <v-card class="pa-6 mt-8" elevation="6" data-cy="achat-action-card">
          <v-card-title>
            <v-icon color="primary" class="mr-2">mdi-calculator</v-icon>
            Calculer le coût d'achat d'une action
          </v-card-title>
          <v-card-text>
            <div class="mb-2 text-caption">Calculez le coût total d'achat d'une action à une date donnée et dans la devise de votre choix.</div>
-           <v-form @submit.prevent="calculerAchatAction">
+           <v-form @submit.prevent="calculerAchatAction" data-cy="achat-action-card">
              <v-row>
                <v-col cols="12" md="3">
                  <v-select
@@ -227,6 +227,7 @@
                    item-value="symbole"
                    label="Symbole"
                    required
+                   data-cy="achat-symbole"
                  />
                </v-col>
                <v-col cols="12" md="3">
@@ -235,6 +236,7 @@
                    label="Date"
                    type="date"
                    required
+                   data-cy="achat-date"
                  />
                </v-col>
                <v-col cols="12" md="3">
@@ -244,6 +246,7 @@
                    type="number"
                    min="1"
                    required
+                   data-cy="achat-quantite"
                  />
                </v-col>
                <v-col cols="12" md="3">
@@ -252,15 +255,16 @@
                    :items="devises"
                    label="Devise"
                    required
+                   data-cy="achat-devise"
                  />
                </v-col>
              </v-row>
-             <v-btn type="submit" color="primary" class="mt-2">Calculer</v-btn>
+             <v-btn type="submit" color="primary" class="mt-2" data-cy="achat-calculer-btn">Calculer</v-btn>
            </v-form>
-           <v-alert v-if="achatResultat" type="success" class="mt-4">
+           <v-alert v-if="achatResultat" type="success" class="mt-4" data-cy="achat-resultat">
              {{ achatResultat.quantite }} {{ achatResultat.symbole }} = {{ achatResultat.cout_total }} {{ achatResultat.devise }} (Taux: {{ achatResultat.taux }})
            </v-alert>
-           <v-alert v-if="achatErreur" type="error" class="mt-4">{{ achatErreur }}</v-alert>
+           <v-alert v-if="achatErreur" type="error" class="mt-4" data-cy="achat-erreur">{{ achatErreur }}</v-alert>
          </v-card-text>
        </v-card>
       </v-container>
