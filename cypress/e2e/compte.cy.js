@@ -335,30 +335,39 @@ describe('Compte - E2E', () => {
    cy.get('[data-cy="entreprise-details-chart"]', { timeout: 30000 }).should('exist');
  });
 
+ it('Affiche le bloc Entreprises populaires et les cartes d\'entreprises', () => {
+   cy.visit('/login');
+   cy.get('[data-cy="login-email"]').type(testUser.email);
+   cy.get('[data-cy="login-password"]').type(testUser.mot_de_passe);
+   cy.get('[data-cy="login-submit"]').click();
+   cy.url().should('include', '/account');
 
+   // Vérifie la présence du bloc Entreprises populaires
+   cy.get('[data-cy="section-entreprises-populaires"]', { timeout: 20000 }).should('be.visible');
+   // Vérifie qu'il y a au moins une carte d'entreprise populaire
+   cy.get('[data-cy="entreprise-populaire-card"]', { timeout: 20000 }).should('be.visible');
+ });
 
-  // active apre tout tests realise
-  // it('Déconnexion', () => {
-  //   cy.visit('/login');
-  //   cy.get('[data-cy="login-email"]').type(testUser.email);
-  //   cy.get('[data-cy="login-password"]').type(testUser.mot_de_passe);
-  //   cy.get('[data-cy="login-submit"]').click();
-  //   cy.url().should('include', '/account');
-  //   cy.contains('Se déconnecter').click();
-  //   cy.url().should('not.include', '/account');
-  //   cy.get('[data-cy="login-email"]').should('not.exist');
-  // });
+  it('Déconnexion', () => {
+    cy.visit('/login');
+    cy.get('[data-cy="login-email"]').type(testUser.email);
+    cy.get('[data-cy="login-password"]').type(testUser.mot_de_passe);
+    cy.get('[data-cy="login-submit"]').click();
+    cy.url().should('include', '/account');
+    cy.contains('Se déconnecter').click();
+    cy.url().should('not.include', '/account');
+    cy.get('[data-cy="login-email"]').should('not.exist');
+  });
 
-  // active apre tout tests realise
-  // it('Supprime le compte utilisateur', () => {
-  //   cy.visit('/login');
-  //   cy.get('[data-cy="login-email"]').type(testUser.email);
-  //   cy.get('[data-cy="login-password"]').type(testUser.mot_de_passe);
-  //   cy.get('[data-cy="login-submit"]').click();
-  //   cy.url().should('include', '/account');
-  //   cy.get('[data-cy="compte-delete-btn"]').click();
-  //   cy.url().should('not.include', '/account');
-  //   cy.get('[data-cy="login-email"]').should('not.exist');
-  // });
+  it('Supprime le compte utilisateur', () => {
+    cy.visit('/login');
+    cy.get('[data-cy="login-email"]').type(testUser.email);
+    cy.get('[data-cy="login-password"]').type(testUser.mot_de_passe);
+    cy.get('[data-cy="login-submit"]').click();
+    cy.url().should('include', '/account');
+    cy.get('[data-cy="compte-delete-btn"]').click();
+    cy.url().should('not.include', '/account');
+    cy.get('[data-cy="login-email"]').should('not.exist');
+  });
 
 });
