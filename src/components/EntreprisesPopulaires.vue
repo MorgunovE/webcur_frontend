@@ -1,5 +1,5 @@
 <template>
-  <v-container class="mt-10">
+  <v-container class="mt-10" data-cy="section-entreprises-populaires">
     <h2 class="mb-4">Entreprises populaires</h2>
     <v-row>
       <v-col
@@ -8,6 +8,7 @@
         cols="12"
         sm="6"
         md="2"
+        data-cy="entreprise-populaire-card"
       >
         <v-card class="pa-4 hoverable">
           <v-avatar size="32" class="mb-2" v-if="ent.image">
