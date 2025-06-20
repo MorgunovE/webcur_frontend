@@ -277,6 +277,30 @@ describe('Compte - E2E', () => {
 
  });
 
+ it('Calcule le coût d\'achat d\'une action', () => {
+   cy.visit('/login');
+   cy.get('[data-cy="login-email"]').type(testUser.email);
+   cy.get('[data-cy="login-password"]').type(testUser.mot_de_passe);
+   cy.get('[data-cy="login-submit"]').click();
+   cy.url().should('include', '/account');
+
+   // Remplir le formulaire d'achat d'action
+   cy.get('[data-cy="achat-symbole"]', { timeout: 10000 }).click();
+   cy.get('.v-list-item', { timeout: 10000 }).contains('AAPL').click();
+   cy.get('[data-cy="achat-date"] input', { timeout: 10000 }).clear().type('2025-06-19');
+   cy.get('[data-cy="achat-quantite"] input', { timeout: 10000 }).clear().type('2');
+   cy.get('[data-cy="achat-devise"]', { timeout: 10000 }).click();
+   cy.get('.v-list-item', { timeout: 10000 }).contains('EUR').click();
+
+   cy.get('[data-cy="achat-calculer-btn"]').click();
+
+   // Vérifier le résultat
+   cy.get('[data-cy="achat-resultat"]', { timeout: 10000 })
+     .should('contain', '2 AAPL')
+     .and('contain', 'EUR')
+     .and('contain', 'Taux');
+ });
+
 
 
   // active apre tout tests realise
