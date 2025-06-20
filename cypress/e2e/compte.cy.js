@@ -263,6 +263,20 @@ describe('Compte - E2E', () => {
    cy.get('[data-cy="action-details-chart"]', { timeout: 20000 }).should('exist');
  });
 
+ it('Affiche le bloc Actions populaires et les cartes d\'actions', () => {
+   cy.visit('/login');
+   cy.get('[data-cy="login-email"]').type(testUser.email);
+   cy.get('[data-cy="login-password"]').type(testUser.mot_de_passe);
+   cy.get('[data-cy="login-submit"]').click();
+   cy.url().should('include', '/account');
+
+   // Vérifie la présence du bloc Actions populaires
+   cy.get('[data-cy="section-actions-populaires"]', { timeout: 20000 }).should('be.visible');
+   // Vérifie qu'il y a au moins une carte d'action populaire
+   cy.get('[data-cy="action-populaire-card"]', { timeout: 20000 }).should('be.visible');
+
+ });
+
 
 
   // active apre tout tests realise
