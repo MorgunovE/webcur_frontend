@@ -235,6 +235,34 @@ describe('Compte - E2E', () => {
       .and('contain', 'EUR');
   });
 
+ it('Affiche les détails de l\'action sélectionnée et le bouton PDF', () => {
+   // Connexion utilisateur
+   cy.visit('/login');
+   cy.get('[data-cy="login-email"]').type(testUser.email);
+   cy.get('[data-cy="login-password"]').type(testUser.mot_de_passe);
+   cy.get('[data-cy="login-submit"]').click();
+   cy.url().should('include', '/account');
+
+   // Attendre que l'autocomplete soit visible
+   cy.get('[data-cy="action-details-autocomplete"]', { timeout: 20000 })
+       .should('be.visible');
+   cy.get('[data-cy="action-details-autocomplete"]', { timeout: 20000 })
+       .click();
+   cy.get('.v-autocomplete__content', { timeout: 20000 })
+     .contains('AAPL')
+     .click();
+
+   // Vérifie le bloc ActionDetailsCard
+   cy.get('[data-cy="action-details-container"]', { timeout: 20000 }).should('be.visible');
+   cy.get('[data-cy="action-details-title"]').should('contain', "Informations sur l'action");
+   cy.get('[data-cy="action-details-autocomplete"]').should('be.visible');
+   cy.get('[data-cy="action-details-info-card"]', { timeout: 20000 }).should('be.visible');
+   cy.get('[data-cy="action-details-info-title"]').should('not.be.empty');
+   cy.get('[data-cy="action-details-info-text"]').should('contain', 'Date:');
+   cy.get('[data-cy="action-details-pdf-btn"]').should('be.visible');
+   cy.get('[data-cy="action-details-chart"]', { timeout: 20000 }).should('exist');
+ });
+
 
 
   // active apre tout tests realise
