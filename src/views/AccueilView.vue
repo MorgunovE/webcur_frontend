@@ -2,7 +2,7 @@
   <v-app>
     <HeaderPrincipal />
     <v-main>
-      <!-- Hero Section -->
+
       <v-container fluid class="hero-section py-16">
         <v-row align="center" justify="center">
           <v-col cols="12" md="8" class="text-left">
@@ -15,7 +15,7 @@
           </v-col>
         </v-row>
       </v-container>
-      <!-- Features -->
+
       <v-container class="mt-8">
         <v-row justify="center" align="center">
           <v-col cols="12" md="4">
@@ -42,7 +42,6 @@
         </v-row>
       </v-container>
 
-      <!-- Popular Currencies -->
       <v-container class="mt-10">
         <h2 class="mb-16 text-center" data-cy="section-devises" >Devises</h2>
         <v-row class="mb-8" align="center" justify="center">
@@ -120,7 +119,6 @@
         </v-alert>
       </v-container>
 
-      <!-- Popular Actions -->
       <v-container class="mt-10">
         <h2 class="mb-16 text-center" data-cy="section-actions">Actions</h2>
         <v-row class="mb-8" align="center" justify="center">
@@ -197,7 +195,6 @@
         </v-alert>
       </v-container>
 
-      <!-- Popular Companies -->
       <v-container class="mt-10 mb-10">
         <h2 class="mb-16 text-center" data-cy="section-entreprises">Entreprises</h2>
         <v-row class="mb-8" align="center" justify="center">

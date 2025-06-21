@@ -86,10 +86,8 @@ const props = defineProps({
 // Emits
 const emit = defineEmits(["update:entrepriseSelectionnee"]);
 
-// Local refs
 const entrepriseCard = ref(null);
 
-// v-model support
 const entrepriseSelectionnee = computed({
   get: () => props.entrepriseSelectionnee,
   set: (val) => emit("update:entrepriseSelectionnee", val),

@@ -2,7 +2,7 @@
   <v-app>
     <HeaderPrincipal />
     <v-main>
-      <!-- Hero Section -->
+
       <v-container fluid class="hero-section py-16">
         <v-row align="center" justify="start">
           <v-col cols="12" md="6" class="text-left">
@@ -19,7 +19,6 @@
         </v-row>
       </v-container>
 
-      <!-- Features -->
       <v-container class="mt-8">
         <v-row justify="center" align="center">
           <v-col cols="12" md="4">
@@ -46,7 +45,6 @@
         </v-row>
       </v-container>
 
-      <!-- Popular Companies Preview -->
       <v-container class="mt-10" data-cy="section-entreprises">
         <h2 class="mb-16 text-center">Entreprises</h2>
         <v-row class="mb-8" align="center" justify="center">
@@ -124,7 +122,6 @@
         </v-alert>
       </v-container>
 
-      <!-- AAPL Company Preview with Chart -->
       <v-container class="mt-10" @click="goRegister" data-cy="section-aapl">
         <h2 class="mb-4">Aperçu de l'entreprise Apple (AAPL)</h2>
         <v-row>

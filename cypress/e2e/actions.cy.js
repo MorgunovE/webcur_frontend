@@ -50,5 +50,4 @@ describe('Actions - E2E', () => {
     cy.url().should('include', '/register');
   });
 
-
 });

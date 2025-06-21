@@ -67,14 +67,12 @@ describe('Module Vuex auth', () => {
 
   testWithLog('reconnect doit vérifier le token et commit deconnexion si invalide', async () => {
     const commit = jest.fn();
-    // Valid token
     const state = { token: 'tok' };
     const axios = require('@/api/axios').default;
     axios.get = jest.fn().mockResolvedValue({ data: {} });
     let result = await authModule.actions.reconnect({ commit, state });
     expect(result).toBe(true);
 
-    // Invalid token
     axios.get = jest.fn().mockRejectedValue(new Error('unauthorized'));
     result = await authModule.actions.reconnect({ commit, state });
     expect(commit).toHaveBeenCalledWith('deconnexion');

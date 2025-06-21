@@ -2,7 +2,7 @@
   <v-app>
     <HeaderPrincipal />
     <v-main>
-      <!-- Hero Image Section -->
+
       <v-container fluid class="hero-section-register py-12 mb-8">
         <v-row align="center" justify="center">
           <v-col cols="12" md="6" class="text-center">
@@ -15,7 +15,7 @@
           </v-col>
         </v-row>
       </v-container>
-      <!-- Registration Card -->
+
       <v-container>
         <v-row justify="center">
           <v-col cols="12" md="6" lg="4">

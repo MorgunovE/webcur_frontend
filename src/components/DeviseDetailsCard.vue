@@ -105,16 +105,13 @@ const emit = defineEmits([
   "handleDeviseInput"
 ]);
 
-// Local state for showAllRates
 const showAllRates = ref(false);
 
-// v-model support for deviseSelectionnee
 const deviseSelectionneeLocal = computed({
   get: () => props.deviseSelectionnee,
   set: (val) => emit("update:deviseSelectionnee", val),
 });
 
-// Computed for limited conversion rates
 const limitedConversionRates = computed(() => {
   if (!props.conversionRates) return {};
   const entries = Object.entries(props.conversionRates);
@@ -182,7 +179,6 @@ async function onGeneratePdf() {
   });
 }
 
-// Event handlers
 function onDeviseSelectionChange(val) {
   emit("update:deviseSelectionnee", val);
 }

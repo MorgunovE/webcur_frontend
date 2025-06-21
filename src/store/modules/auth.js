@@ -70,7 +70,7 @@ export default {
         dispatch("actions/setActionsFavoris", [], { root: true });
         await axios.post("/deconnexion");
       } catch (e) {
-        // Même en cas d'échec, on nettoie le store
+        console.error("Erreur lors de la déconnexion :", e);
       }
       commit("deconnexion");
     },
