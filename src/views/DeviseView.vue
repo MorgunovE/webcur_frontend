@@ -134,7 +134,7 @@
                 <strong>Conversion rates:</strong>
                 <div>
 
-                  <v-simple-table dense class="styled-table mb-2">
+                  <v-table density="compact" class="mb-2 styled-table">
                     <thead>
                     <tr>
                       <th>Devise</th>
@@ -150,7 +150,7 @@
                       <td>{{ taux }}</td>
                     </tr>
                     </tbody>
-                  </v-simple-table>
+                  </v-table>
                   <div v-if="cadShowAllRates">
                     <v-btn small @click.stop="cadShowAllRates = false" color="primary" variant="text" data-cy="cad-show-less-btn">Show less</v-btn>
                   </div>
