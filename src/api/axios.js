@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const LOCAL_URL = process.env.VUE_APP_API_URL || "http://localhost:5000";
-const REMOTE_URL = process.env.VUE_APP_API_URL_REMOTE || "https://webcur-backend.onrender.com";
+const REMOTE_URL = process.env.VUE_APP_API_URL_REMOTE;
 
 let apiBaseUrl = LOCAL_URL;
 
