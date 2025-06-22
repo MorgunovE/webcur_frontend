@@ -15,27 +15,28 @@ describe('Enregistrement - E2E', () => {
     function detectApiBaseUrl() {
         const local = Cypress.env('VUE_APP_API_URL') || 'http://localhost:5000';
         const remote = Cypress.env('VUE_APP_API_URL_REMOTE');
-        const urls = [remote, local].filter(Boolean);
+        const urls = [local, remote].filter(Boolean);
 
-        function tryNext(i) {
-            if (i >= urls.length) {
-                apiBaseUrl = urls[0];
-                return cy.wrap(apiBaseUrl);
-            }
-            return cy.request({
-                url: `${urls[i]}/health`,
-                failOnStatusCode: false,
-                timeout: 2000
-            }).then(res => {
-                if (res && res.status === 200 || "ok") {
-                    apiBaseUrl = urls[i];
-                    return cy.wrap(apiBaseUrl);
-                } else {
-                    return tryNext(i + 1);
+        return cy.then(() => {
+            return Cypress.Promise.try(async () => {
+                for (let i = 0; i < urls.length; i++) {
+                    try {
+                        const res = await fetch(`${urls[i]}/health`, { method: 'GET' });
+                        const body = await res.json().catch(() => ({}));
+                        if (
+                            res.status === 200 ||
+                            body.status === 'ok' ||
+                            body.status === 'OK'
+                        ) {
+                            apiBaseUrl = urls[i];
+                            return apiBaseUrl;
+                        }
+                    } catch (e) {
+                    }
                 }
+                throw new Error('No backend API available.');
             });
-        }
-        return tryNext(0);
+        });
     }
 
     let currentTestName = '';
