@@ -142,7 +142,7 @@ npx prettier --write .
 - **Ajout d’une devise favorite :**  
   Depuis la page Compte, sélectionnez une devise et ajoutez-la à vos favoris.
 - **Visualisation d’une entreprise :**  
-  Accédez à `/companies/AAPL` pour voir les infos et l’historique d’Apple.
+  Accédez à `/companies` pour voir les infos et l’historique d’entreprise.
 
 ## Dépendance au backend
 
